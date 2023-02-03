@@ -285,7 +285,7 @@ static FAR char *g_idleargv[2];
  *   Does not return.
  *
  ****************************************************************************/
-
+// int test_counter;
 void os_start(void)
 {
 	int i;
@@ -612,6 +612,7 @@ void os_start(void)
 	/* The IDLE Loop **********************************************************/
 	/* When control is return to this point, the system is idle. */
 
+	pm_relax(PM_IDLE_DOMAIN, PM_NORMAL);
 	svdbg("Beginning Idle Loop\n");
 	for (;;) {
 		/* Perform garbage collection (if it is not being done by the worker
@@ -638,6 +639,6 @@ void os_start(void)
 
 		/* Perform any processor-specific idle state operations */
 
-		up_idle();
+		// up_idle();
 	}
 }

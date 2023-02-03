@@ -67,11 +67,7 @@
 #include "up_arch.h"
 
 #include "chip.h"
-
-/*----------------------------------------------------------------------------
-  Clock Variable definitions
- *----------------------------------------------------------------------------*/
-#define configCPU_CLOCK_HZ								150000000
+#include "ameba_soc.h"
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -84,11 +80,13 @@
  *
  */
 
+
 /* The size of the reload field is 24 bits.  Verify that the reload value
  * will fit in the reload register.
  */
+extern uint32_t SystemCoreClock; 
 
-#define SYSTICK_RELOAD ((configCPU_CLOCK_HZ / CLK_TCK) - 1)
+#define SYSTICK_RELOAD ((SystemCoreClock / CLK_TCK) - 1)
 
 #if SYSTICK_RELOAD > 0x00ffffff
 #  error SYSTICK_RELOAD exceeds the range of the RELOAD register
@@ -126,6 +124,8 @@ int up_timerisr(int irq, uint32_t *regs)
 
 void up_timer_initialize(void)
 {
+  DBG_INFO_MSG_ON(MODULE_PMC);
+  DBG_INFO_MSG_ON(MODULE_KM4);
   /* Set the SysTick interrupt to the min priority */ 
 #ifdef CONFIG_ARCH_IRQPRIO
   up_prioritize_irq(AMEBALITE_IRQ_SYSTICK, NVIC_SYSH_PRIORITY_DEFAULT);

@@ -38,6 +38,7 @@
   */
 static u32 gtimer_timeout_handler(void *data)
 {
+	printf("gtimer_timeout_handler reached\n");
 	gtimer_t *obj = (gtimer_t *)data;
 	uint32_t tid = obj->timer_id;
 	gtimer_irq_handler handler;
@@ -78,6 +79,140 @@ static u32 gtimer_timeout_handler(void *data)
   * @note KM4 TIMER0/1/2/3/4/5/6/7/8/9/10/11/12/13/14 are recommended.
   * @retval none
   */
+void INTClear(RTIM_TypeDef *TIMx)
+{
+	u32 CounterIndex = 0;
+	u32 Status = TIMx->SR;
+
+	/* Check the parameters */
+	assert_param(IS_TIM_ALL_TIM(TIMx));
+
+	/* Clear the all IT pending Bits */
+	TIMx->SR = Status;
+
+	/* make sure write ok, because bus delay */
+	while (1) {
+		CounterIndex++;
+		if (CounterIndex >= 300) {
+			//printf("function %s line %d \n", __FUNCTION__, __LINE__);
+			break;
+		}
+
+		if (((TIMx->SR) & 0xFFFFFF) == 0) {
+			//printf("function %s line %d \n", __FUNCTION__, __LINE__);
+			break;
+		}
+	}
+}
+
+u32 GetINTStatus(RTIM_TypeDef *TIMx, u32 TIM_IT)
+{
+	u32 bitstatus = _FALSE;
+	u32 itstatus = 0x0, itenable = 0x0;
+
+	/* Check the parameters */
+	assert_param(IS_TIM_ALL_TIM(TIMx));
+	assert_param(IS_TIM_GET_IT(TIM_IT));
+
+	itstatus = TIMx->SR & TIM_IT;
+	itenable = TIMx->DIER & TIM_IT;
+	printf("function %s line %d TIMx->SR %d TIMx->DIER %x TIM_IT %x \n", __FUNCTION__, __LINE__,TIMx->SR, TIMx->DIER, TIM_IT);
+
+	if ((itstatus != 0) && (itenable != 0)) {
+		bitstatus = _TRUE;
+	} else {
+		bitstatus = _FALSE;
+	}
+
+	return bitstatus;
+}
+
+u32 pg_timer_int_handler_2(void *Data)
+{
+	RTIM_TimeBaseInitTypeDef *TIM_InitStruct = (RTIM_TimeBaseInitTypeDef *) Data;
+	RTIM_INTClear(TIMx[TIM_InitStruct->TIM_Idx]);
+	RTIM_Cmd(TIMx[TIM_InitStruct->TIM_Idx], DISABLE);
+//	uint32_t int_status = GetINTStatus(TIMx[TIM_InitStruct->TIM_Idx], TIM_IT_Update);
+//	printf("function %s line %d timer %x int_status %d\n", __FUNCTION__, __LINE__, TIM_InitStruct->TIM_Idx, int_status);
+	// RTIM_INTClear(TIMx[TIM_InitStruct->TIM_Idx]);
+	// RTIM_Cmd(TIMx[TIM_InitStruct->TIM_Idx], DISABLE);
+//	INTClear(TIMx[7]);
+//	RTIM_INTConfig(TIMx[7], TIM_IT_Update, DISABLE);
+//	RTIM_Cmd(TIMx[7], DISABLE);
+
+	int n = sizeof(TIMx)/sizeof(TIMx);
+	printf("function %s line %d TIMx size %d\n", __FUNCTION__, __LINE__, n);
+
+	// InterruptDis(TIMx_irq[TIM_InitStruct->TIM_Idx]);
+//	InterruptUnRegister(23); //TIMx_irq[7]);
+
+	printf("function %s line %d timer %x\n", __FUNCTION__, __LINE__, TIM_InitStruct);
+
+//	int_status = GetINTStatus(TIMx[TIM_InitStruct->TIM_Idx], TIM_IT_Update);
+	//printf("function %s line %d timer %x int_status %d\n", __FUNCTION__, __LINE__, TIM_InitStruct->TIM_Idx, int_status);
+
+	return 0;
+}
+RTIM_TimeBaseInitTypeDef TIM_InitStruct_GT[8];
+
+extern SLEEP_ParamDef sleep_param;
+void gtimer_init_2(gtimer_t *obj, uint32_t tid)
+{
+	u32 KR4_is_NP = 0;
+	KR4_is_NP = LSYS_GET_KR4_IS_NP(HAL_READ32(SYSTEM_CTRL_BASE, REG_LSYS_SYSTEM_CFG1));
+	sleep_param.sleep_type = SLEEP_PG;
+	sleep_param.sleep_time = 0;
+	sleep_param.dlps_enable = 0;
+	// SOCPS_sleepInit();
+
+	RTIM_TimeBaseInitTypeDef *TIM_InitStruct = &TIM_InitStruct_GT[tid];
+	
+	assert_param(tid < GTIMER_MAX);
+	RCC_PeriphClockCmd(APBPeriph_TIMx[tid], APBPeriph_TIMx_CLOCK[tid], ENABLE);
+
+	obj->timer_id = tid;
+
+	RTIM_TimeBaseStructInit(TIM_InitStruct);
+	TIM_InitStruct->TIM_Idx = (u8)tid;
+	TIM_InitStruct->TIM_Prescaler = 0x10;
+	TIM_InitStruct->TIM_Period = 32768 * 20;
+	TIM_InitStruct->TIM_UpdateEvent = ENABLE; /* UEV enable */
+	TIM_InitStruct->TIM_UpdateSource = TIM_UpdateSource_Overflow;
+	TIM_InitStruct->TIM_ARRProtection = ENABLE;
+	//RTIM_TimeBaseInit(TIMx[tid], &TIM_InitStruct, TIMx_irq[tid], (IRQ_FUN) gtimer_timeout_handler, (u32)obj);
+	printf("function %s line %d TIM_InitStruct %x\n", __FUNCTION__, __LINE__, &TIM_InitStruct);
+
+ 	printf("function %s line %d \n TIM_Prescaler %x\n TIM_Period %x\n TIM_UpdateEvent %x\n TIM_UpdateSource	%x\n TIM_ARRProtection %x\nTIM_Idx %d\nTIM_SecureTimer %x\n",
+			__FUNCTION__, __LINE__,
+			TIM_InitStruct->TIM_Prescaler, 
+			TIM_InitStruct->TIM_Period, 
+			TIM_InitStruct->TIM_UpdateEvent, 
+			TIM_InitStruct->TIM_UpdateSource, 
+			TIM_InitStruct->TIM_ARRProtection, 
+			TIM_InitStruct->TIM_Idx, 
+			TIM_InitStruct->TIM_SecureTimer);
+
+
+	printf("F %s L %d TIMx %d TIMx_irq %d\n", __FUNCTION__, __LINE__,TIMx[tid],TIMx_irq[tid]);
+	// RTIM_TimeBaseInit(TIMx[tid], TIM_InitStruct, TIMx_irq[tid], NULL, NULL);
+	RTIM_TimeBaseInit(TIMx[tid], TIM_InitStruct, TIMx_irq[tid], (IRQ_FUN) gtimer_timeout_handler, (u32)obj);
+	
+	InterruptRegister(pg_timer_int_handler_2, TIMx_irq[tid], (void *)TIM_InitStruct, 4);
+	InterruptEn(TIMx_irq[tid], 4);
+
+	RTIM_INTConfig(TIMx[tid], TIM_IT_Update, ENABLE);
+	RTIM_Cmd(TIMx[tid], ENABLE);
+
+	// printf("F %s L %d KR4_is_NP %llu\n", __FUNCTION__, __LINE__,KR4_is_NP);
+	if (KR4_is_NP) {
+		// printf("\aaaaaaa\n");
+		SOCPS_SetAPWakeEvent_MSK0(WAKE_SRC_Timer1 << tid, ENABLE);
+	} else {
+		// printf("\bbbbbbb\n");
+		SOCPS_SetNPWakeEvent_MSK0(WAKE_SRC_Timer1 << tid, ENABLE);
+	}
+}
+
 void gtimer_init(gtimer_t *obj, uint32_t tid)
 {
 	RTIM_TimeBaseInitTypeDef TIM_InitStruct;
@@ -134,7 +269,7 @@ uint64_t gtimer_read_us(gtimer_t *obj)   //need to be test in IAR(64bit computin
 {
 	assert_param((obj->timer_id < GTIMER_MAX) && (obj->timer_id != TIMER8) && (obj->timer_id != TIMER9));
 
-	uint64_t time_us = 0;
+	uint64_t time_us;
 	if (obj->timer_id <= TIMER7) {
 		time_us = (uint64_t)(gtimer_read_tick(obj) * ((float)1000000 / 32768));
 	} else if (obj->timer_id >= TIMER10) {
@@ -169,6 +304,12 @@ void gtimer_reload(gtimer_t *obj, uint32_t duration_us)
   * @param  obj: Timer object defined in application software.
   * @retval none
   */
+void gtimer_clear_interrupt(gtimer_t *obj){
+	uint32_t tid = obj->timer_id;
+	assert_param(tid < GTIMER_MAX);
+	RTIM_INTConfig(TIMx[tid], TIM_IT_Update, DISABLE);
+
+}
 void gtimer_start(gtimer_t *obj)
 {
 	uint32_t tid = obj->timer_id;

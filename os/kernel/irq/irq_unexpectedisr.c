@@ -94,10 +94,12 @@
  *   with the system.
  *
  ****************************************************************************/
+uint32_t timer_log[20];
 
 int irq_unexpected_isr(int irq, FAR void *context, FAR void *arg)
 {
 	(void)irqsave();
+	timer_log[0] = irq;
 	lldbg("irq: %d\n", irq);
 	PANIC();
 	return OK;					/* Won't get here */

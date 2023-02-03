@@ -143,6 +143,33 @@ VOID SOCPS_MPUReFill_HP(VOID)
 	MPU->CTRL = PMC_BK.MPU_BK.CTRL;
 }
 
+void checkReg(VOID) {
+	asm volatile("MOV %0, r0\n"	:"=r"(PMC_BK.CPURegbackup_HP[0])::"memory");
+	asm volatile("MOV %0, r1\n"	:"=r"(PMC_BK.CPURegbackup_HP[1])::"memory");
+	asm volatile("MOV %0, r2\n"	:"=r"(PMC_BK.CPURegbackup_HP[2])::"memory");
+	asm volatile("MOV %0, r3\n"	:"=r"(PMC_BK.CPURegbackup_HP[3])::"memory");
+	asm volatile("MOV %0, r4\n"	:"=r"(PMC_BK.CPURegbackup_HP[4])::"memory");
+	asm volatile("MOV %0, r5\n"	:"=r"(PMC_BK.CPURegbackup_HP[5])::"memory");
+	asm volatile("MOV %0, r6\n"	:"=r"(PMC_BK.CPURegbackup_HP[6])::"memory");
+	asm volatile("MOV %0, r7\n"	:"=r"(PMC_BK.CPURegbackup_HP[7])::"memory");
+	asm volatile("MOV %0, r8\n"	:"=r"(PMC_BK.CPURegbackup_HP[8])::"memory");
+	asm volatile("MOV %0, r9\n"	:"=r"(PMC_BK.CPURegbackup_HP[9])::"memory");
+	asm volatile("MOV %0, r10\n":"=r"(PMC_BK.CPURegbackup_HP[10])::"memory");
+	asm volatile("MOV %0, r11\n":"=r"(PMC_BK.CPURegbackup_HP[11])::"memory");
+	asm volatile("MOV %0, r12\n":"=r"(PMC_BK.CPURegbackup_HP[12])::"memory");
+	asm volatile("MOV %0, r13\n":"=r"(PMC_BK.CPURegbackup_HP[13])::"memory");//PSP
+	asm volatile("MOV %0, r14\n" :"=r"(PMC_BK.CPURegbackup_HP[14])::"memory");
+	asm volatile("MOV %0, pc\n" :"=r"(PMC_BK.CPURegbackup_HP[15])::"memory");
+	asm volatile("MRS %0, PSR\n":"=r"(PMC_BK.CPURegbackup_HP[16])	::"memory");
+	asm volatile("NOP");
+	asm volatile("NOP");
+
+	DBG_PRINTF(MODULE_KM4, LEVEL_INFO, "==================Check Reg Start==================\n");
+	for (int i = 0; i < 17; i++) {
+		DBG_PRINTF(MODULE_KM4, LEVEL_ERROR, "Reg%d: %x\n", i, PMC_BK.CPURegbackup_HP[i]);
+	}
+}
+
 /* User can add platform related power management code in this function to
  * power off the system. This funtion will excutes again after system
  * recovery, but goes different if-else branch, xSystemPowerStatus is used
@@ -184,6 +211,11 @@ void vPortSystemPowerOff(VOID)
 	asm volatile("MRS %0, PSR\n":"=r"(PMC_BK.CPURegbackup_HP[16])	::"memory");
 	asm volatile("NOP");
 	asm volatile("NOP");
+
+	DBG_PRINTF(MODULE_KM4, LEVEL_ERROR, "==================Print Reg(Sleep) Start==================\n");
+	for (int i = 0; i < 17; i++) {
+		DBG_PRINTF(MODULE_KM4, LEVEL_ERROR, "Reg%d: %x\n", i, PMC_BK.CPURegbackup_HP[i]);
+	}
 
 	PMC_BK.CPURegbackup_HP[14] = PMC_BK.CPURegbackup_HP[15];
 	PMC_BK.CPUPSP_HP = PMC_BK.CPURegbackup_HP[13];
@@ -266,14 +298,16 @@ void vPortSystemPowerOff(VOID)
 		SOCPS_NVICReFill_HP();
 		SOCPS_MPUReFill_HP();
 		//rtl_cryptoEngine_init();
+		DBG_PRINTF(MODULE_KM4, LEVEL_INFO, "Reached here\n");
 	}
-
+	// DBG_PRINTF(MODULE_KM4, LEVEL_INFO, "First\n");
 	if (HAL_READ32(PMC_BASE, SYSPMC_CTRL) & PMC_BIT_PMEN_SLEP) {
 		/* clear power mode */
 		Rtemp = HAL_READ32(PMC_BASE, SYSPMC_CTRL);
 		Rtemp &= ~PMC_BIT_PMEN_SLEP;
 		HAL_WRITE32(PMC_BASE, SYSPMC_CTRL, Rtemp);
 	}
+	DBG_PRINTF(MODULE_KM4, LEVEL_INFO, "Second\n");
 
 resume:
 	if (HAL_READ32(PMC_BASE, SYSPMC_CTRL) & PMC_BIT_KM4_IRQ_MASK) {
@@ -305,18 +339,19 @@ VOID SOCPS_SleepPG(VOID)
 	Rtemp = HAL_READ32(SYSTEM_CTRL_BASE, REG_LSYS_BOOT_CFG);
 	Rtemp |= LSYS_BIT_BOOT_WAKE_FROM_PS_HS;
 	HAL_WRITE32(SYSTEM_CTRL_BASE, REG_LSYS_BOOT_CFG, Rtemp);
-
-	pmu_psp_modify(ENABLE);
+	DBG_PRINTF(MODULE_KM4, LEVEL_INFO, "Before portsystempoweroff\n");
+	// pmu_psp_modify(ENABLE);
 	vPortSystemPowerOff();
-	pmu_psp_modify(DISABLE);
-
+	// pmu_psp_modify(DISABLE);
+	DBG_PRINTF(MODULE_KM4, LEVEL_INFO, "After portsystempoweroff\n");
 	/* clear boot from ps */
 	Rtemp = HAL_READ32(SYSTEM_CTRL_BASE, REG_LSYS_BOOT_CFG);
 	Rtemp &= ~LSYS_BIT_BOOT_WAKE_FROM_PS_HS;
 	HAL_WRITE32(SYSTEM_CTRL_BASE, REG_LSYS_BOOT_CFG, Rtemp);
-
+	DBG_PRINTF(MODULE_KM4, LEVEL_INFO, "Clear boot from ps\n");
 	pmu_exec_wakeup_hook_funs(PMU_MAX);
 	WakeEventFlag_KM4 = _FALSE;
+	DBG_PRINTF(MODULE_KM4, LEVEL_INFO, "Done sleeping flow\n");
 }
 
 VOID SOCPS_DeepSleep(VOID)
@@ -363,6 +398,10 @@ VOID SOCPS_WakeFromPG_KM4(VOID)
 	NewVectorTable[11] = (HAL_VECTOR_FUN)SOCPS_vWFSSVCHandler_KM4;
 	/* push cpu register into stack based on SOCPS_vWFSSVCHandler */
 	/* push cpu register into stack based on SOCPS_vWFSSVCHandler */
+	DBG_PRINTF(MODULE_KM4, LEVEL_ERROR, "==================Print Reg(Wake Up) Start==================\n");
+	for (int i = 0; i < 17; i++) {
+		DBG_PRINTF(MODULE_KM4, LEVEL_ERROR, "Reg%d: %x\n", i, PMC_BK.CPURegbackup_HP[i]);
+	}
 	(* ((volatile unsigned long *)(PMC_BK.CPUPSP_HP - 4))) = (PMC_BK.CPURegbackup_HP[16] | 0x1000000);     //PSR
 	(* ((volatile unsigned long *)(PMC_BK.CPUPSP_HP - 8))) = PMC_BK.CPURegbackup_HP[15];     //PC
 	(* ((volatile unsigned long *)(PMC_BK.CPUPSP_HP - 12))) = PMC_BK.CPURegbackup_HP[14];     //LR
@@ -474,9 +513,9 @@ void SOCPS_SleepCG(void)
 		}
 	}
 
-	pmu_psp_modify(ENABLE);
+	// pmu_psp_modify(ENABLE);
 	vPortSystemClockGate();
-	pmu_psp_modify(DISABLE);
+	// pmu_psp_modify(DISABLE);
 
 resume:
 	if (HAL_READ32(PMC_BASE, SYSPMC_CTRL) & PMC_BIT_KM4_IRQ_MASK) {

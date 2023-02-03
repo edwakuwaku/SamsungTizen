@@ -134,7 +134,7 @@ u32 NPWAP_INTHandler(UNUSED_WARN_DIS void *Data)
 	DBG_PRINTF(MODULE_KR4, LEVEL_INFO, "NP WAKE AP HANDLER %x %x\n",
 			   HAL_READ32(PMC_BASE, WAK_STATUS0), HAL_READ32(PMC_BASE, WAK_STATUS1));
 
-	InterruptDis(NP_WAKE_IRQ_KR4);
+	InterruptDis(NP_WAKE_IRQ);
 
 	km4_resume();
 	return TRUE;
@@ -183,15 +183,15 @@ u32 km4_suspend(u32 type)
 	}
 
 	/*clean kr4 wake pending interrupt*/
-	NVIC_ClearPendingIRQ(NP_WAKE_IRQ_KR4);
+	NVIC_ClearPendingIRQ(NP_WAKE_IRQ);
 
 	sleep_wevent_config_val[1] = HAL_READ32(PMC_BASE, WAK_MASK1_AP);
 	sleep_wevent_config_val[0] = HAL_READ32(PMC_BASE, WAK_MASK0_AP);
 
 	if ((sleep_wevent_config_val[0] | sleep_wevent_config_val[1])) {
 		DBG_PRINTF(MODULE_KR4, LEVEL_INFO, "register np_wake_irq_kr4\n");
-		InterruptRegister(NPWAP_INTHandler, NP_WAKE_IRQ_KR4, (u32)PMC_BASE, INT_PRI3);
-		InterruptEn(NP_WAKE_IRQ_KR4, INT_PRI3);
+		InterruptRegister(NPWAP_INTHandler, NP_WAKE_IRQ, (u32)PMC_BASE, INT_PRI3);
+		InterruptEn(NP_WAKE_IRQ, INT_PRI3);
 	}
 
 	if (type == SLEEP_CG) {
@@ -200,7 +200,7 @@ u32 km4_suspend(u32 type)
 		km4_power_gate();
 	}
 
-	SOCPS_NP_suspend_config(type);
+	SOCPS_AP_suspend_config(type, ENABLE);
 
 	return ret;
 }
@@ -212,8 +212,9 @@ void km4_resume(void)
 	}
 
 	pmu_acquire_wakelock(PMU_KM4_RUN);
+	pmu_acquire_wakelock(PMU_OS);
 
-	SOCPS_NP_resume_config(km4_sleep_type);
+	SOCPS_AP_resume_config(km4_sleep_type, ENABLE);
 
 	if (km4_sleep_type == SLEEP_CG) {
 		km4_clock_on();

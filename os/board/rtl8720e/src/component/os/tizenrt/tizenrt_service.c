@@ -176,12 +176,9 @@ static void _tizenrt_init_sema(_sema *sema, int init_val)
 	if (*sema == NULL) {
 		*sema = (_sema) _tizenrt_zmalloc(sizeof(sem_t));
 		if (*sema == NULL) {
-			DBG_ERR("Failed to zalloc\n");
+			DBG_ERR("Failed to kmm_zalloc\n");
 			return;
 		}
-#ifdef CONFIG_DEBUG_MM_HEAPINFO
-		DEBUG_SET_CALLER_ADDR(*sema);
-#endif
 	} else {
 		DBG_ERR("Already inited\n");
 		return;
@@ -248,9 +245,6 @@ static void _tizenrt_mutex_init(_mutex *pmutex)
 			DBG_ERR("Failed\n");
 			goto err_exit;
 		}
-#ifdef CONFIG_DEBUG_MM_HEAPINFO
-		DEBUG_SET_CALLER_ADDR(*pmutex);
-#endif
 	}
 	err = pthread_mutexattr_init(&mutex_attr);
 	if (err) {
@@ -280,9 +274,6 @@ err_exit:
 			DBG_ERR("Failed\n");
 			return;
 		}
-#ifdef CONFIG_DEBUG_MM_HEAPINFO
-		DEBUG_SET_CALLER_ADDR(*pmutex);
-#endif
 	}
 	sem_init(*pmutex, 0, 1);
 	sem_setprotocol(*pmutex, SEM_PRIO_NONE);
@@ -343,8 +334,6 @@ static int _tizenrt_mutex_get_timeout(_mutex *plock, u32 timeout_ms)
 }
 
 #if 1 //Justin: temporary solution for enter critical code for tizenRT
-void save_and_cli_temp(void);
-void restore_flags_temp(void);
 void save_and_cli_temp()
 {
 	if(flagcnt){
@@ -452,9 +441,6 @@ static void _tizenrt_spinlock_init(_lock *plock)
 			DBG_ERR("Failed\n");
 			return;
 		}
-#ifdef CONFIG_DEBUG_MM_HEAPINFO
-		DEBUG_SET_CALLER_ADDR(*plock);
-#endif
 	}
 	sem_init(*plock, 0, 1);
 	sem_setprotocol(*plock, SEM_PRIO_NONE);
@@ -808,7 +794,7 @@ err_exit:
 		DBG_ERR("%s fail\n", name);
 		return _FAIL;
 	}
-	ptask->task = (pid_t)pid;
+	ptask->task = pid;
 	ptask->task_name = name;
 	return _SUCCESS;
 #endif
@@ -917,18 +903,12 @@ _timerHandle _tizenrt_timerCreate(const signed char *pcTimerName, osdepTickType 
 		DBG_ERR("Fail to alloc priv\n");
 		return NULL;
 	}
-#ifdef CONFIG_DEBUG_MM_HEAPINFO
-	DEBUG_SET_CALLER_ADDR(timer);
-#endif
 	timer->work_hdl = (struct work_s *)_tizenrt_zmalloc(sizeof(struct work_s));
 	if (timer->work_hdl == NULL) {
 		DBG_ERR("Fail to alloc timer->work_hdl\n");
 		kmm_free(timer);
 		return NULL;
 	}
-#ifdef CONFIG_DEBUG_MM_HEAPINFO
-	DEBUG_SET_CALLER_ADDR(timer->work_hdl);
-#endif
 	timer->live = 0;
 	timer->timevalue = xTimerPeriodInTicks;
 	timer->data = pvTimerID;
@@ -944,15 +924,12 @@ _timerHandle _tizenrt_timerCreate(const signed char *pcTimerName, osdepTickType 
 	}
 
 	struct _tizenrt_timer_entry *timer_entry;
-	timer_entry = (struct _tizenrt_timer_entry *)_tizenrt_zmalloc(sizeof(struct _tizenrt_timer_entry));
+	timer_entry = _tizenrt_zmalloc(sizeof(struct _tizenrt_timer_entry));
 	if (timer_entry == NULL) {
 		kmm_free(timer->work_hdl);
 		kmm_free(timer);
 		return NULL;
 	}
-#ifdef CONFIG_DEBUG_MM_HEAPINFO
-	DEBUG_SET_CALLER_ADDR(timer_entry);
-#endif
 	timer_entry->timer = timer;
 
 	_tizenrt_mutex_get(&_tizenrt_timer_mutex);
@@ -1105,6 +1082,7 @@ u8 _tizenrt_get_scheduler_state(void)
 static IRQ_FUN TizenUserIrqFunTable[MAX_PERIPHERAL_IRQ_NUM];
 static int wrapper_IrqFun(int irq, FAR void *context, FAR void *arg)
 {
+	DBG_INFO("INT %d come here\n", irq);
 	if (irq < AMEBALITE_IRQ_FIRST) {
 		DBG_INFO("INT %d should not come here\n", irq);
 		return OK;
@@ -1114,7 +1092,7 @@ static int wrapper_IrqFun(int irq, FAR void *context, FAR void *arg)
 		TizenUserIrqFunTable[irq - AMEBALITE_IRQ_FIRST]((VOID *)(arg));
 	} else {
 		DBG_INFO("INT_Entry Irq %d Fun Not Assign!!!!!\n", irq - AMEBALITE_IRQ_FIRST);
-	}
+	} 
 	return OK;
 }
 
@@ -1122,6 +1100,7 @@ static int wrapper_IrqFun(int irq, FAR void *context, FAR void *arg)
 #define __NVIC_PRIO_BITS 3	/**< Number of priority bits implemented in the NVIC */
 BOOL irq_register_ram(IRQ_FUN IrqFun, IRQn_Type IrqNum, u32 Data, u32 Priority)
 {
+	// DBG_INFO("INT %d come here\n", irq);
 	if (IrqNum < 0) {
 		DBG_INFO("INT %d should not come here\n", IrqNum);
 		return _TRUE;
@@ -1133,6 +1112,7 @@ BOOL irq_register_ram(IRQ_FUN IrqFun, IRQn_Type IrqNum, u32 Data, u32 Priority)
 	TizenUserIrqFunTable[IrqNum] = (IRQ_FUN)((u32) IrqFun | 0x1);
 	Priority = (Priority << (8 - __NVIC_PRIO_BITS));
 	irq_attach(IrqNum + AMEBALITE_IRQ_FIRST, wrapper_IrqFun, (void *)Data);
+	// __NVIC_SetPriority(IrqNum, Priority);
 	up_prioritize_irq(IrqNum + AMEBALITE_IRQ_FIRST, Priority);	//Need to fix, because it can't get the same result as __NVIC_SetPriority
 	return _TRUE;
 }
@@ -1217,9 +1197,9 @@ void vTaskDelay(int ms)
 
 int rtw_printf(const char *format,...)
 {
+	va_list ap;
 	int ret = 0;
 #ifdef CONFIG_DEBUG_LWNL80211_VENDOR_DRV_INFO
-	va_list ap;
 	va_start(ap, format);
 #ifdef CONFIG_LOGM
 	ret = logm_internal(LOGM_NORMAL, LOGM_IDX, LOGM_INF, format, ap);

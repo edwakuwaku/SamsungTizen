@@ -41,21 +41,18 @@ extern int main(void);
 extern u32 GlobalDebugEnable;
 
 #ifdef CONFIG_PLATFORM_TIZENRT_OS
-extern unsigned int _sidle_stack;
-extern unsigned int _sext_heap_start;
-extern unsigned int _sint_heap_start;
+extern unsigned int __StackStart;
 extern unsigned int __StackLimit;
+extern uint8_t __psram_heap_buffer_start__[];
 extern unsigned int __PsramStackLimit;
 void NS_ENTRY BOOT_IMG3(void);
 void app_init_psram(void);
 
-#define IDLE_STACK ((uintptr_t)&_sidle_stack + CONFIG_IDLETHREAD_STACKSIZE - 4)
-#define HEAP_BASE  ((uintptr_t)&_sint_heap_start)
+#define IDLE_STACK ((uintptr_t)&__StackStart+CONFIG_IDLETHREAD_STACKSIZE-4)
+#define HEAP_BASE  ((uintptr_t)&__StackStart+CONFIG_IDLETHREAD_STACKSIZE)
 #define HEAP_LIMIT ((uintptr_t)&__StackLimit)
-#define PSRAM_HEAP_BASE ((uintptr_t)&_sext_heap_start)
+#define PSRAM_HEAP_BASE ((uintptr_t)&__psram_heap_buffer_start__)
 #define PSRAM_HEAP_LIMIT ((uintptr_t)&__PsramStackLimit)
-
-const uintptr_t g_idle_topstack = IDLE_STACK;
 
 void os_heap_init(void){
 	kregionx_start[0] = (void *)HEAP_BASE;
@@ -637,8 +634,18 @@ void HardFault_Handler_ram(void)
  *
  *  @returns    void
  */
+extern volatile dq_queue_t g_readytorun;
+extern volatile dq_queue_t g_pendingtasks;
+extern volatile dq_queue_t g_waitingforsemaphore;
+
 void hard_fault_handler_c(uint32_t mstack[], uint32_t pstack[], uint32_t lr_value, uint32_t fault_id)
 {
+	struct tcb_s *g_readytorun_head  = (struct tcb_s *)g_readytorun.head;
+	struct tcb_s *g_readytorun_tail  = (struct tcb_s *)g_readytorun.tail;
+
+	dbg_printf("%s\n",g_readytorun_head->name);
+	dbg_printf("%s\n",g_readytorun_tail->name);
+
     uint32_t ret, i, src, *stack;
     uint32_t xpsr=__get_xPSR();
     uint32_t CFSR, HFSR, DFSR, MMFAR, BFAR, AFSR;

@@ -123,6 +123,10 @@ static struct amebalite_gpt_lowerhalf_s g_gpt3_lowerhalf = {
 	.ops = &g_timer_ops,
 };
 
+static struct amebalite_gpt_lowerhalf_s g_gpt7_lowerhalf = {
+	.ops = &g_timer_ops,
+};
+
 /****************************************************************************
  * Private Functions
  ****************************************************************************/
@@ -181,19 +185,22 @@ static int amebalite_gpt_start(struct timer_lowerhalf_s *lower)
 	if (!priv) {
 		return -ENODEV;
 	}
-
+	printf("amebalite_gpt_start is here\n");
+	// priv->freerunmode = 1;
+	printf("freerunmode = %s", priv->freerunmode);
 	if (!priv->started) {
 		if (priv->freerunmode) {	/* Free Run Mode */
 			priv->obj.handler = (void *)amebalite_gpt_handler;
 			priv->obj.hid = (uint32_t) priv;
-			gtimer_start_periodical(&priv->obj, 0xFFFFFFFF, priv->obj.handler, priv->obj.hid);
+			// printf("its here\n");
+			gtimer_start_periodical(&priv->obj, 10000000, priv->obj.handler, priv->obj.hid);
 		} else {				/* Alarm Mode */
 			if (priv->callback != NULL) {
 				priv->obj.handler = (void *)amebalite_gpt_handler;
 				priv->obj.hid = (uint32_t) priv;
 				gtimer_start_periodical(&priv->obj, priv->gpt_timeout, priv->obj.handler, priv->obj.hid);
 			} else {
-				gtimer_start_periodical(&priv->obj, priv->gpt_timeout, NULL, 0);
+				gtimer_start_periodical(&priv->obj, priv->gpt_timeout, NULL, NULL);
 			}
 		}
 		priv->started = true;
@@ -360,7 +367,7 @@ static void amebalite_gpt_setcallback(struct timer_lowerhalf_s *lower, tccb_t ca
 			priv->obj.hid = (uint32_t) priv;
 		} else {
 			priv->obj.handler = NULL;
-			priv->obj.hid = 0;
+			priv->obj.hid = NULL;
 		}
 
 		irqrestore(flags);
@@ -435,6 +442,19 @@ static int amebalite_gpt_ioctl(struct timer_lowerhalf_s *lower, int cmd, unsigne
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
+gtimer_t gtimer_pmc_2;
+uint32_t timer_counter_2 = 0;
+
+static int timer2_timeout_handler(int irq, FAR void *context, FAR void *arg)
+{
+  (void)irqsave();
+  printf("function %s line %d gtimer_read_us %llu\n", __FUNCTION__, __LINE__, gtimer_read_us(&gtimer_pmc_2));
+  gtimer_clear_interrupt(&gtimer_pmc_2);
+
+  //gtimer_stop(&gtimer_pmc_2);
+
+  return 0;
+}
 int amebalite_timer_initialize(const char *devpath, int timer)
 {
 	struct amebalite_gpt_lowerhalf_s *priv = NULL;
@@ -448,6 +468,7 @@ int amebalite_timer_initialize(const char *devpath, int timer)
 	case TIMER1:
 		priv = &g_gpt1_lowerhalf;
 		priv->obj.timer_id = TIMER1;
+		// gtimer_init_2(&priv->obj, priv->obj.timer_id);
 		break;
 
 	case TIMER2:
@@ -456,8 +477,19 @@ int amebalite_timer_initialize(const char *devpath, int timer)
 		break;
 
 	case TIMER3:
+		printf("function %s line %d timers %d %d %d %d\n", __FUNCTION__, __LINE__,TIMER0,TIMER1,TIMER2,TIMER3);
 		priv = &g_gpt3_lowerhalf;
 		priv->obj.timer_id = TIMER3;
+		break;
+
+	case TIMER7:
+		priv = &g_gpt7_lowerhalf;
+		priv->obj.timer_id = TIMER7;
+		gtimer_init_2(&priv->obj, priv->obj.timer_id);
+		// (void)irq_attach(AMEBALITE_IRQ_TIMER7, (xcpt_t)timer2_timeout_handler, NULL);
+		// InterruptEn(23, 4);
+		// gtimer_start_periodical(&gtimer_pmc_2, 5000000, (void *)timer2_timeout_handler, (uint32_t)&timer_counter_2);
+		// gtimer_start(&priv->obj);
 		break;
 
 	default:
@@ -470,7 +502,7 @@ int amebalite_timer_initialize(const char *devpath, int timer)
 	priv->callback = NULL;
 
 	/* Initializes the timer device, include timer registers and interrupt */
-	gtimer_init(&priv->obj, priv->obj.timer_id);
+	if(timer != TIMER7) gtimer_init(&priv->obj, priv->obj.timer_id);
 
 	/*
 	 * Register the timer driver as /dev/timerX.  The returned value from

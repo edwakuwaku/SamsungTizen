@@ -682,9 +682,11 @@ void SOCPS_sleepInit(void)
 
 	/* default open ipc wakemask */
 	if (KR4_is_NP) {
+		printf("F %s L %d\n",__FUNCTION__,__LINE__);
 		SOCPS_SetNPWakeEvent_MSK0(WAKE_SRC_IPC_KR4, ENABLE);
 		SOCPS_SetAPWakeEvent_MSK0(WAKE_SRC_IPC_KM4, ENABLE);
 	} else {
+		printf("F %s L %d\n",__FUNCTION__,__LINE__);
 		SOCPS_SetNPWakeEvent_MSK0(WAKE_SRC_IPC_KM4, ENABLE);
 		SOCPS_SetAPWakeEvent_MSK0(WAKE_SRC_IPC_KR4, ENABLE);
 	}
@@ -881,7 +883,7 @@ void SOCPS_PSRAM_ClkSet(u8 Source)
 	}
 }
 
-
+extern SWR_CORE_Vol_Get(void);
 NON_DRAM_TEXT_SECTION
 void SOCPS_Voltage_Switch(u8 sleep)
 {

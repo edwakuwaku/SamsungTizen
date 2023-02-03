@@ -64,6 +64,7 @@
 
 #include "chip.h"
 #include "up_internal.h"
+#include "timer_api.h"
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -94,7 +95,8 @@
  *   Perform IDLE state power management.
  *
  ****************************************************************************/
-
+extern gtimer_t gtimer_pmc_2;
+int i_count = 1;
 #ifdef CONFIG_PM
 static void up_idlepm(void)
 {
@@ -108,14 +110,32 @@ static void up_idlepm(void)
   newstate = pm_checkstate(PM_IDLE_DOMAIN);
 
   /* Check for state changes */
-
+//  if (gtimer_read_us(&gtimer_pmc_2) > (1000000 * i_count)) 
+//  { 
+//  	printf("function %s line %d gtimer %llu\n", __FUNCTION__, __LINE__, gtimer_read_us(&gtimer_pmc_2)); 
+//	i_count ++; 
+//	if (i_count == 6){ 
+//		if (sleep_init_counter == 0) 
+//		{ 
+//		  Systick_Cmd(DISABLE); 
+//		  asm volatile("cpsid i" : : : "memory"); 
+//		  SOCPS_sleepInit(); 
+//		  sleep_init_counter = 1; 
+//		} 
+//		//km4_psp_modify(1); 
+//		SOCPS_SleepPG(); 
+//		//km4_psp_modify(0); 
+//		asm volatile("cpsie i" : : : "memory"); 
+//		Systick_Cmd(ENABLE); 
+//	}		 
+//  } 
   if (newstate != oldstate)
     {
       flags = irqsave();
 
       /* Perform board-specific, state-dependent logic here */
 
-      _info("newstate= %d oldstate=%d\n", newstate, oldstate);
+      // _info("newstate= %d oldstate=%d\n", newstate, oldstate);
 
       /* Then force the global state change */
 
@@ -138,15 +158,35 @@ static void up_idlepm(void)
       switch (newstate)
         {
         case PM_NORMAL:
+          printf("function %s line %d\n", __FUNCTION__, __LINE__);
+          // asm volatile("cpsid i" : : : "memory");
+          // SOCPS_sleepInit();
+          // printf("function %s line %d\n", __FUNCTION__, __LINE__);
+          // SOCPS_SleepPG();
+          // printf("function %s line %d, Done sleep process\n", __FUNCTION__, __LINE__);
+          // asm volatile("cpsie i" : : : "memory");
+          // Systick_Cmd(1);
           break;
 
         case PM_IDLE:
+          printf("function %s line %d\n", __FUNCTION__, __LINE__);
           break;
 
         case PM_STANDBY:
+          printf("function %s line %d\n", __FUNCTION__, __LINE__);
+          // (void)pm_changestate(PM_IDLE_DOMAIN, PM_SLEEP);
           break;
 
         case PM_SLEEP:
+          printf("function %s line %d\n", __FUNCTION__, __LINE__);
+          // Systick_Cmd(0);
+          // asm volatile("cpsid i" : : : "memory");
+          // SOCPS_sleepInit();
+          // printf("function %s line %d\n", __FUNCTION__, __LINE__);
+          // SOCPS_SleepPG();
+          // printf("function %s line %d, Done sleep process\n", __FUNCTION__, __LINE__);
+          // asm volatile("cpsie i" : : : "memory");
+          // Systick_Cmd(1);
           break;
 
         default:

@@ -231,3 +231,27 @@ void SWR_Calib_ReduceVoltage(void)
 	regu->REGU_SWR_ON_CTRL2 = Rtemp;
 
 }
+
+/**
+  * @brief  Set Core voltage Type.
+  * @param  Source: This parameter can be one of the following values:
+  *		 @arg CORE_VOL_0P9
+  *		 @arg CORE_VOL_1P0
+  */
+void SWR_CORE_Vol_Set(u8 vol_type)
+{
+	RRAM_TypeDef *rram = RRAM_DEV;
+	rram->CORE_Vol_Flag = vol_type;
+
+	SWR_Calib_Load();
+
+	if (CORE_VOL_1P0 == vol_type) {
+		SWR_Calib_RaiseVoltage();
+	}
+}
+
+u8 SWR_CORE_Vol_Get(void)
+{
+	RRAM_TypeDef *rram = RRAM_DEV;
+	return rram->CORE_Vol_Flag;
+}

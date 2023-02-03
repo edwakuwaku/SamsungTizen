@@ -357,6 +357,10 @@ static void set_scan_filter(ble_scan_filter *filter, uint8_t *raw_data, uint8_t 
 /****************************************************************************
  * ble_rmc_main
  ****************************************************************************/
+extern volatile dq_queue_t g_readytorun;
+extern volatile dq_queue_t g_pendingtasks;
+extern volatile dq_queue_t g_waitingforsemaphore;
+// extern int test_counter = 0;
 int ble_rmc_main(int argc, char *argv[])
 {
 	RMC_LOG(RMC_TAG, "- BLE Remote Test -\n");
@@ -368,6 +372,16 @@ int ble_rmc_main(int argc, char *argv[])
 	}
 
 	RMC_LOG(RMC_TAG, "cmd : %s\n", argv[1]);
+	if (strncmp(argv[1], "task_list", 11) == 0) {
+		struct tcb_s *g_readytorun_head  = (struct tcb_s *)g_readytorun.head;
+		struct tcb_s *g_readytorun_tail  = (struct tcb_s *)g_readytorun.tail;
+		
+		struct tcb_s *g_pendingtasks_head  = (struct tcb_s *)g_pendingtasks.head;
+
+		printf("%s\n",g_readytorun_head->name);
+		printf("%s\n",g_readytorun_tail->name);
+		//printf("%s\n",g_pendingtasks_head->name);
+	}
 
 	if (strncmp(argv[1], "init", 5) == 0) {
 		if (argc == 3 && strncmp(argv[2], "null", 5) == 0) {
@@ -395,22 +409,34 @@ int ble_rmc_main(int argc, char *argv[])
 		}
 	}
 
-	if (strncmp(argv[1], "version", 8) == 0) {
-		uint8_t version[3] = { 0, };
-		ret = ble_manager_get_version(version);
-		if (ret != BLE_MANAGER_SUCCESS) {
-			RMC_LOG(RMC_TAG, "Fail to get BLE version[%d]\n", ret);
-		} else {
-			RMC_LOG(RMC_TAG, "BLE Version : %02x %02x %02x\n", version[0], version[1], version[2]);
-		}
+	// if (strncmp(argv[1], "version", 8) == 0) {
+	// 	printf("Test Counter:%d\n", test_counter);
+	// }
+
+	// if (strncmp(argv[1], "add", 4) == 0) {
+	// 	test_counter++;
+	// }
+
+	if (strncmp(argv[1], "task_list", 11) == 0) {
+		struct tcb_s *g_readytorun_head  = (struct tcb_s *)g_readytorun.head;
+		struct tcb_s *g_readytorun_tail  = (struct tcb_s *)g_readytorun.tail;
+		
+		struct tcb_s *g_pendingtasks_head  = (struct tcb_s *)g_pendingtasks.head;
+
+		printf("%s\n",g_readytorun_head->name);
+		printf("%s\n",g_readytorun_tail->name);
+		printf("%s\n",g_pendingtasks_head->name);
 	}
 
-	if (strncmp(argv[1], "state", 6) == 0) {
-		if (argc < 3) {
-			goto ble_rmc_done;
-		}
-		int id = atoi(argv[2]);
-		RMC_LOG(RMC_CLIENT_TAG, "Client State [ %s ]\n", __client_state_str(ble_client_get_state(ctx_list[id])));
+	if (strncmp(argv[1], "sleep", 6) == 0) {
+		Systick_Cmd(0);
+		asm volatile("cpsid i" : : : "memory");
+		SOCPS_sleepInit();
+		printf("function %s line %d\n", __FUNCTION__, __LINE__);
+		SOCPS_SleepPG();
+		printf("function %s line %d, Done sleep process\n", __FUNCTION__, __LINE__);
+		asm volatile("cpsie i" : : : "memory");
+		Systick_Cmd(1);
 	}
 
 	if (strncmp(argv[1], "deinit", 7) == 0) {

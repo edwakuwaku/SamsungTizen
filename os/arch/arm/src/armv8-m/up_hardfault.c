@@ -115,9 +115,18 @@ uint32_t system_exception_location;
  *   exceptions that are performed in bad contexts.
  *
  ****************************************************************************/
+extern volatile dq_queue_t g_readytorun;
+extern volatile dq_queue_t g_pendingtasks;
+extern volatile dq_queue_t g_waitingforsemaphore;
 
 int up_hardfault(int irq, FAR void *context, FAR void *arg)
 {
+	struct tcb_s *g_readytorun_head  = (struct tcb_s *)g_readytorun.head;
+	struct tcb_s *g_readytorun_tail  = (struct tcb_s *)g_readytorun.tail;
+
+	lldbg("%s\n",g_readytorun_head->name);
+	lldbg("%s\n",g_readytorun_tail->name);
+
 	uint32_t *regs = (uint32_t *)context;
 	system_exception_location = regs[REG_R15];
 	/* Get the value of the program counter where the fault occurred */

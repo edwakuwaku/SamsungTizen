@@ -216,8 +216,10 @@ static int irqs_close(FAR struct file *filep)
 /****************************************************************************
  * Name: irqs_read
  ****************************************************************************/
+extern uint32_t timer_log[20];
 static ssize_t irqs_read(FAR struct file *filep, FAR char *buffer, size_t buflen)
 {
+	timer_log[1] = 221;
 	FAR struct irqs_file_s *attr;
 	uint16_t irq_idx;
 	size_t linesize;
