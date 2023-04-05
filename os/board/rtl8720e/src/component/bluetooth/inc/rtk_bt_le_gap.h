@@ -169,6 +169,15 @@ typedef struct {
 	uint16_t btgap_buildnum;		/*!< btgap stack build number */
 } rtk_bt_le_version_info_t;
 
+/**
+ * @typedef   rtk_bt_le_get_conn_id_t
+ * @brief     Bluetooth LE GAP get connection id from connection handle.
+ */
+typedef struct {
+	uint16_t conn_handle;			/*!< connection handle */
+	uint8_t *p_conn_id;				/*!< LE connection id */
+} rtk_bt_le_get_conn_id_t;
+
 #if RTK_BLE_5_0_SET_PHYS_SUPPORT
 /**
  * @typedef   rtk_bt_le_phy_type_t
@@ -279,8 +288,7 @@ typedef enum {
  * @enum    rtk_bt_le_ident_addr_type_t
  * @brief   Bluetooth LE indentity address type definition.
  */
-typedef enum
-{
+typedef enum {
     RTK_BT_LE_IDENT_ADDR_PUBLIC      = 0x00,    /*  Public identity address. */
     RTK_BT_LE_IDENT_ADDR_RAND        = 0x01,    /*  Random identity address. */
 } rtk_bt_le_ident_addr_type_t;
@@ -2212,7 +2220,7 @@ uint16_t rtk_bt_le_gap_start_scan(void);
  */
 uint16_t rtk_bt_le_gap_stop_scan(void);
 
-#if defined(CONFIG_BT_MESH) && CONFIG_BT_MESH
+#if defined(RKT_BLE_MESH_SUPPORT) && RKT_BLE_MESH_SUPPORT
 
 uint16_t rtk_bt_le_gap_mesh_start_scan(void);
 
