@@ -38,7 +38,7 @@ extern "C" {
 /**
   * @brief  The enumeration lists the disconnect reasons.
   */
-  //Defined in rtw_wifi_constants.h
+//Defined in rtw_wifi_constants.h
 //typedef enum {
 //	RTW_NO_ERROR,        /**< no error */
 //	RTW_NONE_NETWORK,   /**< none network */
@@ -105,7 +105,9 @@ extern void _promisc_issue_probersp(unsigned char *da);
 extern void _promisc_stop_tx_beacn(void);
 extern void _promisc_resume_tx_beacn(void);
 
+#ifdef CONFIG_PLATFORM_TIZENRT_OS
 extern int wifi_get_tx_powertable(u32* powertable);
+#endif
 #ifdef	__cplusplus
 }
 #endif
