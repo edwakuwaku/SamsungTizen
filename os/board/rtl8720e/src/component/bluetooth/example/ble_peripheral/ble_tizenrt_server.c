@@ -490,6 +490,11 @@ bool rtw_ble_server_conn_is_any_active(void)
 
 }
 
+trble_result_e rtw_ble_server_conn_param_update(trble_conn_handle *conn_handle, trble_conn_param *conn_param)
+{
+//to do
+}
+
 trble_result_e rtw_ble_server_disconnect(trble_conn_handle con_handle)
 {
     if (is_server_init != true)
