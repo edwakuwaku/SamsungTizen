@@ -54,7 +54,6 @@ static void _wlan_network_deinit_task(void)
 void wlan_initialize(void)
 {
 	// app_mbedtls_init();
-
 	inic_ipc_init_host();
 	inic_ipc_api_init_host();
 
