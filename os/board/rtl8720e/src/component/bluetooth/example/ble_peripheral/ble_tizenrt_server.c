@@ -530,7 +530,7 @@ trble_result_e rtw_ble_server_start_adv(void)
         rtk_bt_le_conn_info_t conn_info;
         for(uint8_t i = 0; i < active_conn.conn_num; i++)
         {
-			if (RTK_BT_OK != rtk_bt_le_gap_get_conn_info(i, &conn_info))
+			if (RTK_BT_OK != rtk_bt_le_gap_get_conn_info(active_conn.conn_handle[i], &conn_info))
 			{
 				debug_print("get conn info fail \n");
 				return TRBLE_FAIL;

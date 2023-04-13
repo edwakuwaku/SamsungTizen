@@ -1849,6 +1849,17 @@ typedef struct {
  */
 
 /**
+ * @fn        uint16_t rtk_bt_le_gap_get_conn_id(uint16_t conn_handle, uint8_t *p_conn_id)
+ * @brief     Get local stack version information.
+ * @param[in] conn_handle: Connection handle.
+ * @param[out] p_conn_id: Connection id for BLE link. Range 0 ~ RTK_BLE_GAP_MAX_LINKS - 1.
+ * @return
+ *            - 0  : Succeed
+ *            - Others: Error code
+ */
+uint16_t rtk_bt_le_gap_get_conn_id(uint16_t conn_handle, uint8_t *p_conn_id);
+
+/**
  * @fn        uint16_t rtk_bt_le_gap_get_version(rtk_bt_le_version_info_t *version)
  * @brief     Get local stack version information.
  * @param[out] version: version information

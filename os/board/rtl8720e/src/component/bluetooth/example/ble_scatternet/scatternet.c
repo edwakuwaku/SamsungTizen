@@ -173,17 +173,19 @@ static rtk_bt_evt_cb_ret_t ble_tizenrt_scatternet_gap_app_callback(uint8_t evt_c
             role = conn_ind->role ? "slave" : "master";
             dbg("[APP] Connected, handle: %d, role: %s, remote device: %s\r\n", 
                     conn_ind->conn_handle, role, le_addr);
-            conn_link[conn_ind->conn_handle].is_active = true;
-            conn_link[conn_ind->conn_handle].role = conn_ind->role;
+            uint8_t conn_id;
+            rtk_bt_le_gap_get_conn_id(conn_ind->conn_handle, &conn_id);
+            conn_link[conn_id].is_active = true;
+            conn_link[conn_id].role = conn_ind->role;
             /* gattc action */
-            if (RTK_BT_LE_ROLE_MASTER == conn_link[conn_ind->conn_handle].role &&
+            if (RTK_BT_LE_ROLE_MASTER == conn_link[conn_id].role &&
                 RTK_BT_OK == general_client_attach_conn(conn_ind->conn_handle)) {
                 dbg("[APP] GATTC Profiles attach connection success, conn_handle: %d\r\n",
 																	conn_ind->conn_handle);
             }
 			if(RTK_BT_LE_ROLE_MASTER == conn_ind->role)
 			{
-				if(is_secured && !ble_tizenrt_scatternet_bond_list[conn_ind->conn_handle].is_bonded)
+				if(is_secured && !ble_tizenrt_scatternet_bond_list[conn_id].is_bonded)
 				{
 					rtk_bt_le_get_active_conn_t active_conn;
 					if (RTK_BT_OK != rtk_bt_le_gap_get_active_conn(&active_conn))
@@ -206,7 +208,7 @@ static rtk_bt_evt_cb_ret_t ble_tizenrt_scatternet_gap_app_callback(uint8_t evt_c
 						dbg("[APP] Get mtu size failed \r\n");
 					}
 					connected_dev.conn_handle = conn_ind->conn_handle;
-					connected_dev.is_bonded = ble_tizenrt_scatternet_bond_list[conn_ind->conn_handle].is_bonded;
+					connected_dev.is_bonded = ble_tizenrt_scatternet_bond_list[conn_id].is_bonded;
 					memcpy(connected_dev.conn_info.addr.mac, conn_ind->peer_addr.addr_val, RTK_BD_ADDR_LEN);
 					connected_dev.conn_info.conn_interval = conn_ind->conn_interval;
 					connected_dev.conn_info.slave_latency = conn_ind->conn_latency;
@@ -256,7 +258,9 @@ static rtk_bt_evt_cb_ret_t ble_tizenrt_scatternet_gap_app_callback(uint8_t evt_c
             ble_tizenrt_write_no_rsp_sem = NULL;
         }
 
-        memset(&conn_link[disconn_ind->conn_handle], 0, sizeof(app_conn_table_t));
+        uint8_t conn_id;
+        rtk_bt_le_gap_get_conn_id(disconn_ind->conn_handle, &conn_id);
+        memset(&conn_link[conn_id], 0, sizeof(app_conn_table_t));
         /* gattc action */
         general_client_detach_conn(disconn_ind->conn_handle);
         /* gap action */
@@ -389,15 +393,17 @@ static rtk_bt_evt_cb_ret_t ble_tizenrt_scatternet_gap_app_callback(uint8_t evt_c
             dbg("[APP] Pairing success, conn_handle: %d\r\n", auth_cplt_ind->conn_handle);
 			if(RTK_BT_LE_ROLE_MASTER == ble_tizenrt_scatternet_conn_ind->role)
 			{
-				ble_tizenrt_scatternet_bond_list[auth_cplt_ind->conn_handle].is_bonded = true;
-				memcpy(ble_tizenrt_scatternet_bond_list[auth_cplt_ind->conn_handle].conn_info.addr.mac, ble_tizenrt_scatternet_conn_ind->peer_addr.addr_val, RTK_BD_ADDR_LEN);
+				uint8_t conn_id;
+				rtk_bt_le_gap_get_conn_id(auth_cplt_ind->conn_handle, &conn_id);
+				ble_tizenrt_scatternet_bond_list[conn_id].is_bonded = true;
+				memcpy(ble_tizenrt_scatternet_bond_list[conn_id].conn_info.addr.mac, ble_tizenrt_scatternet_conn_ind->peer_addr.addr_val, RTK_BD_ADDR_LEN);
 				trble_device_connected connected_dev;
 				uint16_t mtu_size = 0;
 				if(RTK_BT_OK != rtk_bt_le_gap_get_mtu_size(auth_cplt_ind->conn_handle, &mtu_size)){
 					dbg("[APP] Get mtu size failed \r\n");
 				}
 				connected_dev.conn_handle = ble_tizenrt_scatternet_conn_ind->conn_handle;
-				connected_dev.is_bonded = ble_tizenrt_scatternet_bond_list[ble_tizenrt_scatternet_conn_ind->conn_handle].is_bonded;
+				connected_dev.is_bonded = ble_tizenrt_scatternet_bond_list[conn_id].is_bonded;
 				memcpy(connected_dev.conn_info.addr.mac, ble_tizenrt_scatternet_conn_ind->peer_addr.addr_val, RTK_BD_ADDR_LEN);
 				connected_dev.conn_info.conn_interval = ble_tizenrt_scatternet_conn_ind->conn_interval;
 				connected_dev.conn_info.slave_latency = ble_tizenrt_scatternet_conn_ind->conn_latency;
