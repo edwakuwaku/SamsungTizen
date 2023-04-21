@@ -132,7 +132,6 @@ static void inic_ipc_host_rx_tasklet(void)
 	recv_queue = &g_inic_host_priv.recv_queue;
 	do {
 		rtw_down_sema(&g_inic_host_priv.recv_sema);
-
 		while ((precvbuf = inic_dequeue_recvbuf(recv_queue))) {
 			p_buf = precvbuf->p_buf;
 			/* Currently TizenRT only uses idx 0 */
