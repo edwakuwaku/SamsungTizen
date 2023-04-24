@@ -42,7 +42,7 @@ extern "C" {
 
 #define WIFI_INDICATE_MSG	0
 #define WIFI_MANAGER_STACKSIZE	1300
-#define WIFI_MANAGER_PRIORITY		(0) //Actual priority is 4 since calling rtw_create_task
+#define WIFI_MANAGER_PRIORITY		(0)	//Actual priority is 4 since calling rtw_create_task
 #define WIFI_MANAGER_Q_SZ	8
 
 #define WIFI_EVENT_MAX_ROW	3
@@ -53,13 +53,12 @@ extern "C" {
 #define DBG_WIFI_INDICATE(fmt, arg...)
 #endif
 
-
 typedef void (*rtw_event_handler_t)(char *buf, int buf_len, int flags, void *handler_user_data);
 
 typedef struct {
-//	rtw_event_indicate_t	event_cmd;
-	rtw_event_handler_t	handler;
-	void	*handler_user_data;
+//  rtw_event_indicate_t    event_cmd;
+	rtw_event_handler_t handler;
+	void *handler_user_data;
 } event_list_elem_t;
 
 /**
@@ -134,8 +133,5 @@ extern void wifi_unreg_event_handler(unsigned int event_cmds, rtw_event_handler_
 #ifdef __cplusplus
 }
 #endif
-
 /*\@}*/
-
-#endif //_WIFI_INDICATE_H
-
+#endif							//_WIFI_INDICATE_H

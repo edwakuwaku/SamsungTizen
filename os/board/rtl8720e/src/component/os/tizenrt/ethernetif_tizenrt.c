@@ -71,7 +71,7 @@
 #include "ethernetif_tizenrt.h"
 #include "queue.h"
 
-#include "lwip/ethip6.h" //Add for ipv6
+#include "lwip/ethip6.h"		//Add for ipv6
 
 #if CONFIG_WLAN
 #include <lwip_intf_tizenrt.h>
@@ -161,16 +161,15 @@ err_t low_level_output(struct netdev *dev, uint8_t *data, uint16_t dlen)
 	int idx = 0;
 
 #if CONFIG_WLAN
-/*
-	if (!rltk_wlan_running(get_idx_from_dev(dev)))
-		return ERR_IF;
-*/
+	/*
+		if (!rltk_wlan_running(get_idx_from_dev(dev)))
+			return ERR_IF;
+	*/
 #endif
-	if (data != NULL && sg_len < MAX_ETH_DRV_SG)
-		{
+	if (data != NULL && sg_len < MAX_ETH_DRV_SG) {
 		sg_list[sg_len].buf = (unsigned int)data;
 		sg_list[sg_len++].len = dlen;
-		}
+	}
 	if (sg_len) {
 #if CONFIG_WLAN
 #if defined(CONFIG_AS_INIC_AP)
@@ -191,10 +190,11 @@ err_t low_level_output(struct netdev *dev, uint8_t *data, uint16_t dlen)
 #else
 		if (1)
 #endif
-{
-			return ERR_OK;}
-		else
-			return ERR_BUF; // return a non-fatal error
+		{
+			return ERR_OK;
+		} else {
+			return ERR_BUF;    // return a non-fatal error
+		}
 	}
 
 	return ERR_OK;
@@ -208,8 +208,9 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 	int sg_len = 0;
 	struct pbuf *q;
 #if CONFIG_WLAN
-	if (!rltk_wlan_running(netif_get_idx(netif)))
+	if (!rltk_wlan_running(netif_get_idx(netif))) {
 		return ERR_IF;
+	}
 #endif
 	for (q = p; q != NULL && sg_len < MAX_ETH_DRV_SG; q = q->next) {
 		sg_list[sg_len].buf = (unsigned int)q->payload;
@@ -225,10 +226,11 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 		if (1)
 #endif
 			return ERR_OK;
-		else
-			return ERR_BUF; // return a non-fatal error
+		else {
+			return ERR_BUF;    // return a non-fatal error
+		}
 	}
-  	//printf("\n\rwlan:%c: send sg_len: %d, tot_len:%d", netif->name[1],sg_len, p->tot_len);
+	//printf("\n\rwlan:%c: send sg_len: %d, tot_len:%d", netif->name[1],sg_len, p->tot_len);
 
 	return ERR_OK;
 }
@@ -262,11 +264,13 @@ void ethernetif_recv(struct netif *netif, int total_len)
 	struct pbuf *p, *q;
 	int sg_len = 0;
 #if CONFIG_WLAN
-	if (!rltk_wlan_running(netif_get_idx(netif)))
+	if (!rltk_wlan_running(netif_get_idx(netif))) {
 		return;
+	}
 #endif
-	if ((total_len > MAX_ETH_MSG) || (total_len < 0))
+	if ((total_len > MAX_ETH_MSG) || (total_len < 0)) {
 		total_len = MAX_ETH_MSG;
+	}
 
 	// Allocate buffer to store received packet
 	p = pbuf_alloc(PBUF_RAW, total_len, PBUF_POOL);
@@ -282,15 +286,16 @@ void ethernetif_recv(struct netif *netif, int total_len)
 	}
 
 	// Copy received packet to scatter list from wrapper rx skb
-  	//printf("\n\rwlan:%c: Recv sg_len: %d, tot_len:%d", netif->name[1],sg_len, total_len);
+	//printf("\n\rwlan:%c: Recv sg_len: %d, tot_len:%d", netif->name[1],sg_len, total_len);
 #if CONFIG_WLAN
 	rltk_wlan_recv(netif_get_idx(netif), sg_list, sg_len);
 #elif CONFIG_INIC_HOST
 	rltk_inic_recv(sg_list, sg_len);
 #endif
 	// Pass received packet to the interface
-	if (ERR_OK != netif->input(p, netif))
+	if (ERR_OK != netif->input(p, netif)) {
 		pbuf_free(p);
+	}
 }
 
 /**
@@ -311,17 +316,18 @@ err_t ethernetif_init_rtk(struct netif *netif)
 
 #if LWIP_NETIF_HOSTNAME
 	/* Initialize interface hostname */
-	if (netif->name[1] == '0')
+	if (netif->name[1] == '0') {
 		netif->hostname = "lwip0";
-	else if (netif->name[1] == '1')
+	} else if (netif->name[1] == '1') {
 		netif->hostname = "lwip1";
-#endif /* LWIP_NETIF_HOSTNAME */
+	}
+#endif							/* LWIP_NETIF_HOSTNAME */
 
 	netif->output = etharp_output;
 #if LWIP_IPV6
 	netif->output_ip6 = ethip6_output;
 #endif
-	netif->linkoutput = (netif_linkoutput_fn)low_level_output;
+	netif->linkoutput = (netif_linkoutput_fn) low_level_output;
 
 //typedef err_t (*netif_linkoutput_fn)(struct netif * netif, struct pbuf * p);
 

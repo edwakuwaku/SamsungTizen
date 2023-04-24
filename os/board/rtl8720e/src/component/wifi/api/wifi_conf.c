@@ -29,7 +29,7 @@
 extern struct netif xnetif[NET_IF_NUM];
 #endif
 
-extern Rltk_wlan_t	rltk_wlan_info[NET_IF_NUM];
+extern Rltk_wlan_t rltk_wlan_info[NET_IF_NUM];
 
 /******************************************************
  *               Variables Definitions
@@ -76,7 +76,7 @@ static void _my_free(void *pbuf)
 static int _my_random(void *p_rng, unsigned char *output, size_t output_len)
 {
 	/* To avoid gcc warnings */
-	(void) p_rng;
+	(void)p_rng;
 
 	rtw_get_random_bytes(output, output_len);
 	return 0;
@@ -84,27 +84,27 @@ static int _my_random(void *p_rng, unsigned char *output, size_t output_len)
 
 static void _wifi_join_status_indicate(rtw_join_status_t join_status)
 {
-	/* step 1: internal process for different status*/
+	/* step 1: internal process for different status */
 	if (join_status == RTW_JOINSTATUS_SUCCESS) {
 #if defined(CONFIG_LWIP_LAYER) && CONFIG_LWIP_LAYER
 		LwIP_netif_set_link_up(0);
 #endif
 
-		/* if not use fast dhcp, store fast connect info to flash when connect successfully*/
+		/* if not use fast dhcp, store fast connect info to flash when connect successfully */
 #if !(defined(CONFIG_FAST_DHCP) && CONFIG_FAST_DHCP)
 		if (p_store_fast_connect_info) {
 			p_store_fast_connect_info(0, 0);
 		}
 #endif
 
-		/* if Synchronous connection, up sema when connect success*/
+		/* if Synchronous connection, up sema when connect success */
 		if (join_block_param && join_block_param->block) {
 			rtw_up_sema(&join_block_param->join_sema);
 		}
 	}
 
 	if (join_status == RTW_JOINSTATUS_FAIL) {
-		/* if synchronous connection, up sema when connect fail*/
+		/* if synchronous connection, up sema when connect fail */
 		if (join_block_param && join_block_param->block) {
 			rtw_up_sema(&join_block_param->join_sema);
 		}
@@ -114,7 +114,7 @@ static void _wifi_join_status_indicate(rtw_join_status_t join_status)
 #if defined(CONFIG_LWIP_LAYER) && CONFIG_LWIP_LAYER
 		LwIP_DHCP_stop(0);
 #if LWIP_AUTOIP
-		/*delete auto ip process for conflict with dhcp*/
+		/*delete auto ip process for conflict with dhcp */
 		//LwIP_AUTOIP_STOP(0);
 #endif
 		LwIP_netif_set_link_down(0);
@@ -123,7 +123,7 @@ static void _wifi_join_status_indicate(rtw_join_status_t join_status)
 
 	rtw_join_status = join_status;
 
-	/* step 2: execute user callback to process join_status*/
+	/* step 2: execute user callback to process join_status */
 	if (p_wifi_joinstatus_user_callback) {
 		p_wifi_joinstatus_user_callback(join_status);
 	}
@@ -139,7 +139,7 @@ int wifi_connect(rtw_network_info_t *connect_param, unsigned char block)
 		return RTW_ERROR;
 	}
 
-	/* step1: check if there's ongoing connect*/
+	/* step1: check if there's ongoing connect */
 	if ((rtw_join_status > RTW_JOINSTATUS_UNKNOWN) && (rtw_join_status < RTW_JOINSTATUS_SUCCESS)) {
 		RTW_API_INFO("\nthere is ongoing wifi connect!");
 		return RTW_BUSY;
@@ -157,9 +157,9 @@ int wifi_connect(rtw_network_info_t *connect_param, unsigned char block)
 	rtw_join_status = RTW_JOINSTATUS_STARTING;
 	_wifi_join_status_indicate(RTW_JOINSTATUS_STARTING);
 
-	/* step2: malloc and set synchronous connection related variables*/
+	/* step2: malloc and set synchronous connection related variables */
 	if (block) {
-		block_param = (internal_join_block_param_t *)rtw_zmalloc(sizeof(internal_join_block_param_t));
+		block_param = (internal_join_block_param_t *) rtw_zmalloc(sizeof(internal_join_block_param_t));
 		if (!block_param) {
 			result = (rtw_result_t) RTW_NOMEM;
 			rtw_join_status = RTW_JOINSTATUS_FAIL;
@@ -174,14 +174,14 @@ int wifi_connect(rtw_network_info_t *connect_param, unsigned char block)
 		}
 	}
 
-	/* step3: set connect cmd to driver*/
+	/* step3: set connect cmd to driver */
 	result = rtw_joinbss_start_api(connect_param);
 	if (result != RTW_SUCCESS) {
 		rtw_join_status = RTW_JOINSTATUS_FAIL;
 		goto error;
 	}
 
-	/* step4: wait connect finished for synchronous connection*/
+	/* step4: wait connect finished for synchronous connection */
 	if (block) {
 		join_block_param = block_param;
 
@@ -211,7 +211,7 @@ error:
 		if (block_param->join_sema) {
 			rtw_free_sema(&block_param->join_sema);
 		}
-		rtw_free((u8 *)block_param);
+		rtw_free((u8 *) block_param);
 		join_block_param = NULL;
 	}
 
@@ -221,6 +221,7 @@ error:
 
 	return result;
 }
+
 //----------------------------------------------------------------------------//
 int wifi_disconnect(void)
 {
@@ -228,9 +229,9 @@ int wifi_disconnect(void)
 
 	//set MAC address last byte to 1 since driver will filter the mac with all 0x00 or 0xff
 	//add extra 2 zero byte for check of #@ in wext_set_bssid()
-	const __u8 null_bssid[ETH_ALEN + 2] = {0, 0, 0, 0, 0, 1, 0, 0};
+	const __u8 null_bssid[ETH_ALEN + 2] = { 0, 0, 0, 0, 0, 1, 0, 0 };
 
-	if (rtw_joinbss_set_bssid(STA_WLAN_INDEX, (__u8 *)null_bssid) < 0) {
+	if (rtw_joinbss_set_bssid(STA_WLAN_INDEX, (__u8 *) null_bssid) < 0) {
 		RTW_API_INFO("\n\rWEXT: Failed to set bogus BSSID to disconnect");
 		ret = -1;
 	}
@@ -258,7 +259,7 @@ _WEAK void wifi_set_user_config(void)
 	wifi_user_config.rtw_adaptivity_th_l2h_ini = 0;
 	//trp
 	wifi_user_config.rtw_tx_pwr_lmt_enable = 2;	// 0: disable, 1: enable, 2: Depend on efuse(flash)
-	wifi_user_config.rtw_tx_pwr_by_rate	= 2;	// 0: disable, 1: enable, 2: Depend on efuse(flash)
+	wifi_user_config.rtw_tx_pwr_by_rate = 2;	// 0: disable, 1: enable, 2: Depend on efuse(flash)
 	wifi_user_config.rtw_trp_tis_cert_en = RTW_TRP_TIS_DISABLE;
 
 #ifdef CONFIG_SAE_SUPPORT
@@ -271,7 +272,7 @@ _WEAK void wifi_set_user_config(void)
 
 	/* power save */
 	wifi_user_config.lps_dtim = 0;
-	wifi_user_config.lps_enter_threshold = 0; // LPS_THRESH_PKT_COUNT
+	wifi_user_config.lps_enter_threshold = 0;	// LPS_THRESH_PKT_COUNT
 
 	wifi_user_config.rtw_power_mgnt = PS_MODE_MIN;
 #if defined(CONFIG_LPS_PG)
@@ -284,13 +285,13 @@ _WEAK void wifi_set_user_config(void)
 	/* AP */
 	wifi_user_config.bForwardingDisabled = 0;
 
-	wifi_user_config.bAcceptAddbaReq = (u8)_TRUE; // 0:Reject AP's Add BA req, 1:Accept AP's Add BA req.
-	wifi_user_config.bIssueAddbaReq = (u8)_TRUE;
+	wifi_user_config.bAcceptAddbaReq = (u8) _TRUE;	// 0:Reject AP's Add BA req, 1:Accept AP's Add BA req.
+	wifi_user_config.bIssueAddbaReq = (u8) _TRUE;
 #ifdef CONFIG_80211AC_VHT
 	wifi_user_config.ampdu_factor = 0;
 #endif
 
-	wifi_user_config.bCheckDestAddress = (u8)_TRUE;
+	wifi_user_config.bCheckDestAddress = (u8) _TRUE;
 
 	wifi_user_config.ap_compatibilty_enabled = 0x0B;
 
@@ -308,7 +309,7 @@ _WEAK void wifi_set_user_config(void)
 	wifi_user_config.country_code = RTW_COUNTRY_MAX;
 
 	wifi_user_config.auto_reconnect_count = 8;
-	wifi_user_config.auto_reconnect_interval = 5; /* in sec*/
+	wifi_user_config.auto_reconnect_interval = 5;	/* in sec */
 
 	wifi_user_config.skb_num_np = SKB_NUM_NP;
 	wifi_user_config.skb_num_ap = 0;
@@ -337,7 +338,6 @@ static int _wifi_on_boot(void)
 		init_event_callback_list();
 		event_init = 1;
 	}
-
 	// set wifi mib
 	wifi_set_user_config();
 	RTW_API_INFO("\n\rInitializing WIFI ...");
@@ -362,7 +362,6 @@ static int _wifi_on_boot(void)
 	if (wifi_user_config.channel_plan) {
 		wifi_set_chplan(wifi_user_config.channel_plan);
 	}
-
 #if defined(CONFIG_LWIP_LAYER) && CONFIG_LWIP_LAYER
 	LwIP_netif_set_up(STA_WLAN_INDEX);
 #endif
@@ -391,7 +390,6 @@ static int _wifi_on_ap(void)
 		wifi_if2_deinit();
 		return ret;
 	}
-
 #if defined(CONFIG_LWIP_LAYER) && CONFIG_LWIP_LAYER
 	LwIP_netif_set_up(SOFTAP_WLAN_INDEX);
 #endif
@@ -401,7 +399,7 @@ static int _wifi_on_ap(void)
 
 int wifi_on(rtw_mode_t mode)
 {
-	(void) mode;
+	(void)mode;
 	static u32 wifi_boot = 0;
 	int ret = RTW_SUCCESS;
 
@@ -426,7 +424,7 @@ int wifi_off(void)
 
 int wifi_set_mode(rtw_mode_t mode)
 {
-	(void) mode;
+	(void)mode;
 	return 0;
 }
 
@@ -454,9 +452,8 @@ int wifi_start_ap(rtw_softap_info_t *softAP_config)
 		}
 	}
 	if (softAP_config->security_type != RTW_SECURITY_OPEN) {
-		if (softAP_config->password_len <= RTW_MAX_PSK_LEN &&
-			softAP_config->password_len >= RTW_MIN_PSK_LEN) {
-			if (softAP_config->password_len == RTW_MAX_PSK_LEN) { //password_len=64 means pre-shared key, pre-shared key should be 64 hex characters
+		if (softAP_config->password_len <= RTW_MAX_PSK_LEN && softAP_config->password_len >= RTW_MIN_PSK_LEN) {
+			if (softAP_config->password_len == RTW_MAX_PSK_LEN) {	//password_len=64 means pre-shared key, pre-shared key should be 64 hex characters
 				unsigned char i, j;
 				for (i = 0; i < 64; i++) {
 					j = softAP_config->password[i];
@@ -495,7 +492,7 @@ int wifi_start_ap(rtw_softap_info_t *softAP_config)
 	case RTW_SECURITY_WEP_PSK:
 		alg = RTW_ENCODE_ALG_WEP;
 		key_idx = 1;
-		ext_key = (u8 *)softAP_config->password;
+		ext_key = (u8 *) softAP_config->password;
 		ext_key_len = softAP_config->password_len;
 		break;
 	case RTW_SECURITY_WPA2_TKIP_PSK:
@@ -521,7 +518,7 @@ int wifi_start_ap(rtw_softap_info_t *softAP_config)
 		ret = rtw_bss_set_enc(wlan_idx, alg, NULL, 0, key_idx, 0, 0, ext_key, ext_key_len);
 	}
 	if (ret == 0 && ext_key == NULL) {
-		ret = rtw_bss_set_passphrase(wlan_idx, (u8 *)softAP_config->password, softAP_config->password_len);
+		ret = rtw_bss_set_passphrase(wlan_idx, (u8 *) softAP_config->password, softAP_config->password_len);
 	}
 
 	if (ret < 0) {
@@ -533,7 +530,6 @@ open:
 	if (ret < 0) {
 		goto exit;
 	}
-
 #if defined(CONFIG_LWIP_LAYER) && CONFIG_LWIP_LAYER
 	LwIP_netif_set_link_up(wlan_idx);
 #endif
@@ -542,7 +538,6 @@ exit:
 
 	return ret;
 }
-
 
 int wifi_stop_ap(void)
 {
@@ -564,7 +559,6 @@ int wifi_stop_ap(void)
 
 	return RTW_SUCCESS;
 }
-
 
 int wifi_scan_networks(rtw_scan_param_t *scan_param, unsigned char block)
 {
@@ -594,4 +588,4 @@ int wifi_scan_networks(rtw_scan_param_t *scan_param, unsigned char block)
 	return ret;
 }
 
-#endif	//#if CONFIG_WLAN
+#endif							//#if CONFIG_WLAN

@@ -20,7 +20,6 @@
 #endif
 #include "utils/rom/rom_wps_os.h"
 
-
 typedef void *xqueue_handle_t;
 
 typedef long os_time_t;
@@ -82,16 +81,15 @@ int os_get_reltime(struct os_reltime *t);
  * Note: The result is in seconds from Epoch, i.e., in UTC, not in local time
  * which is used by POSIX mktime().
  */
-int os_mktime(int year, int month, int day, int hour, int min, int sec,
-			  os_time_t *t);
+int os_mktime(int year, int month, int day, int hour, int min, int sec, os_time_t *t);
 
 struct os_tm {
-	int sec; /* 0..59 or 60 for leap seconds */
-	int min; /* 0..59 */
-	int hour; /* 0..23 */
-	int day; /* 1..31 */
-	int month; /* 1..12 */
-	int year; /* Four digit year */
+	int sec;					/* 0..59 or 60 for leap seconds */
+	int min;					/* 0..59 */
+	int hour;					/* 0..23 */
+	int day;					/* 1..31 */
+	int month;					/* 1..12 */
+	int year;					/* Four digit year */
 };
 
 int os_gmtime(os_time_t t, struct os_tm *tm);
@@ -100,22 +98,17 @@ int os_gmtime(os_time_t t, struct os_tm *tm);
 
 /* Helpers for handling struct os_reltime */
 
-static inline int os_reltime_before(struct os_reltime *a,
-									struct os_reltime *b)
+static inline int os_reltime_before(struct os_reltime *a, struct os_reltime *b)
 {
 	return os_time_before(a, b);
 }
 
-
-static inline void os_reltime_sub(struct os_reltime *a, struct os_reltime *b,
-								  struct os_reltime *res)
+static inline void os_reltime_sub(struct os_reltime *a, struct os_reltime *b, struct os_reltime *res)
 {
 	os_time_sub(a, b, res);
 }
 
-
-static inline void os_reltime_age(struct os_reltime *start,
-								  struct os_reltime *age)
+static inline void os_reltime_age(struct os_reltime *start, struct os_reltime *age)
 {
 	struct os_reltime now;
 
@@ -123,16 +116,12 @@ static inline void os_reltime_age(struct os_reltime *start,
 	os_reltime_sub(&now, start, age);
 }
 
-
-static inline int os_reltime_expired(struct os_reltime *now,
-									 struct os_reltime *ts,
-									 os_time_t timeout_secs)
+static inline int os_reltime_expired(struct os_reltime *now, struct os_reltime *ts, os_time_t timeout_secs)
 {
 	struct os_reltime age;
 
 	os_reltime_sub(now, ts, &age);
-	return (age.sec > timeout_secs) ||
-		   (age.sec == timeout_secs && age.usec > 0);
+	return (age.sec > timeout_secs) || (age.sec == timeout_secs && age.usec > 0);
 }
 
 /**
@@ -255,13 +244,13 @@ void *os_zalloc(size_t size);
  */
 static inline void *os_calloc(size_t nmemb, size_t size)
 {
-	if (size && nmemb > (~(size_t) 0) / size) {
+	if (size && nmemb > (~(size_t)0) / size) {
 		return NULL;
 	}
 	return os_zalloc(nmemb * size);
 }
-//#endif
 
+//#endif
 
 static inline int os_memcmp_const(const void *a, const void *b, size_t len)
 {
@@ -477,7 +466,7 @@ char *os_strstr(const char *haystack, const char *needle);
  */
 int os_snprintf(char *str, size_t size, const char *format, ...);
 
-#else /* OS_NO_C_LIB_DEFINES */
+#else							/* OS_NO_C_LIB_DEFINES */
 
 #if !defined(CONFIG_PLATFORM_8721D) && !defined(CONFIG_PLATFORM_AMEBAD2) && !defined(CONFIG_PLATFORM_AMEBADPLUS)
 #ifndef os_malloc
@@ -571,12 +560,11 @@ extern char *os_strdup(const char *string_copy_from);
 #endif
 #endif
 
-#endif /* OS_NO_C_LIB_DEFINES */
-
+#endif							/* OS_NO_C_LIB_DEFINES */
 
 static inline void *os_realloc_array(void *ptr, size_t nmemb, size_t size)
 {
-	if (size && nmemb > (~(size_t) 0) / size) {
+	if (size && nmemb > (~(size_t)0) / size) {
 		return NULL;
 	}
 	if (ptr == NULL) {
@@ -586,7 +574,7 @@ static inline void *os_realloc_array(void *ptr, size_t nmemb, size_t size)
 	}
 }
 
-void *os_xqueue_create(unsigned long uxQueueLength, unsigned long uxItemSize) ;
+void *os_xqueue_create(unsigned long uxQueueLength, unsigned long uxItemSize);
 
 int os_xqueue_receive(xqueue_handle_t xQueue, void *const pvBuffer, unsigned long xSecsToWait);
 
@@ -594,5 +582,4 @@ void os_xqueue_delete(xqueue_handle_t xQueue);
 
 int os_xqueue_send(xqueue_handle_t xQueue, const void *const pvItemToQueue, unsigned long xSecsToWait);
 
-
-#endif /* OS_H */
+#endif							/* OS_H */

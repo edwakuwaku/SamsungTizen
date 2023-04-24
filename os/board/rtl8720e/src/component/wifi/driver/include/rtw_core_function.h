@@ -9,13 +9,13 @@ sint rtw_recv_init_priv(struct recv_priv *precvpriv, _adapter *padapter);
 void rtw_recv_free_priv(struct recv_priv *precvpriv);
 union recv_frame *rtw_recv_alloc_frame(_queue *pfree_recv_queue);
 int rtw_recv_free_frame(union recv_frame *precvframe, _queue *pfree_recv_queue);
-void rtw_recv_free_frame_queue(_queue *pframequeue,  _queue *pfree_recv_queue);
+void rtw_recv_free_frame_queue(_queue *pframequeue, _queue *pfree_recv_queue);
 u32 rtw_recv_free_uc_swdec_pending_queue(_adapter *padapter);
 void rtw_recv_free_defrag_queue(PADAPTER padapter, struct sta_info *psta);
 int rtw_recv_tkip_countermeasure(_adapter *padapter);
-sint rtw_recv_frame_chkmic(_adapter *padapter,  union recv_frame *precvframe);
-sint rtw_recv_frame_chkpn(_adapter *padapter,  union recv_frame *precvframe);
-sint rtw_recv_frame_chk_frag_pn(_adapter *padapter,  union recv_frame *precvframe, u8 fragnum);
+sint rtw_recv_frame_chkmic(_adapter *padapter, union recv_frame *precvframe);
+sint rtw_recv_frame_chkpn(_adapter *padapter, union recv_frame *precvframe);
+sint rtw_recv_frame_chk_frag_pn(_adapter *padapter, union recv_frame *precvframe, u8 fragnum);
 union recv_frame *rtw_recv_frame_chk_plaintext(_adapter *padapter, union recv_frame *precv_frame);
 union recv_frame *rtw_recv_frame_defrag(_adapter *padapter, _queue *defrag_q);
 union recv_frame *rtw_recv_frame_chk_defrag(PADAPTER padapter, union recv_frame *precv_frame);
@@ -48,7 +48,7 @@ u8 *rtw_recv_recvframe_pull_tail(union recv_frame *precvframe, sint sz);
 /*-------------------------------------------------------------------------------
 	rtw_xmit.c.
 --------------------------------------------------------------------------------*/
-s32	rtw_xmit_priv_init(struct xmit_priv *pxmitpriv, _adapter *padapter);
+s32 rtw_xmit_priv_init(struct xmit_priv *pxmitpriv, _adapter *padapter);
 void rtw_xmit_priv_free(struct xmit_priv *pxmitpriv);
 void rtw_xmit_open_pktfile(struct sk_buff *pktptr, struct pkt_file *pfile);
 uint rtw_xmit_read_pktfile(struct pkt_file *pfile, u8 *rmem, uint rlen);
@@ -66,11 +66,10 @@ void rtw_xmit_count_stats(PADAPTER padapter, struct xmit_frame *pxmitframe, int 
 s32 rtw_xmit_classifier(_adapter *padapter, struct xmit_frame *pxmitframe);
 int rtw_xmit_mgntframe(_adapter *padapter, struct xmit_frame *pmgntframe);
 int rtw_xmit_entry(struct sk_buff *pkt, struct net_device *pnetdev);
-u8	rtw_xmit_query_short_GI(struct sta_info *psta, u8 bw);
+u8 rtw_xmit_query_short_GI(struct sta_info *psta, u8 bw);
 void rtw_xmit_nulldata(_adapter *padapter, unsigned int power_mode);
 void rtw_xmit_qos_nulldata(_adapter *padapter, unsigned char *da, u16 tid);
 s32 rtw_txframes_pending(_adapter *padapter);
-
 
 /*-------------------------------------------------------------------------------
 	rtw_xmitbuff.c.
@@ -84,8 +83,8 @@ struct xmit_buf *rtw_xmitbuf_alloc(struct xmit_priv *pxmitpriv);
 s32 rtw_xmitbuf_free(struct xmit_priv *pxmitpriv, struct xmit_buf *pxmitbuf);
 struct xmit_buf *rtw_xmitbuf_ext_alloc(struct xmit_priv *pxmitpriv, u32 size);
 s32 rtw_xmitbuf_ext_free(struct xmit_priv *pxmitpriv, struct xmit_buf *pxmitbuf);
-BOOLEAN rtw_xmitbuf_enqueue(IN  struct rtw_tx_ring	*ring, IN  struct xmit_buf *pxmitbuf);
-struct xmit_buf *rtw_xmitbuf_dequeue(IN  struct rtw_tx_ring	*ring);
+BOOLEAN rtw_xmitbuf_enqueue(IN struct rtw_tx_ring *ring, IN struct xmit_buf *pxmitbuf);
+struct xmit_buf *rtw_xmitbuf_dequeue(IN struct rtw_tx_ring *ring);
 
 /*-------------------------------------------------------------------------------
 	rtw_shortcut.c.
@@ -95,7 +94,7 @@ int rtw_recv_get_rx_sc_index(ADAPTER *padapter, unsigned char *hdr);
 int rtw_recv_get_rx_sc_free_entry(ADAPTER *padapter, unsigned char *hdr);
 int rtw_recv_indicatepkt_sc(_adapter *padapter, union recv_frame *precv_frame, int idx);
 int rtw_recv_check_rx_shortcut_path(_adapter *padapter, union recv_frame *precv_frame);
-#endif // RX_SHORTCUT
+#endif							// RX_SHORTCUT
 #ifdef TX_SHORTCUT
 int rtw_get_tx_sc_index(struct sta_info *pstat, unsigned char *hdr);
 int rtw_get_tx_sc_free_entry(struct sta_info *pstat, unsigned char *hdr);
@@ -108,7 +107,7 @@ s32 rtw_xmit_entry_sc(_adapter *padapter, struct sk_buff *pkt);
 void _rtw_init_stainfo(struct sta_info *psta);
 void _rtw_defrag_timer_handler(void *FunctionContext);
 void init_defrag_queue_timer(_adapter *padapter, struct sta_info *psta);
-struct	sta_info *rtw_alloc_stainfo(struct sta_priv *pstapriv, u8 *hwaddr);
+struct sta_info *rtw_alloc_stainfo(struct sta_priv *pstapriv, u8 *hwaddr);
 u32 rtw_free_stainfo(_adapter *padapter, struct sta_info *psta);
 u8 rtw_free_stainfo_hdl(_adapter *padapter, struct cmd_obj *cmd_obj);
 u32 rtw_free_stainfo_enqueue_cmd(_adapter *padapter, struct sta_info *psta);
@@ -126,7 +125,7 @@ void rtw_sta_del_event(_adapter *padapter, unsigned char *MacAddr, unsigned shor
 /*-------------------------------------------------------------------------------
 	rtw_task.c.
 --------------------------------------------------------------------------------*/
-int rtw_if_wifi_create_task(struct task_struct *ptask, const char *name, u32  stack_size, u32 priority, thread_func_t func, void *thctx);
+int rtw_if_wifi_create_task(struct task_struct *ptask, const char *name, u32 stack_size, u32 priority, thread_func_t func, void *thctx);
 void rtw_if_wifi_delete_task(struct task_struct *ptask);
 void rtw_if_wifi_wakeup_task(struct task_struct *ptask);
 
@@ -135,9 +134,9 @@ void rtw_if_wifi_wakeup_task(struct task_struct *ptask);
 --------------------------------------------------------------------------------*/
 void rtw_scan_report_free_remaining_node(struct mlme_priv *pmlmepriv);
 int rtw_scan_start_api(rtw_scan_param_t *scan_param, unsigned char block);
-u8 rtw_scan_start_cmd(_adapter  *padapter, struct sitesurvey_parm *pparm);
+u8 rtw_scan_start_cmd(_adapter *padapter, struct sitesurvey_parm *pparm);
 u8 rtw_scan_cmd_hdl(_adapter *padapter, struct cmd_obj *cmd_obj);
-void rtw_scan_cmd_callback(_adapter	*padapter,  struct cmd_obj *pcmd);
+void rtw_scan_cmd_callback(_adapter *padapter, struct cmd_obj *pcmd);
 void rtw_scan_one_channel(_adapter *padapter);
 int rtw_scan_report_node_process(_adapter *padapter, rtw_scan_report_node_t *new_node);
 int rtw_scan_report_node_sort_and_insert(_adapter *padapter, rtw_scan_report_node_t *new_node);
@@ -148,7 +147,7 @@ void rtw_scan_mbssid_parse(WLAN_BSSID_EX *bssid);
 #endif
 u8 rtw_scan_collect_bss_info(_adapter *padapter, union recv_frame *precv_frame, WLAN_BSSID_EX *bssid);
 void rtw_scan_one_beacon_report(_adapter *padapter, union recv_frame *precv_frame);
-void rtw_scan_done_user_callback(_adapter	*padapter);
+void rtw_scan_done_user_callback(_adapter *padapter);
 void rtw_scan_one_channel_done(_adapter *padapter);
 void rtw_scan_timeout_handler(void *FunctionContext);
 void rtw_scan_timer_hdl(void *FunctionContext);
@@ -164,9 +163,9 @@ void rtw_joinbss_assoc_timer_hdl(void *FunctionContext);
 void rtw_joinbss_done_indicate(_adapter *padapter);
 void rtw_joinbss_result_callback(_adapter *padapter, int join_res);
 void rtw_joinbss_result(_adapter *padapter, int res);
-void rtw_joinbss_cmd_callback(_adapter	*padapter,  struct cmd_obj *pcmd);
+void rtw_joinbss_cmd_callback(_adapter *padapter, struct cmd_obj *pcmd);
 u8 rtw_joinbss_cmd_hdl(_adapter *padapter, struct cmd_obj *cmd_obj);
-u8 rtw_joinbss_cmd(_adapter  *padapter, struct wlan_network *ptgt_network);
+u8 rtw_joinbss_cmd(_adapter *padapter, struct wlan_network *ptgt_network);
 int rtw_joinbss_from_scanned_queue(struct mlme_priv *pmlmepriv);
 u8 rtw_joinbss_start(_adapter *padapter);
 u8 _rtw_joinbss_set_bssid(_adapter *padapter, u8 *bssid);
@@ -219,7 +218,7 @@ void rtw_assoc_resources_free(_adapter *padapter, int lock_scanned_queue);
 	rtw_setkey.c.
 --------------------------------------------------------------------------------*/
 sint rtw_setkey_to_cam(_adapter *padapter, struct security_priv *psecuritypriv, sint keyid, u8 set_tx);
-void rtw_setkey_cmd_callback(_adapter *padapter,  struct cmd_obj *pcmd);
+void rtw_setkey_cmd_callback(_adapter *padapter, struct cmd_obj *pcmd);
 u8 rtw_setkey_clear_stakey(_adapter *padapter, u8 *psta, u8 entry);
 u8 rtw_setkey_set_stakey(_adapter *padapter, u8 *psta, u8 unicast_key);
 u8 rtw_setkey_cmd_hdl(_adapter *padapter, struct cmd_obj *cmd_obj);
@@ -238,15 +237,14 @@ void rtw_psk_ap_send_eapol(_adapter *padapter, struct sta_info *psta, int resend
 void rtw_psk_ap_eapolkey_recvd(_adapter *padapter, struct sta_info *psta);
 void rtw_psk_init(_adapter *padapter, unsigned char *pie, unsigned short ielen);
 void rtw_psk_init_wpa_sta_info(_adapter *padapter, struct sta_info *psta);
-int rtw_psk_tkip_send_mic_failure_report(_adapter *padapter, struct	sta_info *psta);
+int rtw_psk_tkip_send_mic_failure_report(_adapter *padapter, struct sta_info *psta);
 
 /*-------------------------------------------------------------------------------
 	rtw_sae.c.
 --------------------------------------------------------------------------------*/
 #ifdef CONFIG_SAE_SUPPORT
 int rtw_sae_generate_commit_msg(struct sae_data *sae, u8 *own_addr, u8 *peer_addr, enum sae_group_config group_config);
-int rtw_sae_handle_auth(_adapter *padapter, struct sta_info *psta, struct sae_data *sae, u8 *own_addr, u8 *peer_addr,
-						u8 *sae_msg, u32 sae_msg_len, u16 seq_num, u16 status);
+int rtw_sae_handle_auth(_adapter *padapter, struct sta_info *psta, struct sae_data *sae, u8 *own_addr, u8 *peer_addr, u8 *sae_msg, u32 sae_msg_len, u16 seq_num, u16 status);
 struct sae_data *rtw_sae_allocate_instance(_adapter *padapter);
 void rtw_sae_free_instance(_adapter *padapter, const char *reason);
 #endif
@@ -265,7 +263,7 @@ void rtw_wnm_reset_btm_candidate(struct roam_nb_info *pnb);
 void rtw_wnm_reset_btm_cache(_adapter *padapter);
 void rtw_wnm_reset_btm_state(_adapter *padapter);
 void rtw_wnm_issue_action(_adapter *padapter, u8 action, u8 reason, u8 dialog);
-#endif /* CONFIG_RTW_WNM */
+#endif							/* CONFIG_RTW_WNM */
 void wnm_dbg_cmd(_adapter *padapter, char *s);
 #if defined(CONFIG_RTW_WNM) || defined(CONFIG_IEEE80211K)
 void rtw_roam_nb_info_init(_adapter *padapter);
@@ -276,7 +274,7 @@ void rtw_check_peer_btm_cap(_adapter *padapter, struct wlan_network *pcur_networ
 u8 rtw_roam_nb_scan_list_set(_adapter *padapter, struct sitesurvey_parm *pparm);
 u32 rtw_wnm_btm_candidates_survey(_adapter *padapter, u8 *pframe, u32 elem_len, u8 from_btm);
 void sitesurvey_res_reset(_adapter *padapter, struct sitesurvey_parm *pparm);
-#endif /*defined(CONFIG_RTW_WNM) || defined(CONFIG_IEEE80211K) */
+#endif							/*defined(CONFIG_RTW_WNM) || defined(CONFIG_IEEE80211K) */
 
 /*-------------------------------------------------------------------------------
 	rtw_autoreconnect.c.
@@ -292,7 +290,7 @@ u8 rtw_autoreconnect_start(_adapter *padapter, bool continue_by, bool fixed_time
 /*-------------------------------------------------------------------------------
 	rtw_network.c.
 --------------------------------------------------------------------------------*/
-struct wlan_network *rtw_network_alloc(struct	mlme_priv *pmlmepriv);
+struct wlan_network *rtw_network_alloc(struct mlme_priv *pmlmepriv);
 void rtw_network_queue_free(_adapter *dev);
 struct wlan_network *rtw_network_find(_queue *scanned_queue, u8 *addr);
 void rtw_network_update_for_scan(WLAN_BSSID_EX *dst, WLAN_BSSID_EX *src, _adapter *padapter, bool update_ie);
@@ -325,7 +323,7 @@ void rtw_deinit_rm(_adapter *padapter);
 void rtw_rm_enable(_adapter *padapter);
 void rtw_rm_disable(_adapter *padapter);
 void rtw_check_peer_rm_cap(_adapter *padapter, struct wlan_network *pcur_network);
-#endif /* CONFIG_IEEE80211K */
+#endif							/* CONFIG_IEEE80211K */
 
 /*-------------------------------------------------------------------------------
 	rtw_rm_util.c.
@@ -344,7 +342,7 @@ u8 rm_get_bcn_rsni(struct rm_obj *prm, struct wlan_network *pcur_network);
 int rm_get_tx_power(PADAPTER padapter, enum rf_path path, u8 rate, s8 *pwr);
 int rm_get_rx_sensitivity(PADAPTER padapter, enum channel_width bw, u8 rate, s8 *pwr);
 int rm_get_path_a_max_tx_power(_adapter *padapter, s8 *path_a);
-#endif /* CONFIG_IEEE80211K */
+#endif							/* CONFIG_IEEE80211K */
 
 /*-------------------------------------------------------------------------------
 	rtw_rm.c.
@@ -384,9 +382,9 @@ void rtw_roam_nb_discover(_adapter *padapter, u8 bfroce);
 void rm_dbg_list_sta(_adapter *padapter, char *s);
 void rm_dbg_help(_adapter *padapter, char *s);
 struct sta_info *rm_get_sta(_adapter *padapter, u16 aid, u8 *pbssid);
-#endif /* RM_SUPPORT_IWPRIV_DBG */
+#endif							/* RM_SUPPORT_IWPRIV_DBG */
 void rm_dbg_cmd(_adapter *padapter, char *s);
-#endif /* CONFIG_IEEE80211K */
+#endif							/* CONFIG_IEEE80211K */
 
 /*-------------------------------------------------------------------------------
 	rtw_dynamic.c.
@@ -404,7 +402,7 @@ void rtw_dynamic_check_link_status(_adapter *padapter);
 u32 WIFI_PMTimer_GetCount(void);
 u32 WIFI_PMTimer_GetPassTime(u32 start);
 void wifi_performance_print();
-#endif //WIFI_PERFORMANCE_MONITOR
+#endif							//WIFI_PERFORMANCE_MONITOR
 #ifndef CONFIG_AS_INIC_AP
 u32 wifi_heap_size_printt(void);
 #endif
@@ -445,7 +443,7 @@ int rtw_ft_validate_ie_eapol_3(_adapter *padapter, u8 *buf, u32 len);
 int rtw_ft_process_assoc_resp(_adapter *padapter, u8 *pframe, u32 frame_len);
 int rtw_ft_process_auth_resp(_adapter *padapter, u8 *pframe, u32 frame_len);
 int rtw_ft_chk_roaming_candidate(_adapter *padapter, struct wlan_network *competitor);
-void rtw_ft_validate_akm_type(_adapter  *padapter, struct wlan_network *pcur_network);
+void rtw_ft_validate_akm_type(_adapter *padapter, struct wlan_network *pcur_network);
 void rtw_ft_build_eapol_2_ies(_adapter *padapter, OCTET_STRING *EapolKeyMsgSend);
 void rtw_ft_build_auth_req_ies(_adapter *padapter, struct pkt_attrib *pattrib, u8 **pframe);
 u8 rtw_ft_build_assoc_req_ies(_adapter *padapter, u8 is_reassoc, struct pkt_attrib *pattrib, u8 **pframe);
@@ -458,7 +456,7 @@ void rtw_ft_start_clnt_join(_adapter *padapter);
 unsigned int OnAction_ft(_adapter *padapter, union recv_frame *precv_frame);
 void rtw_ft_dbg_cmd(_adapter *padapter, char *s);
 int rtw_ft_process_igtk_subelem(_adapter *padapter, const u8 *igtk_elem, u32 igtk_elem_len);
-#endif /* CONFIG_IEEE80211R */
+#endif							/* CONFIG_IEEE80211R */
 
 /*-------------------------------------------------------------------------------
 	rtw_he.c.
@@ -490,11 +488,11 @@ int rtw_ht_operation_update(_adapter *padapter);
 #ifdef CONFIG_80211AC_VHT
 void rtw_vht_use_default_setting(_adapter *padapter);
 void rtw_process_vht_op_mode_notify(_adapter *padapter, u8 *pframe, PVOID sta);
-u32	rtw_build_vht_op_mode_notify_ie(_adapter *padapter, u8 *pbuf, u8 bw);
-u32	rtw_build_vht_cap_ie(_adapter *padapter, u8 *pbuf);
+u32 rtw_build_vht_op_mode_notify_ie(_adapter *padapter, u8 *pbuf, u8 bw);
+u32 rtw_build_vht_cap_ie(_adapter *padapter, u8 *pbuf);
 u32 rtw_restructure_vht_ie(_adapter *padapter, u8 *in_ie, u8 *out_ie, uint in_len, uint *pout_len);
 unsigned int rtw_on_action_vht(_adapter *padapter, union recv_frame *precv_frame);
-#endif /* CONFIG_80211AC_VHT */
+#endif							/* CONFIG_80211AC_VHT */
 
 /*-------------------------------------------------------------------------------
 	rtw_ips.c.
@@ -556,7 +554,7 @@ void rtw_drv_scan_by_self(_adapter *padapter, u8 reason);
 int rtw_is_desired_network(_adapter *padapter, struct wlan_network *pcur_network_new);
 void rtw_roamimg_info_init(_adapter *padapter);
 int rtw_select_roaming_candidate(struct mlme_priv *mlme);
-#endif /* CONFIG_LAYER2_ROAMING */
+#endif							/* CONFIG_LAYER2_ROAMING */
 
 /*-------------------------------------------------------------------------------
 	rtw_ap.c.
@@ -594,7 +592,7 @@ int rtw_on_beacon_info_check(ADAPTER *Adapter, u8 *pframe, u32 packet_len);
 unsigned int rtw_on_beacon(_adapter *padapter, union recv_frame *precv_frame);
 void rtw_get_bcn_info(struct wlan_network *pcur_network);
 void rtw_ap_issue_beacon(_adapter *padapter);
-int rtw_ap_set_beacon(_adapter *padapter, u8 *pbuf,  int len);
+int rtw_ap_set_beacon(_adapter *padapter, u8 *pbuf, int len);
 int rtw_ap_generate_bcn_ie(_adapter *padapter, u8 *ssid, u16 ssid_len, u8 *ie, u32 max_ie_sz);
 void rtw_ap_update_beacon(_adapter *padapter, u8 ie_id, u8 *oui, u8 tx);
 u8 rtw_ap_tx_beacon_hdl(_adapter *padapter, struct cmd_obj *cmd_obj);
@@ -607,7 +605,7 @@ unsigned int rtw_on_action(_adapter *padapter, union recv_frame *precv_frame);
 unsigned int rtw_on_action_back(_adapter *padapter, union recv_frame *precv_frame);
 #ifdef CONFIG_RTW_WNM
 unsigned int rtw_on_action_wnm(_adapter *padapter, union recv_frame *precv_frame);
-#endif /* CONFIG_RTW_WNM */
+#endif							/* CONFIG_RTW_WNM */
 
 /*-------------------------------------------------------------------------------
 	rtw_addba.c.
@@ -630,7 +628,7 @@ unsigned int rtw_dot11w_on_action_sa_query(_adapter *padapter, union recv_frame 
 u8 rtw_dot11w_sta_timeout_event_callback(_adapter *padapter, struct cmd_obj *cmd_obj);
 void rtw_dot11w_sa_query_timer_hdl(void *FunctionContext);
 void rtw_dot11w_init_expire_timer(_adapter *padapter, struct sta_info *psta);
-u32	rtw_dot11w_BIP_verify(_adapter *padapter, u8 *precvframe);
+u32 rtw_dot11w_BIP_verify(_adapter *padapter, u8 *precvframe);
 sint rtw_dot11w_validate_mgmt(_adapter *padapter, union recv_frame **pprecv_frame);
 #endif
 
@@ -639,7 +637,7 @@ sint rtw_dot11w_validate_mgmt(_adapter *padapter, union recv_frame **pprecv_fram
 --------------------------------------------------------------------------------*/
 int rtw_cmd_filter(struct cmd_priv *pcmdpriv, struct cmd_obj *cmd_obj);
 u32 rtw_enqueue_cmd(struct cmd_priv *pcmdpriv, struct cmd_obj *cmd_obj);
-struct	cmd_obj	*rtw_dequeue_cmd(struct cmd_priv *pcmdpriv);
+struct cmd_obj *rtw_dequeue_cmd(struct cmd_priv *pcmdpriv);
 void rtw_free_cmd_obj(struct cmd_obj *pcmd);
 u8 rtw_cmd_process(_adapter *padapter, void *task);
 void rtw_cmd_resource_free(_adapter *padapter);
@@ -691,7 +689,7 @@ void _write_rfreg(PADAPTER padapter, u8 rfpath, u32 addr, u32 bitmask, u32 val);
 u32 read_rfreg(PADAPTER padapter, u8 rfpath, u32 addr);
 void write_rfreg(PADAPTER padapter, u8 rfpath, u32 addr, u32 val);
 s32 init_mp_priv(PADAPTER padapter);
-VOID MPT_DeInitAdapter(IN PADAPTER	padapter);
+VOID MPT_DeInitAdapter(IN PADAPTER padapter);
 void MPT_PwrCtlDM(PADAPTER padapter, u32 bstart);
 s32 mp_start_test(PADAPTER padapter);
 void mp_stop_test(PADAPTER padapter);
@@ -705,11 +703,11 @@ void mp_init_psd(PADAPTER padapter, struct rtw_point *wrqu);
 void mp_get_point_data_psd(PADAPTER padapter, struct rtw_point *wrqu);
 void mp_restore_psd(PADAPTER padapter, struct rtw_point *wrqu);
 #endif
-u8 MptToMgntRate(IN	u32 MptRateIdx);
+u8 MptToMgntRate(IN u32 MptRateIdx);
 u8 MgntRateToMPTRate(u8 rate);
 u32 mpt_ProQueryCalTxPower(PADAPTER padapter, u8 RfPath);
 int rtfloor(float x);
-void ByteToBit(u8 *out, bool *in, u8	in_size);
+void ByteToBit(u8 *out, bool *in, u8 in_size);
 void CRC16_generator(bool *out, bool *in, u8 in_size);
 void CCK_generator(PRT_PMAC_TX_INFO pPMacTxInfo, PRT_PMAC_PKT_INFO pPMacPktInfo);
 u32 LDPC_parameter_generator(u32 N_pld_int, u32 N_CBPSS, u32 N_SS, u32 R, u32 m_STBC, u32 N_TCB_int);
@@ -720,8 +718,8 @@ void HT_SIG_generator(PRT_PMAC_TX_INFO pPMacTxInfo, PRT_PMAC_PKT_INFO pPMacPktIn
 void VHT_SIG_A_generator(PRT_PMAC_TX_INFO pPMacTxInfo, PRT_PMAC_PKT_INFO pPMacPktInfo);
 void VHT_SIG_B_generator(PRT_PMAC_TX_INFO pPMacTxInfo);
 void VHT_Delimiter_generator(PRT_PMAC_TX_INFO pPMacTxInfo);
-void mp_FA_statistics(PADAPTER	padapter);
-#endif // #ifdef CONFIG_MP_INCLUDED
+void mp_FA_statistics(PADAPTER padapter);
+#endif							// #ifdef CONFIG_MP_INCLUDED
 
 /*-------------------------------------------------------------------------------
 	rtw_promisc.c.
@@ -785,8 +783,8 @@ void rtw_reset_securitypriv(_adapter *padapter);
 u32 rtw_start_drv_threads(_adapter *padapter);
 void rtw_stop_drv_threads(_adapter *padapter);
 
-#endif // _RTW_ADAPTER_DEFINED_H_
-#endif // _RTW_CORE_FUNCTION_H_
+#endif							// _RTW_ADAPTER_DEFINED_H_
+#endif							// _RTW_CORE_FUNCTION_H_
 
 /*-------------------------------------------------------------------------------
 	rtw_skbuff.c: for core, inic and api. Place outside _RTW_CORE_FUNCTION_H_.
@@ -805,4 +803,3 @@ void init_skb_pool(void);
 void deinit_skb_pool(void);
 int skb_fail_get_and_rst(void);
 void skb_fail_inc(void);
-

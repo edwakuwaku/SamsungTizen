@@ -157,10 +157,10 @@ trble_result_e trble_netmgr_init(struct bledev *dev, trble_client_init_config *c
 {
 	printf("[%s : %d]\n", __FILE__, __LINE__);
 	trble_result_e ret = TRBLE_INVALID_ARGS;
-	 if (!wifi_is_running(0)) {
-	 	TRBLE_TEST_ERR("[TRBLE] WiFi is off. Please turn on WiFi first.\n");
-	 	return TRBLE_FAIL;
-	 }
+	if (!wifi_is_running(0)) {
+		TRBLE_TEST_ERR("[TRBLE] WiFi is off. Please turn on WiFi first.\n");
+		return TRBLE_FAIL;
+	}
 #ifdef CONFIG_AMEBALITE_BLE_SCATTERNET
 	if (client != NULL && server != NULL) {
 		ret = rtw_ble_combo_init(client, server);
@@ -212,7 +212,7 @@ trble_result_e trble_netmgr_get_bonded_device(struct bledev *dev, trble_bonded_d
 {
 	int i;
 	trble_result_e ret = rtw_ble_server_get_bonded_device(device_list, device_count);
-	
+
 	if (ret == TRBLE_SUCCESS) {
 		for (i = 0; i < *device_count; i++) {
 			_reverse_mac(device_list[i].bd_addr.mac, NULL);
@@ -255,7 +255,7 @@ trble_result_e trble_netmgr_conn_param_update(struct bledev *dev, trble_conn_han
 trble_result_e trble_netmgr_ioctl(struct bledev *dev, trble_msg_s *msg)
 {
 	trble_result_e ret = TRBLE_UNSUPPORTED;
-	
+
 	if (msg->cmd == TRBLE_MSG_GET_VERSION) {
 		// uint8_t *version = (uint8_t *)msg->data;
 		// temporary remove
@@ -345,7 +345,6 @@ trble_result_e trble_netmgr_operation_write_no_response(struct bledev *dev, trbl
 	return rtw_ble_client_operation_write_no_response(handle, in_data);
 }
 
-
 /*** Peripheral(Server) ***/
 trble_result_e trble_netmgr_get_profile_count(struct bledev *dev, uint16_t *count)
 {
@@ -372,7 +371,7 @@ trble_result_e trble_netmgr_attr_get_data(struct bledev *dev, trble_attr_handle 
 {
 	trble_result_e ret = TRBLE_SUCCESS;
 
-	if (data != NULL && data->data != NULL){
+	if (data != NULL && data->data != NULL) {
 		data->data = rtw_ble_server_att_get_data_ptr(attr_handle);
 		data->length = rtw_ble_server_att_get_length(attr_handle);
 	} else {
@@ -398,7 +397,7 @@ trble_result_e trble_netmgr_get_mac_addr_by_conn_handle(struct bledev *dev, trbl
 {
 	trble_result_e ret = TRBLE_SUCCESS;
 	uint8_t *mac;
-	
+
 	mac = rtw_ble_server_get_mac_address_by_conn_handle(con_handle);
 	if (mac == NULL) {
 		return TRBLE_FAIL;
@@ -413,7 +412,6 @@ trble_result_e trble_netmgr_get_conn_handle_by_addr(struct bledev *dev, uint8_t 
 	*con_handle = rtw_ble_server_get_conn_handle_by_address(bd_addr);
 	return TRBLE_SUCCESS;
 }
-
 
 /*** Advertiser(Broadcaster) ***/
 trble_result_e trble_netmgr_set_adv_data(struct bledev *dev, trble_data *data)

@@ -17,14 +17,13 @@
 #ifndef __OSDEP_SERVICE_LIST_H_
 #define __OSDEP_SERVICE_LIST_H_
 
-
-// struct	__queue	{
-// 	struct	list_head	queue;
-// 	_lock			lock;
+// struct   __queue {
+//  struct  list_head   queue;
+//  _lock           lock;
 // };
 
-// typedef struct	__queue		_queue;
-// typedef struct	list_head	_list;
+// typedef struct   __queue     _queue;
+// typedef struct   list_head   _list;
 
 /*************************** List *******************************/
 
@@ -33,14 +32,14 @@
  * @param[in] list: Pointer to the list to be initialized.
  * @return	  None
  */
-void	rtw_init_listhead(_list *list);
+void rtw_init_listhead(_list *list);
 
 /**
  * @brief  This function tests whether a list is empty.
  * @param[in] phead: Pointer to the list to test.
  * @return	  _TRUE/_FALSE
  */
-uint32_t	rtw_is_list_empty(_list *phead);
+uint32_t rtw_is_list_empty(_list *phead);
 
 /**
  * @brief  This function adds a new entry after "phead" for the list.
@@ -48,7 +47,7 @@ uint32_t	rtw_is_list_empty(_list *phead);
  * @param[in] phead: List head to add it after.
  * @return	  None
  */
-void	rtw_list_insert_head(_list *plist, _list *phead);
+void rtw_list_insert_head(_list *plist, _list *phead);
 
 /**
  * @brief  This function adds a new entry before "phead" for the list.
@@ -56,7 +55,7 @@ void	rtw_list_insert_head(_list *plist, _list *phead);
  * @param[in] phead: List head to add it before.
  * @return	  None
  */
-void	rtw_list_insert_tail(_list *plist, _list *phead);
+void rtw_list_insert_tail(_list *plist, _list *phead);
 
 /**
  * @brief  This function deletes entry from list and reinitialize it.
@@ -64,21 +63,21 @@ void	rtw_list_insert_tail(_list *plist, _list *phead);
  * @return	  None
  * @note	  Caller must check if the list is empty before calling rtw_list_delete
  */
-void	rtw_list_delete(_list *plist);
+void rtw_list_delete(_list *plist);
 /*************************** End List *******************************/
 
-// static __inline _list *get_next(_list	*list)
+// static __inline _list *get_next(_list    *list)
 // {
-// 	return list->next;
+//  return list->next;
 // }
 
-static __inline _list *get_prev(_list	*list)
+static __inline _list *get_prev(_list *list)
 {
 	return list->prev;
 }
 
-// static __inline _list	*get_list_head(_queue	*queue)
+// static __inline _list    *get_list_head(_queue   *queue)
 // {
-// 	return (&(queue->queue));
+//  return (&(queue->queue));
 // }
 #endif

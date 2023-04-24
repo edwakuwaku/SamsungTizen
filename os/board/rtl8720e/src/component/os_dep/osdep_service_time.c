@@ -68,5 +68,3 @@ void rtw_yield_os(void)
 {
 	sched_yield();
 }
-
-

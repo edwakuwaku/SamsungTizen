@@ -48,10 +48,11 @@ extern struct netdev *ameba_nm_dev_wlan1;
 //static
 struct netdev *rtk_get_netdev(int idx)
 {
-	if (idx == 1)
-	    return ameba_nm_dev_wlan1;
-	else
-	    return ameba_nm_dev_wlan0;
+	if (idx == 1) {
+		return ameba_nm_dev_wlan1;
+	} else {
+		return ameba_nm_dev_wlan0;
+	}
 }
 
 /**
@@ -107,12 +108,12 @@ int rltk_wlan_send(int idx, struct eth_drv_sg *sg_list, int sg_len, int total_le
 
 	unsigned int irq_flags = save_and_cli();
 	/*if (rltk_wlan_check_isup(idx)) {
-		wifi_if_tx_inc(idx);
-	} else {
-		DBG_ERR("netif is DOWN");
-		restore_flags(irq_flags);
-		return -1;
-	}*/
+	   wifi_if_tx_inc(idx);
+	   } else {
+	   DBG_ERR("netif is DOWN");
+	   restore_flags(irq_flags);
+	   return -1;
+	   } */
 	restore_flags(irq_flags);
 
 #ifdef CONFIG_TX_ZERO_COPY
@@ -149,7 +150,6 @@ int rltk_wlan_send(int idx, struct eth_drv_sg *sg_list, int sg_len, int total_le
 		ret = -1;
 		goto exit;
 	}
-
 #ifndef CONFIG_TX_ZERO_COPY
 	for (last_sg = &sg_list[sg_len]; sg_list < last_sg; ++sg_list) {
 		rtw_memcpy(skb->tail, (void *)(sg_list->buf), sg_list->len);
@@ -200,18 +200,19 @@ void rltk_wlan_recv(int idx, struct eth_drv_sg *sg_list, int sg_len)
 
 int netif_is_valid_IP(int idx, unsigned char *ip_dest)
 {
-	return 1;//For net manager, always Valid
+	return 1;					//For net manager, always Valid
 }
 
 #ifdef CONFIG_NET_NETMGR
 int get_idx_from_dev(struct netdev *dev)
 {
-	if (!strcmp(WLAN0_NAME, dev->ifname))
+	if (!strcmp(WLAN0_NAME, dev->ifname)) {
 		return 0;
-	else if(!strcmp(WLAN1_NAME, dev->ifname))
+	} else if (!strcmp(WLAN1_NAME, dev->ifname)) {
 		return 1;
-	else
+	} else {
 		return -1;
+	}
 }
 #endif
 #if !defined(CONFIG_MBED_ENABLED)
@@ -232,10 +233,11 @@ int netif_get_hwaddr(int idx_wlan, uint8_t *dev_addr)
 		rtw_printf("[netif_get_hwaddr] get dev fail\n");
 		return -1;
 	}
-	if (netdev_get_hwaddr(dev_tmp, dev_addr, (unsigned char*)IFHWADDRLEN) == 0)
+	if (netdev_get_hwaddr(dev_tmp, dev_addr, (unsigned char *)IFHWADDRLEN) == 0) {
 		return 0;
-	else
+	} else {
 		return -1;
+	}
 }
 #endif
 
@@ -297,8 +299,9 @@ unsigned char *rltk_wlan_get_ip(int idx)
 
 	struct netif *ni = (struct netif *)(((struct netdev_ops *)(dev_tmp)->ops)->nic);
 
-	return (uint8_t *) &(ni->ip_addr);
+	return (uint8_t *)&(ni->ip_addr);
 }
+
 unsigned char *rltk_wlan_get_gw(int idx)
 {
 	struct netdev *dev_tmp = NULL;
@@ -311,7 +314,7 @@ unsigned char *rltk_wlan_get_gw(int idx)
 	}
 
 	struct netif *ni = (struct netif *)(((struct netdev_ops *)(dev_tmp)->ops)->nic);
-	return (uint8_t *) &(ni->gw);
+	return (uint8_t *)&(ni->gw);
 }
 
 unsigned char *rltk_wlan_get_gwmask(int idx)
@@ -326,6 +329,6 @@ unsigned char *rltk_wlan_get_gwmask(int idx)
 	}
 
 	struct netif *ni = (struct netif *)(((struct netdev_ops *)(dev_tmp)->ops)->nic);
-	return (uint8_t *) &(ni->netmask);
+	return (uint8_t *)&(ni->netmask);
 }
 #endif

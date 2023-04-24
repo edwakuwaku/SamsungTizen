@@ -129,23 +129,23 @@ struct twt_control_t {
 		6			0		dictate, suggest different parameter
 		7			0		reject */
 struct twt_req_type_t {
-	u16 protection: 1;		/* 1: request NAV protection during SP */
+	u16 protection: 1;			/* 1: request NAV protection during SP */
 	u16 interval_exp: 5;
-	u16 twt_id: 3;		/* the maximum twt connection between two STAs is 4 */
-	u16 flow_type: 1;		/* 1: unaonunced, 0: aonunced */
-	u16 implict: 1;		/* 1: implicit, 0: explicit. An HE STA negotiate individual TWT agreements shall set the Implicit subfield to 1 */
-	u16 trigger: 1;		/* 1: trigger, 0: no-trigger */
+	u16 twt_id: 3;				/* the maximum twt connection between two STAs is 4 */
+	u16 flow_type: 1;			/* 1: unaonunced, 0: aonunced */
+	u16 implict: 1;				/* 1: implicit, 0: explicit. An HE STA negotiate individual TWT agreements shall set the Implicit subfield to 1 */
+	u16 trigger: 1;				/* 1: trigger, 0: no-trigger */
 	u16 setup_cmd: 3;
 	u16 twt_req: 1;
 };
 
 /* twt_wake_interval = interval_mantissa*2exp(interval_exp) */
 struct twt_ie_other_t {
-	u32 twt_l;	/* low 32bit of target wake time, corresponding to TSF time */
-	u32 twt_h;	/* high 32bit of target wake time, corresponding to TSF time */
+	u32 twt_l;					/* low 32bit of target wake time, corresponding to TSF time */
+	u32 twt_h;					/* high 32bit of target wake time, corresponding to TSF time */
 	unsigned char norminal_wake_duration;
 	u16 interval_mantissa;
-	unsigned char twt_channel;		/* 0: 20MHz */
+	unsigned char twt_channel;	/* 0: 20MHz */
 };
 
 struct twt_ie_t {
@@ -155,4 +155,3 @@ struct twt_ie_t {
 };
 
 #endif
-

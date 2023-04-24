@@ -81,7 +81,6 @@ static int _rtw_arc4random(void)
 #endif
 }
 
-
 int rtw_get_random_bytes(void *buf, u32 len)
 {
 	unsigned int ranbuf;
@@ -110,13 +109,13 @@ u32 rtw_getFreeHeapSize(void)
 void rtw_netif_start_queue(void *pnetdev)
 {
 	/* To avoid gcc warnings */
-	(void) pnetdev;
+	(void)pnetdev;
 }
 
 int rtw_netif_queue_stopped(void *pnetdev)
 {
 	/* To avoid gcc warnings */
-	(void) pnetdev;
+	(void)pnetdev;
 
 	return 0;
 }
@@ -124,13 +123,13 @@ int rtw_netif_queue_stopped(void *pnetdev)
 void rtw_netif_wake_queue(void *pnetdev)
 {
 	/* To avoid gcc warnings */
-	(void) pnetdev;
+	(void)pnetdev;
 }
 
 void rtw_netif_stop_queue(void *pnetdev)
 {
 	/* To avoid gcc warnings */
-	(void) pnetdev;
+	(void)pnetdev;
 }
 
 void rtw_acquire_wakelock(void)
@@ -188,7 +187,7 @@ u32 rtw_atoi(u8 *s)
 	return (num);
 }
 
-int rtw_printf(const char *format,...)
+int rtw_printf(const char *format, ...)
 {
 	int ret = 0;
 #ifdef CONFIG_DEBUG_LWNL80211_VENDOR_DRV_INFO
@@ -204,7 +203,7 @@ int rtw_printf(const char *format,...)
 	return ret;
 }
 
-int rtw_printf_info(const char *format,...)
+int rtw_printf_info(const char *format, ...)
 {
 	va_list ap;
 	int ret = 0;

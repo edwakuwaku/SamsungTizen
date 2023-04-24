@@ -31,7 +31,6 @@
  *  @{
  */
 
-
 #include "rtw_wifi_constants.h"
 #include <platform_stdlib.h>
 #include "rtw_intf_bt.h"
@@ -45,8 +44,6 @@ extern "C" {
 /** @defgroup WIFI_Exported_Constants WIFI Exported Constants
   * @{
   */
-
-
 
 /** @defgroup API_INFO_Defs
    *@{
@@ -65,7 +62,6 @@ extern "C" {
 #define RTW_API_INFO(args)
 #endif
 /** @} */
-
 
 /** @defgroup MAC_Defs
    *@{
@@ -86,7 +82,6 @@ extern "C" {
 #define MAC_FMT			"%02x:%02x:%02x:%02x:%02x:%02x"
 /** @} */
 
-
 /** @defgroup WIFI_MAKEU32_Def
    *@{
    */
@@ -98,7 +93,6 @@ extern "C" {
                                ((u32_t)((c) & 0xff) << 8)  | \
                                 (u32_t)((d) & 0xff))
 /** @} */
-
 
 /** @defgroup SCAN_Defs
    *@{
@@ -123,7 +117,6 @@ extern "C" {
 */
 #define PSCAN_SIMPLE_CONFIG	0x04
 /** @} */
-
 
 /** @defgroup BIT_Def
    *@{
@@ -170,22 +163,21 @@ extern "C" {
 typedef enum {
 	PROBE_REQ = BIT(0),
 	PROBE_RSP = BIT(1),
-	BEACON	  = BIT(2),
+	BEACON = BIT(2),
 	ASSOC_REQ = BIT(3),
 } rtw_custom_ie_type_t;
-#endif /* _CUSTOM_IE_TYPE_ */
+#endif							/* _CUSTOM_IE_TYPE_ */
 
-typedef enum  {
-	WL_BAND_2_4G = 0,   ///<2.4g band
-	WL_BAND_5G,            ///<5g band
-	WL_BAND_2_4G_5G_BOTH, ///<2.4g&5g band
-	WL_BANDMAX  ///< max band
+typedef enum {
+	WL_BAND_2_4G = 0,		///<2.4g band
+	WL_BAND_5G,				///<5g band
+	WL_BAND_2_4G_5G_BOTH,	///<2.4g&5g band
+	WL_BANDMAX				///< max band
 } WL_BAND_TYPE;
 
 /**
   * @}
   */
-
 
 /** @addtogroup Structs
    *@{
@@ -194,24 +186,26 @@ typedef enum  {
  * @brief  The enumeration is join block param.
  */
 typedef struct {
-	void				*join_sema;
-	unsigned int		join_timeout;
-	unsigned char		block;
+	void *join_sema;
+	unsigned int join_timeout;
+	unsigned char block;
 } internal_join_block_param_t;
 
 /**
   * @brief  The structure is used to describe the unique 6-byte MAC address.
   */
 typedef struct {
-	unsigned char octet[6]; /**< Unique 6-byte MAC address */
+	unsigned char octet[6];
+	/**< Unique 6-byte MAC address */
 } rtw_mac_t;
 
 /**
   * @brief  The structure is used to describe the maclist.
   */
 typedef struct {
-	unsigned int    count;         /**< Number of MAC addresses in the list    */
-	rtw_mac_t mac_list[1];   /**< Variable length array of MAC addresses */
+	unsigned int count;		   /**< Number of MAC addresses in the list    */
+	rtw_mac_t mac_list[1];
+	/**< Variable length array of MAC addresses */
 } rtw_maclist_t;
 
 /**
@@ -220,33 +214,34 @@ typedef struct {
   *			channel, atm_window, dtim_period, RSSI e.g.
   */
 typedef struct {
-	unsigned int      version;                ///< version field
-	unsigned int      length;                 ///< byte length of data in this record
+	unsigned int version;	///< version field
+	unsigned int length;	///< byte length of data in this record
 	/* starting at version and including IEs */
-	rtw_mac_t     BSSID;
-	unsigned short      beacon_period;          ///< units are Kusec
-	unsigned short      capability;             ///< Capability information
-	unsigned char       SSID_len;
-	unsigned char       SSID[32];
-	unsigned char       channel;
-	unsigned short      atim_window;            ///< units are Kusec
-	unsigned char       dtim_period;            ///< DTIM period
-	signed short       RSSI;                   ///< receive signal strength (in dBm)
+	rtw_mac_t BSSID;
+	unsigned short beacon_period;	///< units are Kusec
+	unsigned short capability;	///< Capability information
+	unsigned char SSID_len;
+	unsigned char SSID[32];
+	unsigned char channel;
+	unsigned short atim_window;	///< units are Kusec
+	unsigned char dtim_period;	///< DTIM period
+	signed short RSSI;		///< receive signal strength (in dBm)
 
-	unsigned char       n_cap;                  ///< BSS is 802.11N Capable
-	unsigned int      nbss_cap;               ///< 802.11N BSS Capabilities (based on HT_CAP_*)
-	unsigned char       basic_mcs[MCSSET_LEN];  ///< 802.11N BSS required MCS set
+	unsigned char n_cap;	///< BSS is 802.11N Capable
+	unsigned int nbss_cap;	///< 802.11N BSS Capabilities (based on HT_CAP_*)
+	unsigned char basic_mcs[MCSSET_LEN];	///< 802.11N BSS required MCS set
 
-	unsigned short      ie_offset;              ///< offset at which IEs start, from beginning
-	unsigned int      ie_length;             ///< byte length of Information Elements
+	unsigned short ie_offset;	///< offset at which IEs start, from beginning
+	unsigned int ie_length;	///< byte length of Information Elements
 } rtw_bss_info_t;
 
 /**
   * @brief  The structure is used to describe the SSID.
   */
 typedef struct {
-	unsigned char len;     /**< SSID length */
-	unsigned char val[33]; /**< SSID name (AP name)  */
+	unsigned char len; /**< SSID length */
+	unsigned char val[33];
+	/**< SSID name (AP name)  */
 } rtw_ssid_t;
 
 typedef int (*wifi_do_fast_connect_ptr)(void);
@@ -262,12 +257,12 @@ typedef void (*rtw_joinstatus_callback_t)(rtw_join_status_t join_status);
   *        and the data length of string pointed by password should not exceed 64.
   */
 typedef struct {
-	rtw_ssid_t 			ssid;
-	unsigned char		hidden_ssid;
-	rtw_security_t		security_type;
-	unsigned char 		*password;
-	unsigned char 		password_len;
-	unsigned char		channel;
+	rtw_ssid_t ssid;
+	unsigned char hidden_ssid;
+	rtw_security_t security_type;
+	unsigned char *password;
+	unsigned char password_len;
+	unsigned char channel;
 } rtw_softap_info_t;
 
 /**
@@ -282,31 +277,31 @@ typedef struct {
   * 	   set to 0 means do normal scan on the specified channel or full channel.
   */
 typedef struct {
-	rtw_ssid_t					ssid;
-	rtw_mac_t					bssid;
-	rtw_security_t				security_type;
-	unsigned char				*password;
-	int 						password_len;
-	int 						key_id;
-	unsigned char				channel;		/**< set to 0 means full channel scan, set to other value means only scan on the specified channel */
-	unsigned char				pscan_option;	/**< used when the specified channel is set, set to 0 for normal partial scan, set to PSCAN_FAST_SURVEY for fast survey*/
-	rtw_joinstatus_callback_t	joinstatus_user_callback;	/**< user callback for processing joinstatus, please set to NULL if not use it */
+	rtw_ssid_t ssid;
+	rtw_mac_t bssid;
+	rtw_security_t security_type;
+	unsigned char *password;
+	int password_len;
+	int key_id;
+	unsigned char channel;					/**< set to 0 means full channel scan, set to other value means only scan on the specified channel */
+	unsigned char pscan_option;				/**< used when the specified channel is set, set to 0 for normal partial scan, set to PSCAN_FAST_SURVEY for fast survey*/
+	rtw_joinstatus_callback_t joinstatus_user_callback;	/**< user callback for processing joinstatus, please set to NULL if not use it */
 } rtw_network_info_t;
 
 /**
   * @brief  The structure is used to store the WIFI setting gotten from WIFI driver.
   */
 typedef struct {
-	rtw_mode_t			mode;   /**< the mode of current wlan interface */
-	unsigned char 		ssid[33];   /**< the ssid of connected AP or softAP */
-	unsigned char		bssid[6];   /**< the bssid of connected AP or softAP */
-	unsigned char		channel;
-	rtw_security_t		security_type;   /**< the security type of connected AP or softAP */
-	unsigned char 		password[65];   /**< the password of connected AP or softAP */
-	unsigned char		key_idx;
-	unsigned char		iw_mode;	/**< RTK_IW_MODE */
-	unsigned char		alg;		/**< RTW_IW_ENC_ALG */
-	unsigned int		auth_type;
+	rtw_mode_t mode;		/**< the mode of current wlan interface */
+	unsigned char ssid[33];		/**< the ssid of connected AP or softAP */
+	unsigned char bssid[6];		/**< the bssid of connected AP or softAP */
+	unsigned char channel;
+	rtw_security_t security_type;	 /**< the security type of connected AP or softAP */
+	unsigned char password[65];		/**< the password of connected AP or softAP */
+	unsigned char key_idx;
+	unsigned char iw_mode;		/**< RTK_IW_MODE */
+	unsigned char alg;			/**< RTW_IW_ENC_ALG */
+	unsigned int auth_type;
 } rtw_wifi_setting_t;
 
 extern rtw_wifi_setting_t wifi_setting[2];
@@ -314,7 +309,7 @@ extern rtw_wifi_setting_t wifi_setting[2];
 /**
   * @brief  The structure is used to describe the wifi user configuration
   */
-struct  wifi_user_conf {
+struct wifi_user_conf {
 	unsigned char rtw_adaptivity_en;
 	unsigned char rtw_adaptivity_mode;
 	unsigned char rtw_adaptivity_th_l2h_ini;
@@ -346,16 +341,16 @@ struct  wifi_user_conf {
 
 	unsigned char ampdu_factor;	///for vht capability IE
 
-	unsigned char bCheckDestAddress; ///< 0: don't check dest mac and ip address for station, 1: check dest mac and ip address for station
+	unsigned char bCheckDestAddress;	///< 0: don't check dest mac and ip address for station, 1: check dest mac and ip address for station
 
 	/*
-	The ap_compatibilty_enabled is used to configure the wlan settings, each bit controls one aspect.
-	bit 0: (0: follow 802.11 spec, do not issue deauth, 1(default): issue deauth in 1st REAUTH_TO to be compatible with ap)
-	bit 1: (0: do not check beacon info to connect with AP with multiple SSID, 1(default): check beacon info)
-	bit 2: (0(default): do not issue deauth at start of auth, 1: issue deauth at start of auth)
-	bit 3: (0: do not switch WEP auth algo unless WLAN_STATUS_NOT_SUPPORTED_AUTH_ALG, 1(default): switch WEP auth algo from shared key to open system in 1st REAUTH_TO)
-	other bits: reserved
-	*/
+	   The ap_compatibilty_enabled is used to configure the wlan settings, each bit controls one aspect.
+	   bit 0: (0: follow 802.11 spec, do not issue deauth, 1(default): issue deauth in 1st REAUTH_TO to be compatible with ap)
+	   bit 1: (0: do not check beacon info to connect with AP with multiple SSID, 1(default): check beacon info)
+	   bit 2: (0(default): do not issue deauth at start of auth, 1: issue deauth at start of auth)
+	   bit 3: (0: do not switch WEP auth algo unless WLAN_STATUS_NOT_SUPPORTED_AUTH_ALG, 1(default): switch WEP auth algo from shared key to open system in 1st REAUTH_TO)
+	   other bits: reserved
+	 */
 	unsigned char ap_compatibilty_enabled;
 
 	unsigned char max_roaming_times;
@@ -366,57 +361,57 @@ struct  wifi_user_conf {
 
 	unsigned char country_code;
 
-	/*for auto reconnect*/
+	/*for auto reconnect */
 	unsigned char auto_reconnect_count;
-	unsigned char auto_reconnect_interval; // in sec
+	unsigned char auto_reconnect_interval;	// in sec
 
-	/*wifi driver's trx buffer number, each skb occupies about 1.8K bytes of heap, a little difference between different chips*/
-	int skb_num_np;/*In INIC mode for all traffics except tx data, In single core mode for all traffics*/
-	int skb_num_ap;/*In INIC mode for tx data packtes, not used in single core mode*/
+	/*wifi driver's trx buffer number, each skb occupies about 1.8K bytes of heap, a little difference between different chips */
+	int skb_num_np;			/*In INIC mode for all traffics except tx data, In single core mode for all traffics */
+	int skb_num_ap;			/*In INIC mode for tx data packtes, not used in single core mode */
 
 	/* for RTS/CTS */
 	unsigned char cts2self;
 
 	/* for MCC */
 	unsigned char en_mcc;
-} ;
+};
 
-extern  struct wifi_user_conf wifi_user_config;
+extern struct wifi_user_conf wifi_user_config;
 
 /**
   * @brief  The structure is used to describe the psk info
   */
 struct psk_info {
-	unsigned char index;                  ///<  index
-	unsigned char psk_essid[32 + 4]; ///< refer to NDIS_802_11_LENGTH_SSID + 4
-	unsigned char psk_passphrase[64 + 1]; ///< refer to IW_PASSPHRASE_MAX_SIZE + 1
-	unsigned char wpa_global_PSK[20 * 2]; ///< refer to A_SHA_DIGEST_LEN * 2
+	unsigned char index;	///<  index
+	unsigned char psk_essid[32 + 4];	///< refer to NDIS_802_11_LENGTH_SSID + 4
+	unsigned char psk_passphrase[64 + 1];	///< refer to IW_PASSPHRASE_MAX_SIZE + 1
+	unsigned char wpa_global_PSK[20 * 2];	///< refer to A_SHA_DIGEST_LEN * 2
 };
 
 /**
   * @brief  The structure is used to describe the sw statistics
   */
-typedef struct { /* software statistics for tx and rx*/
-	unsigned long   rx_packets;             /*!< total packets received       */
-	unsigned long   tx_packets;             /*!<total packets transmitted    */
-	unsigned long   rx_dropped;             /*!< no space in buffers    */
-	unsigned long   tx_dropped;             /*!< no space available  */
-	unsigned long   rx_bytes;               /*!< total bytes received         */
-	unsigned long   tx_bytes;               /*!< total bytes transmitted      */
-	unsigned long   rx_overflow;            /*!< rx fifo overflow count       */
-	unsigned int    max_skbbuf_used_number; /*!< max skb buffer used number       */
-	unsigned int    skbbuf_used_number;     /*!< current used skbbuf number       */
-	unsigned int    max_skbdata_used_number;/*!< max skb data used number       */
-	unsigned int    skbdata_used_number;    /*!< current used skbdata number       */
+typedef struct {			/* software statistics for tx and rx */
+	unsigned long rx_packets;	/*!< total packets received       */
+	unsigned long tx_packets;	/*!<total packets transmitted    */
+	unsigned long rx_dropped;	/*!< no space in buffers    */
+	unsigned long tx_dropped;	/*!< no space available  */
+	unsigned long rx_bytes;	/*!< total bytes received         */
+	unsigned long tx_bytes;	/*!< total bytes transmitted      */
+	unsigned long rx_overflow;	/*!< rx fifo overflow count       */
+	unsigned int max_skbbuf_used_number;	/*!< max skb buffer used number       */
+	unsigned int skbbuf_used_number;	/*!< current used skbbuf number       */
+	unsigned int max_skbdata_used_number;	/*!< max skb data used number       */
+	unsigned int skbdata_used_number;	/*!< current used skbdata number       */
 } rtw_sw_statistics_t;
 
 /**
   * @brief  The structure is used to describe the phy statistics
   */
 typedef struct {
-	signed char rssi;          /*!<average rssi in 1 sec */
-	signed char snr;          /*!< average snr in 1 sec (not include cck rate)*/
-	/* todo*/
+	signed char rssi;		/*!<average rssi in 1 sec */
+	signed char snr;		/*!< average snr in 1 sec (not include cck rate) */
+	/* todo */
 	unsigned int false_alarm_cck;
 	unsigned int false_alarm_ofdm;
 	unsigned int cca_cck;
@@ -430,32 +425,32 @@ typedef struct {
 * @brief channel scan time
 */
 typedef struct {
-	unsigned short active_scan_time;      /*!< active scan time per channel, units: millisecond, default is 100ms */
-	unsigned short passive_scan_time;     /*!< passive scan time per channel, units: millisecond, default is 110ms */
+	unsigned short active_scan_time;	/*!< active scan time per channel, units: millisecond, default is 100ms */
+	unsigned short passive_scan_time;	/*!< passive scan time per channel, units: millisecond, default is 110ms */
 } rtw_channel_scan_time_t;
 
 /**
   * @brief  The structure is used to describe the scan result of the AP.
   */
 typedef struct {
-	rtw_ssid_t              SSID;             /**< Service Set Identification (i.e. Name of Access Point)                    */
-	rtw_mac_t               BSSID;            /**< Basic Service Set Identification (i.e. MAC address of Access Point)       */
-	signed short		                  signal_strength;  /**< Receive Signal Strength Indication in dBm. <-90=Very poor, >-30=Excellent */
-	rtw_bss_type_t          bss_type;         /**< Network type                                                              */
-	rtw_security_t          security;         /**< Security type                                                             */
-	rtw_wps_type_t          wps_type;         /**< WPS type                                                                  */
-	unsigned int                      channel;          /**< Radio channel that the AP beacon was received on                          */
-	rtw_802_11_band_t       band;             /**< Radio band                                                                */
+	rtw_ssid_t SSID;					  /**< Service Set Identification (i.e. Name of Access Point)                    */
+	rtw_mac_t BSSID;					  /**< Basic Service Set Identification (i.e. MAC address of Access Point)       */
+	signed short signal_strength;						/**< Receive Signal Strength Indication in dBm. <-90=Very poor, >-30=Excellent */
+	rtw_bss_type_t bss_type;			  /**< Network type                                                              */
+	rtw_security_t security;			  /**< Security type                                                             */
+	rtw_wps_type_t wps_type;			  /**< WPS type                                                                  */
+	unsigned int channel;							/**< Radio channel that the AP beacon was received on                          */
+	rtw_802_11_band_t band;				  /**< Radio band                                                                */
 } rtw_scan_result_t;
 
 typedef struct rtw_scan_handler_result {
-    rtw_scan_result_t ap_details;
-    rtw_bool_t        scan_complete;
-    void*               user_data;
+	rtw_scan_result_t ap_details;
+	rtw_bool_t scan_complete;
+	void *user_data;
 } rtw_scan_handler_result_t;
 
-typedef rtw_result_t (*scan_user_callback_t)(unsigned int ap_num, void *user_data);
-typedef rtw_result_t (*scan_report_each_mode_user_callback_t)(rtw_scan_result_t *scanned_ap_info, void *user_data);
+typedef rtw_result_t(*scan_user_callback_t)(unsigned int ap_num, void *user_data);
+typedef rtw_result_t(*scan_report_each_mode_user_callback_t)(rtw_scan_result_t *scanned_ap_info, void *user_data);
 
 /**
   * @brief  The structure is used to describe the scan parameters used for scan,
@@ -463,28 +458,29 @@ typedef rtw_result_t (*scan_report_each_mode_user_callback_t)(rtw_scan_result_t 
   *        and the data length of string pointed by password should not exceed 64.
   */
 typedef struct {
-	rtw_scan_option_t						options;
-	char									*ssid;
-	unsigned char							*channel_list;
-	unsigned char							channel_list_num;
-	rtw_channel_scan_time_t 				chan_scan_time;
-	unsigned short							max_ap_record_num;     /**< config the max number of recorded AP, when set to 0, use default value 64 */
-	void									*scan_user_data;
-	scan_user_callback_t					scan_user_callback;   /**< used for normal asynchronized mode */
-	scan_report_each_mode_user_callback_t	scan_report_each_mode_user_callback; /*used for RTW_SCAN_REPORT_EACH mode */
+	rtw_scan_option_t options;
+	char *ssid;
+	unsigned char *channel_list;
+	unsigned char channel_list_num;
+	rtw_channel_scan_time_t chan_scan_time;
+	unsigned short max_ap_record_num;						   /**< config the max number of recorded AP, when set to 0, use default value 64 */
+	void *scan_user_data;
+	scan_user_callback_t scan_user_callback;				  /**< used for normal asynchronized mode */
+	scan_report_each_mode_user_callback_t scan_report_each_mode_user_callback;	/*used for RTW_SCAN_REPORT_EACH mode */
 } rtw_scan_param_t;
 
 /**
   * @brief  The structure is used to describe the data description
   */
 typedef struct {
-	unsigned char wlan_idx;      /**< index of wlan interface which will transmit */
-	unsigned char *buf;          /**< poninter of buf where raw data is stored*/
-	unsigned short buf_len;      /**< the length of raw data*/
-	unsigned short flags;        /**< send options*/
-	unsigned char tx_rate;       /**< specific tx rate, please refer to enum MGN_RATE in wifi_constants.h*/
-	unsigned char retry_limit;   /**< retry limit configure, when set to 0, will use default retry limit 12*/
-	/* todo*/
+	unsigned char wlan_idx;	 /**< index of wlan interface which will transmit */
+	unsigned char *buf;		 /**< poninter of buf where raw data is stored*/
+	unsigned short buf_len;	 /**< the length of raw data*/
+	unsigned short flags;	 /**< send options*/
+	unsigned char tx_rate;	 /**< specific tx rate, please refer to enum MGN_RATE in wifi_constants.h*/
+	unsigned char retry_limit;
+	/**< retry limit configure, when set to 0, will use default retry limit 12*/
+	/* todo */
 	unsigned int tx_power;
 } raw_data_desc_t;
 
@@ -492,10 +488,10 @@ typedef struct {
   * @brief  The structure is used to set WIFI packet filter pattern.
   */
 typedef struct {
-	unsigned short	offset;     ///< Offset in bytes to start filtering (referenced to the start of the ethernet packet)
-	unsigned short	mask_size;  ///< Size of the mask in bytes
-	unsigned char	*mask;       ///< Pattern mask bytes to be ANDed with the pattern eg. "\xff00" (must be in network byte order)
-	unsigned char	*pattern;    ///< Pattern bytes used to filter eg. "\x0800"  (must be in network byte order)
+	unsigned short offset;	///< Offset in bytes to start filtering (referenced to the start of the ethernet packet)
+	unsigned short mask_size;	///< Size of the mask in bytes
+	unsigned char *mask;	///< Pattern mask bytes to be ANDed with the pattern eg. "\xff00" (must be in network byte order)
+	unsigned char *pattern;	///< Pattern bytes used to filter eg. "\x0800"  (must be in network byte order)
 } rtw_packet_filter_pattern_t;
 
 /**
@@ -544,10 +540,10 @@ typedef struct {
 	rtw_csi_action act;
 	rtw_csi_accuracy accuracy;
 	unsigned char enable;
-	unsigned char trig_period;  /* unit:ms*/
+	unsigned char trig_period;	/* unit:ms */
 	unsigned char data_rate;
 	unsigned char mac_addr[6];
-	unsigned char multi_type;/* 0&1 for multi sta CSI */
+	unsigned char multi_type;	/* 0&1 for multi sta CSI */
 } rtw_csi_action_parm_t;
 
 #if defined CONFIG_RTL8735B || defined __DOXYGEN__
@@ -612,28 +608,28 @@ typedef struct _cus_ie {
 	__u8 *ie;
 	__u8 type;
 } rtw_custom_ie_t, *p_rtw_custom_ie_t;
-#endif /* _CUS_IE_ */
+#endif							/* _CUS_IE_ */
 
 /**
  * @brief  The structure is used to describe net device
  */
 struct net_device {
-	void			*priv;		/* pointer to private data */
-	unsigned char		dev_addr[6];	/* set during bootup */
-	int	(*hard_start_xmit)(struct sk_buff *skb, struct net_device *dev);
+	void *priv;				/* pointer to private data */
+	unsigned char dev_addr[6];	/* set during bootup */
+	int (*hard_start_xmit)(struct sk_buff *skb, struct net_device *dev);
 };
 
 /**
  * @brief  The structure is used to describe wlan info
  */
 typedef struct {
-	struct net_device	dev;		/* Binding wlan driver netdev */
-	void			*skb;		/* pending Rx packet */
-	unsigned int		tx_busy;
-	unsigned int		rx_busy;
-	unsigned char		enable;
-	unsigned char		mac[6];
-	_sema			netif_rx_sema;	/* prevent race condition on .skb in rltk_netif_rx() */
+	struct net_device dev;	/* Binding wlan driver netdev */
+	void *skb;				/* pending Rx packet */
+	unsigned int tx_busy;
+	unsigned int rx_busy;
+	unsigned char enable;
+	unsigned char mac[6];
+	_sema netif_rx_sema;	/* prevent race condition on .skb in rltk_netif_rx() */
 } Rltk_wlan_t;
 
 extern Rltk_wlan_t rltk_wlan_info[NET_IF_NUM];
@@ -650,13 +646,9 @@ extern Rltk_wlan_t rltk_wlan_info[NET_IF_NUM];
 * @}
 */
 
-
-
 /** @defgroup WIFI_Exported_Functions WIFI Exported Functions
   * @{
   */
-
-
 
 /** @defgroup Basic_Functions
   * @{
@@ -889,7 +881,6 @@ int wifi_start_ap(rtw_softap_info_t *softAP_config);
  */
 int wifi_stop_ap(void);
 
-
 /**
  * @brief  Get the associated clients with SoftAP.
  * @param[out]  client_list_buffer: The location where the client
@@ -899,9 +890,7 @@ int wifi_stop_ap(void);
  * @return  RTW_SUCCESS: The result is successfully got.
  * @return  RTW_ERROR: The result is not successfully got.
  */
-int wifi_get_associated_client_list(
-	void			*client_list_buffer,
-	unsigned short	buffer_length);
+int wifi_get_associated_client_list(void *client_list_buffer, unsigned short buffer_length);
 
 /**
  * @brief  delete a STA
@@ -958,7 +947,6 @@ int wifi_set_network_mode(rtw_network_mode_t mode);
   * @}
   */
 
-
 /** @defgroup Extended_Functions
   * @{
   */
@@ -984,10 +972,7 @@ int wifi_set_network_mode(rtw_network_mode_t mode);
  * @note  This function can implement vendor specified simple configure.
  * @note  To fetch Ethernet frames, the len_used should be set to 1
  */
-int wifi_set_promisc(
-	rtw_rcr_level_t	enabled,
-	void	(*callback)(unsigned char *, unsigned int, void *),
-	unsigned char	len_used);
+int wifi_set_promisc(rtw_rcr_level_t enabled, void (*callback)(unsigned char *, unsigned int, void *), unsigned char len_used);
 
 /**
  * @brief  Let Wi-Fi enter promiscuous mode.
@@ -1017,10 +1002,7 @@ void wifi_init_packet_filter(void);
  * @return  0 if success, otherwise return -1.
  * @note  For now, the maximum number of filters is 5.
  */
-int wifi_add_packet_filter(
-	unsigned char					filter_id,
-	rtw_packet_filter_pattern_t		*patt,
-	rtw_packet_filter_rule_t		rule);
+int wifi_add_packet_filter(unsigned char filter_id, rtw_packet_filter_pattern_t *patt, rtw_packet_filter_rule_t rule);
 
 /**
  * @brief  Enable the packet filter.
@@ -1084,10 +1066,7 @@ int wifi_retransmit_packet_filter(u8 enable, u8 filter_interval_ms);
  * 	"wifi_filter_by_ap_and_phone_mac(0,NULL,NULL)" before exiting
  * 	promisc mode if you enabled it during the promisc mode.
  */
-void wifi_filter_by_ap_and_phone_mac(
-	u8		enable,
-	void	*ap_mac,
-	void	*phone_mac);
+void wifi_filter_by_ap_and_phone_mac(u8 enable, void *ap_mac, void *phone_mac);
 
 /**
  * @brief  config to report ctrl packet or not under promisc mode.
@@ -1101,7 +1080,6 @@ void wifi_filter_by_ap_and_phone_mac(
  */
 int wifi_promisc_ctrl_packet_rpt(u8 enable);
 #endif
-
 
 /**
  * @brief  check whether current wifi driver is mp or not.
@@ -1216,7 +1194,7 @@ void wifi_set_indicate_mgnt(int enable);
 
 #if defined CONFIG_ANTENNA_DIVERSITY ||defined __DOXYGEN__
 int wifi_get_antenna_info(unsigned char *antenna);
-#endif // #ifdef CONFIG_ANTENNA_DIVERSITY
+#endif							// #ifdef CONFIG_ANTENNA_DIVERSITY
 
 //-------------------------------------------------------------//
 /*
@@ -1236,10 +1214,7 @@ WL_BAND_TYPE wifi_get_band_type(void);
  * @param[in]  channel_num: the number of channel in channel set
  * @return  the selected auto channel
  */
-int wifi_get_auto_chl(
-	unsigned char wlan_idx,
-	unsigned char *channel_set,
-	unsigned char channel_num);
+int wifi_get_auto_chl(unsigned char wlan_idx, unsigned char *channel_set, unsigned char channel_num);
 
 /**
  * @brief	Get wifi TSF register[63:32]&[31:0].
@@ -1259,10 +1234,7 @@ u64 wifi_get_tsf(unsigned char port_id);
  * 	successfully set to wifi driver.
  * @note  this function should be used when operating as AP.
  */
-int wifi_ap_switch_chl_and_inform(
-	unsigned char new_chl,
-	unsigned char chl_switch_cnt,
-	ap_channel_switch_callback_t callback);
+int wifi_ap_switch_chl_and_inform(unsigned char new_chl, unsigned char chl_switch_cnt, ap_channel_switch_callback_t callback);
 
 /**
  * @brief  initialize mac address filter list
@@ -1452,8 +1424,6 @@ int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len,
 int wifi_set_dhcp_offload(void);
 #endif
 
-
-
 #if defined CONFIG_ARP_KEEP_ALIVE || defined __DOXYGEN__
 /**
  * @brief   use ARP response as keep alive packet instead of null frame
@@ -1501,13 +1471,8 @@ int wifi_wowlan_set_smartdtim(uint8_t check_period, uint8_t threshold, uint8_t c
  * @return  RTW_SUCCESS
  */
 #if defined CONFIG_WOWLAN_PARAM || defined __DOXYGEN__
-int wifi_wowlan_set_wowlan_param(u8  fwdis_period,
-								 u8  fwdis_trypktnum,
-								 u8  pno_enable,
-								 u8  pno_timeout,
-								 u8  l2_keepalive_period);
+int wifi_wowlan_set_wowlan_param(u8 fwdis_period, u8 fwdis_trypktnum, u8 pno_enable, u8 pno_timeout, u8 l2_keepalive_period);
 #endif
-
 
 #if defined CONFIG_ARP_REQUEST_KEEP_ALIVE  || defined __DOXYGEN__
 /**
@@ -1517,8 +1482,7 @@ int wifi_wowlan_set_wowlan_param(u8  fwdis_period,
  * @param[in]   dtim1to : change to dtim1
  * @return  RTW_SUCCESS
  */
-int wifi_wowlan_set_arpreq_keepalive(u8  powerbit,
-									 u8  dtim1to);
+int wifi_wowlan_set_arpreq_keepalive(u8 powerbit, u8 dtim1to);
 #endif
 
 #if defined CONFIG_WOWLAN_IO_WDT || defined __DOXYGEN__
@@ -1529,8 +1493,7 @@ int wifi_wowlan_set_arpreq_keepalive(u8  powerbit,
  * @param[in]   interval : pull ctrl interval
  * @return  RTW_SUCCESS
  */
-int wifi_wowlan_set_wdt(u8  gpio,
-						u8  interval);
+int wifi_wowlan_set_wdt(u8 gpio, u8 interval);
 #endif
 
 // WoWlan related
@@ -1588,7 +1551,7 @@ int wifi_csi_report(u32 buf_len, u8 *csi_buf, u32 *len);
  * @return  RTW_SUCCESS or RTW_ERROR
  */
 #ifdef CONFIG_PLATFORM_TIZENRT_OS
-int wifi_get_tx_powertable(u32* powertable);
+int wifi_get_tx_powertable(u32 *powertable);
 #endif
 
 /**
@@ -1627,6 +1590,4 @@ int wifi_set_pmf_mode(u8 pmf_mode);
 #ifdef __cplusplus
 }
 #endif
-
-#endif // __WIFI_API_H
-
+#endif							// __WIFI_API_H

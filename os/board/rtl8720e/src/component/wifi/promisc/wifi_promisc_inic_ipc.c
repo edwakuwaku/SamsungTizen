@@ -23,7 +23,7 @@
 void (*ipc_promisc_callback)(unsigned char *, unsigned int, void *userdata) = NULL;
 //#endif
 
-#if 0//only in NP,INIC_IPC_API_TODO
+#if 0							//only in NP,INIC_IPC_API_TODO
 void promisc_deinit(void *padapter)
 {
 #ifdef CONFIG_PROMISC
@@ -44,9 +44,9 @@ int promisc_recv_func(void *padapter, void *rframe)
 int promisc_recv_lens_func(void *padapter, u8 *payload, u8 plen)
 {
 	/* To avoid gcc warnings */
-	(void) padapter;
-	(void) payload;
-	(void) plen;
+	(void)padapter;
+	(void)payload;
+	(void)plen;
 
 	// Never reach here if not define CONFIG_PROMISC
 #ifdef CONFIG_PROMISC
@@ -62,7 +62,7 @@ int promisc_recv_lens_func(void *padapter, u8 *payload, u8 plen)
 #endif
 int promisc_filter_retransmit_pkt(u8 enable, u8 filter_interval_ms)
 {
-	/*avoid GCC warning*/
+	/*avoid GCC warning */
 	(void)enable;
 	(void)filter_interval_ms;
 
@@ -76,7 +76,7 @@ int promisc_filter_retransmit_pkt(u8 enable, u8 filter_interval_ms)
 	ret = inic_ipc_api_host_message_send(IPC_API_PROMISC_FILTER_RETRANSMIT_PKT, param_buf, 2);
 	return ret;
 #else
-	return -1;//_promisc_filter_retransmit_normal_pkt(enable);
+	return -1;					//_promisc_filter_retransmit_normal_pkt(enable);
 #endif
 #else
 	return -1;
@@ -86,7 +86,7 @@ int promisc_filter_retransmit_pkt(u8 enable, u8 filter_interval_ms)
 int promisc_filter_with_len(u16 len)
 {
 	/* To avoid gcc warnings */
-	(void) len;
+	(void)len;
 
 	// Never reach here if not define CONFIG_PROMISC
 #ifdef CONFIG_PROMISC
@@ -115,7 +115,7 @@ int promisc_set(rtw_rcr_level_t enabled, void (*callback)(unsigned char *, unsig
 	if (callback != NULL) {
 		param_buf[1] = 0xFFFFFFFF;
 	} else {
-		param_buf[1] = (u32)callback;
+		param_buf[1] = (u32) callback;
 	}
 	param_buf[2] = len_used;
 	ipc_promisc_callback = callback;
@@ -144,14 +144,14 @@ int promisc_get_fixed_channel(void *fixed_bssid, u8 *ssid, int *ssid_length)
 	u32 param_buf[3];
 
 	if (fixed_bssid) {
-		DCache_Clean((u32)fixed_bssid, ETH_ALEN);
+		DCache_Clean((u32) fixed_bssid, ETH_ALEN);
 	}
 	if (ssid && ssid_length) {
-		DCache_Clean((u32)ssid, (u32)ssid_length);
+		DCache_Clean((u32) ssid, (u32) ssid_length);
 	}
-	param_buf[0] = (u32)fixed_bssid;
-	param_buf[1] = (u32)ssid;
-	param_buf[2] = (u32)ssid_length;
+	param_buf[0] = (u32) fixed_bssid;
+	param_buf[1] = (u32) ssid;
+	param_buf[2] = (u32) ssid_length;
 	ret = inic_ipc_api_host_message_send(IPC_API_PROMISC_GET_FIXED_CHANNEL, param_buf, 3);
 	return ret;
 #else
@@ -165,14 +165,14 @@ void promisc_filter_by_ap_and_phone_mac(u8 enable, void *ap_mac, void *phone_mac
 	u32 param_buf[3];
 
 	if (ap_mac) {
-		DCache_Clean((u32)ap_mac, ETH_ALEN);
+		DCache_Clean((u32) ap_mac, ETH_ALEN);
 	}
 	if (phone_mac) {
-		DCache_Clean((u32)phone_mac, ETH_ALEN);
+		DCache_Clean((u32) phone_mac, ETH_ALEN);
 	}
 	param_buf[0] = enable;
-	param_buf[1] = (u32)ap_mac;
-	param_buf[2] = (u32)phone_mac;
+	param_buf[1] = (u32) ap_mac;
+	param_buf[2] = (u32) phone_mac;
 	inic_ipc_api_host_message_send(IPC_API_PROMISC_FILTER_BY_AP_AND_PHONE_MAC, param_buf, 3);
 	return;
 #endif
@@ -198,9 +198,9 @@ int promisc_get_chnl_by_bssid(u8 *bssid)
 	u32 param_buf[1];
 
 	if (bssid) {
-		DCache_Clean((u32)bssid, ETH_ALEN);
+		DCache_Clean((u32) bssid, ETH_ALEN);
 	}
-	param_buf[0] = (u32)bssid;
+	param_buf[0] = (u32) bssid;
 	ret = inic_ipc_api_host_message_send(IPC_API_PROMISC_GET_CHANNEL_BY_BSSID, param_buf, 1);
 	return ret;
 #endif
@@ -212,8 +212,8 @@ void promisc_update_candi_ap_rssi_avg(s8 rssi, u8 cnt)
 #ifdef CONFIG_PROMISC
 	u32 param_buf[2];
 
-	param_buf[0] = (u32)rssi;
-	param_buf[1] = (u32)cnt;
+	param_buf[0] = (u32) rssi;
+	param_buf[1] = (u32) cnt;
 	inic_ipc_api_host_message_send(IPC_API_PROMISC_UPDATE_CANDI_AP_RSSI_AVG, param_buf, 2);
 #endif
 }
@@ -223,7 +223,7 @@ void promisc_stop_tx_beacn(void)
 #ifdef CONFIG_PROMISC
 	u32 param_buf[1];
 
-	param_buf[0] = 1; //for stop
+	param_buf[0] = 1;			//for stop
 	inic_ipc_api_host_message_send(IPC_API_PROMISC_TX_BEACON_CONTROL, param_buf, 1);
 #endif
 }
@@ -233,7 +233,7 @@ void promisc_resume_tx_beacn(void)
 #ifdef CONFIG_PROMISC
 	u32 param_buf[1];
 
-	param_buf[0] = 2; //for resume
+	param_buf[0] = 2;			//for resume
 	inic_ipc_api_host_message_send(IPC_API_PROMISC_TX_BEACON_CONTROL, param_buf, 1);
 #endif
 }
@@ -243,8 +243,8 @@ void promisc_issue_probersp(unsigned char *da)
 #ifdef CONFIG_PROMISC
 	u32 param_buf[1];
 
-	DCache_Clean((u32)da, ETH_ALEN);
-	param_buf[0] = (u32)da;
+	DCache_Clean((u32) da, ETH_ALEN);
+	param_buf[0] = (u32) da;
 	inic_ipc_api_host_message_send(IPC_API_PROMISC_ISSUE_PROBERSP, param_buf, 1);
 #endif
 }
@@ -271,7 +271,7 @@ static struct eth_buffer eth_buffer;
 #ifdef CONFIG_PROMISC
 #define MAX_PACKET_FILTER_INFO 5
 #define FILTER_ID_INIT_VALUE 10
-rtw_packet_filter_info_t paff_array[MAX_PACKET_FILTER_INFO] = {0};
+rtw_packet_filter_info_t paff_array[MAX_PACKET_FILTER_INFO] = { 0 };
 
 void promisc_init_packet_filter(void)
 {
@@ -284,16 +284,16 @@ int promisc_add_packet_filter(u8 filter_id, rtw_packet_filter_pattern_t *patt, r
 	u32 param_buf[3];
 
 	if (patt) {
-		DCache_Clean((u32)patt, sizeof(rtw_packet_filter_pattern_t));
+		DCache_Clean((u32) patt, sizeof(rtw_packet_filter_pattern_t));
 		if (patt->mask) {
-			DCache_Clean((u32)patt->mask, (u32)patt->mask_size);
+			DCache_Clean((u32) patt->mask, (u32) patt->mask_size);
 		}
 		if (patt->pattern) {
-			DCache_Clean((u32)patt->pattern, (u32)patt->mask_size);
+			DCache_Clean((u32) patt->pattern, (u32) patt->mask_size);
 		}
 	}
 	param_buf[0] = filter_id;
-	param_buf[1] = (u32)patt;
+	param_buf[1] = (u32) patt;
 	param_buf[2] = rule;
 	ret = inic_ipc_api_host_message_send(IPC_API_PROMISC_ADD_PACKET_FILTER, param_buf, 3);
 	return ret;
@@ -305,7 +305,7 @@ int promisc_enable_packet_filter(u8 filter_id)
 	u32 param_buf[2];
 
 	param_buf[0] = filter_id;
-	param_buf[1] = 1; //for enable
+	param_buf[1] = 1;			//for enable
 	ret = inic_ipc_api_host_message_send(IPC_API_PROMISC_PACKET_FILTER_CONTROL, param_buf, 2);
 	return ret;
 }
@@ -316,7 +316,7 @@ int promisc_disable_packet_filter(u8 filter_id)
 	u32 param_buf[2];
 
 	param_buf[0] = filter_id;
-	param_buf[1] = 2; //for disable
+	param_buf[1] = 2;			//for disable
 	ret = inic_ipc_api_host_message_send(IPC_API_PROMISC_PACKET_FILTER_CONTROL, param_buf, 2);
 	return ret;
 }
@@ -327,7 +327,7 @@ int promisc_remove_packet_filter(u8 filter_id)
 	u32 param_buf[2];
 
 	param_buf[0] = filter_id;
-	param_buf[1] = 3; //for remove
+	param_buf[1] = 3;			//for remove
 	ret = inic_ipc_api_host_message_send(IPC_API_PROMISC_PACKET_FILTER_CONTROL, param_buf, 2);
 	return ret;
 }
@@ -336,7 +336,7 @@ int promisc_remove_packet_filter(u8 filter_id)
 /*	Make callback simple to prevent latency to wlan rx when promiscuous mode */
 static void promisc_callback(unsigned char *buf, unsigned int len, void *userdata)
 {
-	struct eth_frame *frame = (struct eth_frame *) rtw_malloc(sizeof(struct eth_frame));
+	struct eth_frame *frame = (struct eth_frame *)rtw_malloc(sizeof(struct eth_frame));
 
 	if (frame) {
 		frame->prev = NULL;
@@ -344,7 +344,7 @@ static void promisc_callback(unsigned char *buf, unsigned int len, void *userdat
 		memcpy(frame->da, buf, 6);
 		memcpy(frame->sa, buf + 6, 6);
 		frame->len = len;
-		frame->rssi = ((ieee80211_frame_info_t *)userdata)->rssi;
+		frame->rssi = ((ieee80211_frame_info_t *) userdata)->rssi;
 
 		rtw_enter_critical(NULL, NULL);
 
@@ -395,7 +395,7 @@ static void promisc_test(int duration, unsigned char len_used)
 	wifi_enter_promisc_mode();
 	wifi_set_promisc(RTW_PROMISC_ENABLE, promisc_callback, len_used);
 
-	for (ch = 1; ch <= 13; ch ++) {
+	for (ch = 1; ch <= 13; ch++) {
 		if (wifi_set_channel(ch) == 0) {
 			printf("\n\n\rSwitch to channel(%d)", ch);
 		}
@@ -411,18 +411,18 @@ static void promisc_test(int duration, unsigned char len_used)
 				if (frame) {
 					int i;
 					printf("\n\rDA:");
-					for (i = 0; i < 6; i ++) {
+					for (i = 0; i < 6; i++) {
 						printf(" %02x", frame->da[i]);
 					}
 					printf(", SA:");
-					for (i = 0; i < 6; i ++) {
+					for (i = 0; i < 6; i++) {
 						printf(" %02x", frame->sa[i]);
 					}
 					printf(", len=%d", frame->len);
 					printf(", RSSI=%d", frame->rssi);
-					rtw_free((void *) frame);
+					rtw_free((void *)frame);
 				} else {
-					rtw_mdelay_os(1);    //delay 1 tick
+					rtw_mdelay_os(1);	//delay 1 tick
 				}
 			} else {
 				break;
@@ -433,19 +433,19 @@ static void promisc_test(int duration, unsigned char len_used)
 	wifi_set_promisc(RTW_PROMISC_DISABLE, NULL, 0);
 
 	while ((frame = retrieve_frame()) != NULL) {
-		rtw_free((void *) frame);
+		rtw_free((void *)frame);
 	}
 }
 
 static void promisc_callback_all(unsigned char *buf, unsigned int len, void *userdata)
 {
-	struct eth_frame *frame = (struct eth_frame *) rtw_malloc(sizeof(struct eth_frame));
+	struct eth_frame *frame = (struct eth_frame *)rtw_malloc(sizeof(struct eth_frame));
 
 	if (frame) {
 		frame->prev = NULL;
 		frame->next = NULL;
 #if defined(CONFIG_UNSUPPORT_PLCPHDR_RPT) && CONFIG_UNSUPPORT_PLCPHDR_RPT
-		if (((ieee80211_frame_info_t *)userdata)->type == RTW_RX_UNSUPPORT) {
+		if (((ieee80211_frame_info_t *) userdata)->type == RTW_RX_UNSUPPORT) {
 			//NOTICE: buf structure now is rtw_rx_info_t.
 			frame->type = 0xFF;
 			memset(frame->da, 0, 6);
@@ -460,13 +460,13 @@ static void promisc_callback_all(unsigned char *buf, unsigned int len, void *use
 
 		frame->len = len;
 		/*
-		* type is the first byte of Frame Control Field of 802.11 frame
-		* If the from/to ds information is needed, type could be reused as follows:
-		* frame->type = ((((ieee80211_frame_info_t *)userdata)->i_fc & 0x0100) == 0x0100) ? 2 : 1;
-		* 1: from ds; 2: to ds
-		*/
+		 * type is the first byte of Frame Control Field of 802.11 frame
+		 * If the from/to ds information is needed, type could be reused as follows:
+		 * frame->type = ((((ieee80211_frame_info_t *)userdata)->i_fc & 0x0100) == 0x0100) ? 2 : 1;
+		 * 1: from ds; 2: to ds
+		 */
 
-		frame->rssi = ((ieee80211_frame_info_t *)userdata)->rssi;
+		frame->rssi = ((ieee80211_frame_info_t *) userdata)->rssi;
 
 		rtw_enter_critical(NULL, NULL);
 
@@ -482,6 +482,7 @@ static void promisc_callback_all(unsigned char *buf, unsigned int len, void *use
 		rtw_exit_critical(NULL, NULL);
 	}
 }
+
 static void promisc_test_all(int duration, unsigned char len_used)
 {
 	int ch;
@@ -493,7 +494,7 @@ static void promisc_test_all(int duration, unsigned char len_used)
 	wifi_enter_promisc_mode();
 	wifi_set_promisc(RTW_PROMISC_ENABLE_2, promisc_callback_all, len_used);
 
-	for (ch = 1; ch <= 13; ch ++) {
+	for (ch = 1; ch <= 13; ch++) {
 		if (wifi_set_channel(ch) == 0) {
 			printf("\n\n\rSwitch to channel(%d)", ch);
 		}
@@ -510,18 +511,18 @@ static void promisc_test_all(int duration, unsigned char len_used)
 					int i;
 					printf("\n\rTYPE: 0x%x, ", frame->type);
 					printf("DA:");
-					for (i = 0; i < 6; i ++) {
+					for (i = 0; i < 6; i++) {
 						printf(" %02x", frame->da[i]);
 					}
 					printf(", SA:");
-					for (i = 0; i < 6; i ++) {
+					for (i = 0; i < 6; i++) {
 						printf(" %02x", frame->sa[i]);
 					}
 					printf(", len=%d", frame->len);
 					printf(", RSSI=%d", frame->rssi);
-					rtw_free((void *) frame);
+					rtw_free((void *)frame);
 				} else {
-					rtw_mdelay_os(1);    //delay 1 tick
+					rtw_mdelay_os(1);	//delay 1 tick
 				}
 			} else {
 				break;
@@ -532,7 +533,7 @@ static void promisc_test_all(int duration, unsigned char len_used)
 	wifi_set_promisc(RTW_PROMISC_DISABLE, NULL, 0);
 
 	while ((frame = retrieve_frame()) != NULL) {
-		rtw_free((void *) frame);
+		rtw_free((void *)frame);
 	}
 }
 
@@ -552,4 +553,4 @@ void cmd_promisc(int argc, char **argv)
 		printf("\n\rUsage: %s DURATION_SECONDS [with_len]", argv[0]);
 	}
 }
-#endif	//#if CONFIG_WLAN
+#endif							//#if CONFIG_WLAN

@@ -28,7 +28,6 @@
 #define SHORT_SLOT_TIME					9
 #define NON_SHORT_SLOT_TIME				20
 
-
 #define CENTER_CH_2G_40M_NUM	9
 #define CENTER_CH_2G_NUM		14
 #define CENTER_CH_5G_20M_NUM	28	/* 20M center channels */
@@ -48,7 +47,7 @@
 #if !defined(SUPPORT_5G_CHANNEL)
 #define	MAX_CHANNEL_NUM					MAX_CHANNEL_NUM_2G
 #else
-#define	MAX_CHANNEL_NUM					(MAX_CHANNEL_NUM_2G + MAX_CHANNEL_NUM_5G) //14+28
+#define	MAX_CHANNEL_NUM					(MAX_CHANNEL_NUM_2G + MAX_CHANNEL_NUM_5G)	//14+28
 #endif
 
 #if defined(NOT_SUPPORT_RF_MULTIPATH)
@@ -58,43 +57,40 @@
 #define RTW_MAX_RF_PATH					2	// Max 4 for ss larger than 2
 #define MAX_TX_COUNT				4	//It must always set to 4, otherwise read efuse table secquence will be wrong.
 #endif
-#define	MAX_CHNL_GROUP_24G		6 		// ch1~2, ch3~5, ch6~8,ch9~11,ch12~13,CH 14 total three groups
+#define	MAX_CHNL_GROUP_24G		6	// ch1~2, ch3~5, ch6~8,ch9~11,ch12~13,CH 14 total three groups
 #define	MAX_CHNL_GROUP_5G		14
 
 #define NUM_REGULATORYS	1
 
 //Country codes
 #define USA							0x555320
-#define EUROPE						0x1 //temp, should be provided later	
-#define JAPAN						0x2 //temp, should be provided later	
-
+#define EUROPE						0x1	//temp, should be provided later
+#define JAPAN						0x2	//temp, should be provided later
 
 typedef enum _CAPABILITY {
-	cESS			= 0x0001,
-	cIBSS			= 0x0002,
-	cPollable		= 0x0004,
-	cPollReq			= 0x0008,
-	cPrivacy		= 0x0010,
-	cShortPreamble	= 0x0020,
-	cPBCC			= 0x0040,
-	cChannelAgility	= 0x0080,
-	cSpectrumMgnt	= 0x0100,
-	cQos			= 0x0200,	// For HCCA, use with CF-Pollable and CF-PollReq
-	cShortSlotTime	= 0x0400,
-	cAPSD			= 0x0800,
-	cRM				= 0x1000,	// RRM (Radio Request Measurement)
-	cDSSS_OFDM	= 0x2000,
-	cDelayedBA		= 0x4000,
-	cImmediateBA	= 0x8000,
+	cESS = 0x0001,
+	cIBSS = 0x0002,
+	cPollable = 0x0004,
+	cPollReq = 0x0008,
+	cPrivacy = 0x0010,
+	cShortPreamble = 0x0020,
+	cPBCC = 0x0040,
+	cChannelAgility = 0x0080,
+	cSpectrumMgnt = 0x0100,
+	cQos = 0x0200,				// For HCCA, use with CF-Pollable and CF-PollReq
+	cShortSlotTime = 0x0400,
+	cAPSD = 0x0800,
+	cRM = 0x1000,				// RRM (Radio Request Measurement)
+	cDSSS_OFDM = 0x2000,
+	cDelayedBA = 0x4000,
+	cImmediateBA = 0x8000,
 } CAPABILITY, *PCAPABILITY;
 
-enum	_REG_PREAMBLE_MODE {
-	PREAMBLE_LONG	= 1,
-	PREAMBLE_AUTO	= 2,
-	PREAMBLE_SHORT	= 3,
+enum _REG_PREAMBLE_MODE {
+	PREAMBLE_LONG = 1,
+	PREAMBLE_AUTO = 2,
+	PREAMBLE_SHORT = 3,
 };
-
-
 
 struct center_chs_ent_t {
 	u8 ch_num;
@@ -135,8 +131,6 @@ u32 wifi_rom_freq2ch(u32 freq);
 #define rtw_is_2g_ch(ch) (ch >= 1 && ch <= 14)
 #define rtw_is_5g_ch(ch) ((ch) >= 36 && (ch) <= 177)
 
-
 u8 wifi_rom_get_op_chs_by_cch_bw(u8 cch, u8 bw, u8 **op_chs, u8 *op_ch_num);
 
 #endif
-

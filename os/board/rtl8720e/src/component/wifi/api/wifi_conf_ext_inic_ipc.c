@@ -53,7 +53,7 @@ extern unsigned char dhcp_mode_sta;
  *               Variables Declarations
  ******************************************************/
 void *param_indicator;
-struct task_struct wifi_autoreconnect_task = {0};
+struct task_struct wifi_autoreconnect_task = { 0 };
 
 /******************************************************
  *               Variables Definitions
@@ -66,7 +66,6 @@ struct task_struct wifi_autoreconnect_task = {0};
 #define NETMASK_ADDR2   255
 #define NETMASK_ADDR3   0
 #endif
-
 /*Gateway Address*/
 #ifndef GW_ADDR0
 #define GW_ADDR0   192
@@ -77,16 +76,14 @@ struct task_struct wifi_autoreconnect_task = {0};
 /******************************************************
  *               Function Definitions
  ******************************************************/
-
 #if CONFIG_WLAN
-
 //----------------------------------------------------------------------------//
 void wifi_psk_info_set(struct psk_info *psk_data)
 {
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)psk_data;
-	DCache_Clean((u32)psk_data, sizeof(struct psk_info));
+	param_buf[0] = (u32) psk_data;
+	DCache_Clean((u32) psk_data, sizeof(struct psk_info));
 	inic_ipc_api_host_message_send(IPC_API_WIFI_PSK_INFO_SET, param_buf, 1);
 }
 
@@ -98,13 +95,13 @@ void wifi_psk_info_get(struct psk_info *psk_data)
 		return;
 	}
 
-	param_buf[0] = (u32)psk_info_temp;
-	DCache_CleanInvalidate((u32)psk_info_temp, sizeof(struct psk_info));
+	param_buf[0] = (u32) psk_info_temp;
+	DCache_CleanInvalidate((u32) psk_info_temp, sizeof(struct psk_info));
 	inic_ipc_api_host_message_send(IPC_API_WIFI_PSK_INFO_GET, param_buf, 1);
 
-	DCache_Invalidate((u32)psk_info_temp, sizeof(struct psk_info));
+	DCache_Invalidate((u32) psk_info_temp, sizeof(struct psk_info));
 	rtw_memcpy(psk_data, psk_info_temp, sizeof(struct psk_info));
-	rtw_mfree((u8 *)psk_info_temp, 0);
+	rtw_mfree((u8 *) psk_info_temp, 0);
 }
 
 int wifi_get_mac_address(rtw_mac_t *mac)
@@ -112,18 +109,18 @@ int wifi_get_mac_address(rtw_mac_t *mac)
 	int ret = 0;
 	u32 param_buf[1];
 
-	rtw_mac_t *mac_temp = (rtw_mac_t *)rtw_malloc(sizeof(rtw_mac_t));
+	rtw_mac_t *mac_temp = (rtw_mac_t *) rtw_malloc(sizeof(rtw_mac_t));
 	if (mac_temp == NULL) {
 		return -1;
 	}
 
-	param_buf[0] = (u32)mac_temp;
-	DCache_CleanInvalidate((u32)mac_temp, sizeof(rtw_mac_t));
+	param_buf[0] = (u32) mac_temp;
+	DCache_CleanInvalidate((u32) mac_temp, sizeof(rtw_mac_t));
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_MAC_ADDR, param_buf, 1);
 
-	DCache_Invalidate((u32)mac_temp, sizeof(rtw_mac_t));
+	DCache_Invalidate((u32) mac_temp, sizeof(rtw_mac_t));
 	rtw_memcpy(mac, mac_temp, sizeof(rtw_mac_t));
-	rtw_mfree((u8 *)mac_temp, 0);
+	rtw_mfree((u8 *) mac_temp, 0);
 	return ret;
 }
 
@@ -133,7 +130,7 @@ int wifi_btcoex_set_ble_scan_duty(u8 duty)
 	int ret = 0;
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)duty;
+	param_buf[0] = (u32) duty;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_COEX_BLE_SET_SCAN_DUTY, param_buf, 1);
 	return ret;
 }
@@ -142,12 +139,12 @@ u8 wifi_driver_is_mp(void)
 {
 	int ret = 0;
 
-	ret = (u8)inic_ipc_api_host_message_send(IPC_API_WIFI_DRIVE_IS_MP, NULL, 0);
+	ret = (u8) inic_ipc_api_host_message_send(IPC_API_WIFI_DRIVE_IS_MP, NULL, 0);
 	return ret;
 }
 
 //----------------------------------------------------------------------------//
-int wifi_get_associated_client_list(void *client_list_buffer, unsigned short	buffer_length)
+int wifi_get_associated_client_list(void *client_list_buffer, unsigned short buffer_length)
 {
 	int ret = 0;
 	u32 param_buf[2];
@@ -157,36 +154,37 @@ int wifi_get_associated_client_list(void *client_list_buffer, unsigned short	buf
 		return -1;
 	}
 
-	rtw_memcpy(client_list_buffer_temp, client_list_buffer, sizeof(int));//copy count from original buf
-	param_buf[0] = (u32)client_list_buffer_temp;
-	param_buf[1] = (u32)buffer_length;
-	DCache_CleanInvalidate((u32)client_list_buffer_temp, buffer_length);
+	rtw_memcpy(client_list_buffer_temp, client_list_buffer, sizeof(int));	//copy count from original buf
+	param_buf[0] = (u32) client_list_buffer_temp;
+	param_buf[1] = (u32) buffer_length;
+	DCache_CleanInvalidate((u32) client_list_buffer_temp, buffer_length);
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_ASSOCIATED_CLIENT_LIST, param_buf, 2);
-	DCache_Invalidate((u32)client_list_buffer_temp, buffer_length);
+	DCache_Invalidate((u32) client_list_buffer_temp, buffer_length);
 	rtw_memcpy(client_list_buffer, client_list_buffer_temp, buffer_length);
-	rtw_mfree((u8 *)client_list_buffer_temp, 0);
+	rtw_mfree((u8 *) client_list_buffer_temp, 0);
 	return ret;
 }
+
 //----------------------------------------------------------------------------//
 int wifi_get_setting(unsigned char wlan_idx, rtw_wifi_setting_t *psetting)
 {
 	int ret = 0;
 	u32 param_buf[2];
 
-	rtw_wifi_setting_t *setting_temp = (rtw_wifi_setting_t *)rtw_malloc(sizeof(rtw_wifi_setting_t));
+	rtw_wifi_setting_t *setting_temp = (rtw_wifi_setting_t *) rtw_malloc(sizeof(rtw_wifi_setting_t));
 	if (setting_temp == NULL) {
 		return -1;
 	}
 
-	param_buf[0] = (u32)wlan_idx;
-	param_buf[1] = (u32)setting_temp;
-	DCache_CleanInvalidate((u32)setting_temp, sizeof(rtw_wifi_setting_t));
+	param_buf[0] = (u32) wlan_idx;
+	param_buf[1] = (u32) setting_temp;
+	DCache_CleanInvalidate((u32) setting_temp, sizeof(rtw_wifi_setting_t));
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_SETTING, param_buf, 2);
-	DCache_Invalidate((u32)setting_temp, sizeof(rtw_wifi_setting_t));
+	DCache_Invalidate((u32) setting_temp, sizeof(rtw_wifi_setting_t));
 	rtw_memcpy(psetting, setting_temp, sizeof(rtw_wifi_setting_t));
-	rtw_mfree((u8 *)setting_temp, 0);
+	rtw_mfree((u8 *) setting_temp, 0);
 
 	return ret;
 }
@@ -196,7 +194,7 @@ int wifi_set_ips_enable(u8 enable)
 	int ret = 0;
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)enable;
+	param_buf[0] = (u32) enable;
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SET_IPS_EN, param_buf, 1);
 	return ret;
@@ -207,22 +205,20 @@ int wifi_set_lps_enable(u8 enable)
 	int ret = 0;
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)enable;
+	param_buf[0] = (u32) enable;
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SET_LPS_EN, param_buf, 1);
 	return ret;
 }
 
-
 //----------------------------------------------------------------------------//
-
 
 int wifi_set_mfp_support(unsigned char value)
 {
 	int ret = 0;
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)value;
+	param_buf[0] = (u32) value;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SET_MFP_SUPPORT, param_buf, 1);
 	return ret;
 }
@@ -233,7 +229,7 @@ int wifi_set_group_id(unsigned char value)
 	int ret = 0;
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)value;
+	param_buf[0] = (u32) value;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SET_GROUP_ID, param_buf, 1);
 	return ret;
 #else
@@ -241,13 +237,12 @@ int wifi_set_group_id(unsigned char value)
 #endif
 }
 
-
 int wifi_set_pmk_cache_enable(unsigned char value)
 {
 	int ret = 0;
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)value;
+	param_buf[0] = (u32) value;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SET_PMK_CACHE_EN, param_buf, 1);
 	return ret;
 }
@@ -258,19 +253,19 @@ int wifi_get_sw_statistic(unsigned char idx, rtw_sw_statistics_t *statistic)
 	u32 param_buf[2];
 	int ret = 0;
 
-	rtw_sw_statistics_t *statistic_temp = (rtw_sw_statistics_t *)rtw_malloc(sizeof(rtw_sw_statistics_t));
+	rtw_sw_statistics_t *statistic_temp = (rtw_sw_statistics_t *) rtw_malloc(sizeof(rtw_sw_statistics_t));
 	if (statistic_temp == NULL) {
 		return 0;
 	}
-	param_buf[0] = (u32)idx;
-	param_buf[1] = (u32)statistic_temp;
-	DCache_CleanInvalidate((u32)statistic_temp, sizeof(rtw_sw_statistics_t));
+	param_buf[0] = (u32) idx;
+	param_buf[1] = (u32) statistic_temp;
+	DCache_CleanInvalidate((u32) statistic_temp, sizeof(rtw_sw_statistics_t));
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_SW_STATISTIC, param_buf, 2);
 
-	DCache_Invalidate((u32)statistic_temp, sizeof(rtw_sw_statistics_t));
+	DCache_Invalidate((u32) statistic_temp, sizeof(rtw_sw_statistics_t));
 	rtw_memcpy(statistic, statistic_temp, sizeof(rtw_sw_statistics_t));
-	rtw_mfree((u8 *)statistic_temp, 0);
+	rtw_mfree((u8 *) statistic_temp, 0);
 	return ret;
 }
 
@@ -279,20 +274,20 @@ int wifi_fetch_phy_statistic(unsigned char wlan_idx, rtw_phy_statistics_t *phy_s
 	u32 param_buf[2];
 	int ret = 0;
 
-	rtw_phy_statistics_t *phy_statistic_temp = (rtw_phy_statistics_t *)rtw_malloc(sizeof(rtw_phy_statistics_t));
+	rtw_phy_statistics_t *phy_statistic_temp = (rtw_phy_statistics_t *) rtw_malloc(sizeof(rtw_phy_statistics_t));
 	if (phy_statistic_temp == NULL) {
 		return -1;
 	}
 
-	param_buf[0] = (u32)phy_statistic_temp;
-	param_buf[1] = (u32)wlan_idx;
-	DCache_CleanInvalidate((u32)phy_statistic_temp, sizeof(rtw_phy_statistics_t));
+	param_buf[0] = (u32) phy_statistic_temp;
+	param_buf[1] = (u32) wlan_idx;
+	DCache_CleanInvalidate((u32) phy_statistic_temp, sizeof(rtw_phy_statistics_t));
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_PHY_STATISTIC, param_buf, 2);
 
-	DCache_Invalidate((u32)phy_statistic_temp, sizeof(rtw_phy_statistics_t));
+	DCache_Invalidate((u32) phy_statistic_temp, sizeof(rtw_phy_statistics_t));
 	rtw_memcpy(phy_statistic, phy_statistic_temp, sizeof(rtw_phy_statistics_t));
-	rtw_mfree((u8 *)phy_statistic_temp, 0);
+	rtw_mfree((u8 *) phy_statistic_temp, 0);
 	return ret;
 }
 
@@ -306,7 +301,7 @@ int wifi_set_network_mode(rtw_network_mode_t mode)
 	int ret = 0;
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)mode;
+	param_buf[0] = (u32) mode;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SET_NETWORK_MODE, param_buf, 1);
 	return ret;
 }
@@ -326,11 +321,11 @@ int wifi_set_gen_ie(unsigned char wlan_idx, char *buf, __u16 buf_len, __u16 flag
 	int ret = 0;
 	u32 param_buf[4];
 
-	DCache_Clean((u32)buf, (u32)buf_len);
-	param_buf[0] = (u32)wlan_idx;
-	param_buf[1] = (u32)buf;
-	param_buf[2] = (u32)buf_len;
-	param_buf[3] = (u32)flags;
+	DCache_Clean((u32) buf, (u32) buf_len);
+	param_buf[0] = (u32) wlan_idx;
+	param_buf[1] = (u32) buf;
+	param_buf[2] = (u32) buf_len;
+	param_buf[3] = (u32) flags;
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SET_GEN_IE, param_buf, 4);
 	return ret;
@@ -355,7 +350,7 @@ unsigned char wifi_get_eap_phase(void)
 #ifdef CONFIG_EAP
 	unsigned char eap_phase = 0;
 
-	eap_phase = (u8)inic_ipc_api_host_message_send(IPC_API_WIFI_GET_EAP_PHASE, NULL, 0);
+	eap_phase = (u8) inic_ipc_api_host_message_send(IPC_API_WIFI_GET_EAP_PHASE, NULL, 0);
 	return eap_phase;
 #else
 	return 0;
@@ -381,9 +376,9 @@ int wifi_if_send_eapol(unsigned char wlan_idx, char *buf, __u16 buf_len, __u16 f
 	int ret = 0;
 	u32 param_buf[4];
 
-	DCache_Clean((u32)buf, (u32)buf_len);
-	param_buf[0] = (u32)wlan_idx;
-	param_buf[1] = (u32)buf;
+	DCache_Clean((u32) buf, (u32) buf_len);
+	param_buf[0] = (u32) wlan_idx;
+	param_buf[1] = (u32) buf;
 	param_buf[2] = buf_len;
 	param_buf[3] = flags;
 
@@ -398,8 +393,8 @@ static void rtw_autoreconnect_thread(void *param)
 	rtw_create_secure_context(configMINIMAL_SECURE_STACK_SIZE);
 #endif
 	int ret = RTW_ERROR;
-	struct wifi_autoreconnect_param *reconnect_info = (struct wifi_autoreconnect_param *) param;
-	rtw_network_info_t connect_param = {0};
+	struct wifi_autoreconnect_param *reconnect_info = (struct wifi_autoreconnect_param *)param;
+	rtw_network_info_t connect_param = { 0 };
 
 	if (reconnect_info->ssid_len) {
 		rtw_memcpy(connect_param.ssid.val, reconnect_info->ssid, reconnect_info->ssid_len);
@@ -428,16 +423,16 @@ static void rtw_autoreconnect_thread(void *param)
 			LwIP_DHCP(0, DHCP_START);
 #if LWIP_AUTOIP
 			/*delete auto ip process for conflict with dhcp
-						uint8_t *ip = LwIP_GetIP(0);
-						if ((ip[0] == 0) && (ip[1] == 0) && (ip[2] == 0) && (ip[3] == 0)) {
-							RTW_API_INFO("\n\nIPv4 AUTOIP ...");
-							LwIP_AUTOIP(0);
-						}
-			*/
+			   uint8_t *ip = LwIP_GetIP(0);
+			   if ((ip[0] == 0) && (ip[1] == 0) && (ip[2] == 0) && (ip[3] == 0)) {
+			   RTW_API_INFO("\n\nIPv4 AUTOIP ...");
+			   LwIP_AUTOIP(0);
+			   }
+			 */
 #endif
 		}
 	}
-#endif //#if CONFIG_LWIP_LAYER
+#endif							//#if CONFIG_LWIP_LAYER
 	param_indicator = NULL;
 	rtw_delete_task(&wifi_autoreconnect_task);
 #endif
@@ -445,10 +440,7 @@ static void rtw_autoreconnect_thread(void *param)
 }
 
 #if CONFIG_AUTO_RECONNECT
-void rtw_autoreconnect_hdl(rtw_security_t security_type,
-							char *ssid, int ssid_len,
-							char *password, int password_len,
-							int key_id)
+void rtw_autoreconnect_hdl(rtw_security_t security_type, char *ssid, int ssid_len, char *password, int password_len, int key_id)
 {
 	static struct wifi_autoreconnect_param param;
 	param_indicator = &param;
@@ -509,18 +501,17 @@ int wifi_get_autoreconnect(__u8 *mode)
 	if (mode_temp == NULL) {
 		return -1;
 	}
-	DCache_CleanInvalidate((u32)mode_temp, sizeof(__u8));
-	param_buf[0] = (u32)mode_temp;
+	DCache_CleanInvalidate((u32) mode_temp, sizeof(__u8));
+	param_buf[0] = (u32) mode_temp;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_AUTORECONNECT, param_buf, 1);
-	DCache_Invalidate((u32)mode_temp, sizeof(__u8));
+	DCache_Invalidate((u32) mode_temp, sizeof(__u8));
 	*mode = *mode_temp;
-	rtw_mfree((u8 *)mode_temp, 0);
+	rtw_mfree((u8 *) mode_temp, 0);
 	return ret;
 #else
 	return 0;
 #endif
 }
-
 
 //----------------------------------------------------------------------------//
 /*
@@ -562,16 +553,15 @@ int wifi_add_custom_ie(void *cus_ie, int ie_num)
 	for (cnt = 0; cnt < ie_num; cnt++) {
 		rtw_custom_ie_t ie_t = *(pcus_ie + cnt);
 		ie_len = ie_t.ie[1];
-		DCache_Clean((u32)ie_t.ie, (u32)(ie_len + 2));
+		DCache_Clean((u32) ie_t.ie, (u32)(ie_len + 2));
 	}
-	DCache_Clean((u32)cus_ie, ie_num * sizeof(rtw_custom_ie_t));
-	param_buf[0] = 0;//type 0 means add
-	param_buf[1] = (u32)cus_ie;
+	DCache_Clean((u32) cus_ie, ie_num * sizeof(rtw_custom_ie_t));
+	param_buf[0] = 0;			//type 0 means add
+	param_buf[1] = (u32) cus_ie;
 	param_buf[2] = ie_num;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_CUS_IE, param_buf, 3);
 	return ret;
 }
-
 
 int wifi_update_custom_ie(void *cus_ie, int ie_index)
 {
@@ -579,14 +569,13 @@ int wifi_update_custom_ie(void *cus_ie, int ie_index)
 	u32 param_buf[3];
 	u8 ie_len = 0;
 
-
 	rtw_custom_ie_t ie_t = *(p_rtw_custom_ie_t)(cus_ie);
 	ie_len = *(u8 *)(ie_t.ie + 1);
-	DCache_Clean((u32)ie_t.ie, (u32)ie_len);
+	DCache_Clean((u32) ie_t.ie, (u32) ie_len);
 
-	DCache_Clean((u32)cus_ie, sizeof(rtw_custom_ie_t));
-	param_buf[0] = 1;//type 1 means update
-	param_buf[1] = (u32)cus_ie;
+	DCache_Clean((u32) cus_ie, sizeof(rtw_custom_ie_t));
+	param_buf[0] = 1;			//type 1 means update
+	param_buf[1] = (u32) cus_ie;
 	param_buf[2] = ie_index;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_CUS_IE, param_buf, 3);
 	return ret;
@@ -596,15 +585,16 @@ int wifi_del_custom_ie(unsigned char wlan_idx)
 {
 	u32 param_buf[2];
 
-	param_buf[0] = 2;//type 2 means delete
-	param_buf[1] = (u32)wlan_idx;
+	param_buf[0] = 2;			//type 2 means delete
+	param_buf[1] = (u32) wlan_idx;
 	return inic_ipc_api_host_message_send(IPC_API_WIFI_CUS_IE, param_buf, 2);
 }
+
 //----------------------------------------------------------------------------//
 void wifi_set_indicate_mgnt(int enable)
 {
 	u32 param_buf[1];
-	param_buf[0] = (u32)enable;
+	param_buf[0] = (u32) enable;
 	inic_ipc_api_host_message_send(IPC_API_WIFI_SET_IND_MGNT, param_buf, 1);
 }
 
@@ -613,9 +603,9 @@ int wifi_send_raw_frame(raw_data_desc_t *raw_data_desc)
 	int ret = 0;
 	u32 param_buf[1];
 
-	DCache_Clean((u32)raw_data_desc, sizeof(raw_data_desc_t));
-	DCache_Clean((u32)raw_data_desc->buf, (u32)raw_data_desc->buf_len);
-	param_buf[0] = (u32)raw_data_desc;
+	DCache_Clean((u32) raw_data_desc, sizeof(raw_data_desc_t));
+	DCache_Clean((u32) raw_data_desc->buf, (u32) raw_data_desc->buf_len);
+	param_buf[0] = (u32) raw_data_desc;
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SEND_MGNT, param_buf, 1);
 	return ret;
@@ -626,9 +616,9 @@ int wifi_set_tx_rate_by_ToS(unsigned char enable, unsigned char ToS_precedence, 
 	int ret = 0;
 	u32 param_buf[3];
 
-	param_buf[0] = (u32)enable;
-	param_buf[1] = (u32)ToS_precedence;
-	param_buf[2] = (u32)tx_rate;
+	param_buf[0] = (u32) enable;
+	param_buf[1] = (u32) ToS_precedence;
+	param_buf[2] = (u32) tx_rate;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SET_TXRATE_BY_TOS, param_buf, 3);
 	return ret;
 }
@@ -658,17 +648,18 @@ int wifi_set_cts2self_duration_and_send(unsigned char wlan_idx, unsigned short d
 	int ret = 0;
 	u32 param_buf[2];
 
-	param_buf[0] = (u32)wlan_idx;
-	param_buf[1] = (u32)duration;
+	param_buf[0] = (u32) wlan_idx;
+	param_buf[1] = (u32) duration;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_SET_CTS2SEFL_DUR_AND_SEND, param_buf, 2);
 	return ret;
 
 }
+
 int wifi_init_mac_filter(void)
 {
 	u32 param_buf[1];
 
-	param_buf[0] = 0;//type 0 means init
+	param_buf[0] = 0;			//type 0 means init
 	return inic_ipc_api_host_message_send(IPC_API_WIFI_MAC_FILTER, param_buf, 1);
 }
 
@@ -677,9 +668,9 @@ int wifi_add_mac_filter(unsigned char *hwaddr)
 	int ret = 0;
 	u32 param_buf[2];
 
-	DCache_Clean((u32)hwaddr, ETH_ALEN);
-	param_buf[0] = 1;//type 1 means add
-	param_buf[1] = (u32)hwaddr;
+	DCache_Clean((u32) hwaddr, ETH_ALEN);
+	param_buf[0] = 1;			//type 1 means add
+	param_buf[1] = (u32) hwaddr;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_MAC_FILTER, param_buf, 2);
 	return ret;
 }
@@ -689,9 +680,9 @@ int wifi_del_mac_filter(unsigned char *hwaddr)
 	int ret = 0;
 	u32 param_buf[2];
 
-	DCache_Clean((u32)hwaddr, ETH_ALEN);
-	param_buf[0] = 2;//type 2 means delete
-	param_buf[1] = (u32)hwaddr;
+	DCache_Clean((u32) hwaddr, ETH_ALEN);
+	param_buf[0] = 2;			//type 2 means delete
+	param_buf[1] = (u32) hwaddr;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_MAC_FILTER, param_buf, 2);
 	return ret;
 }
@@ -702,10 +693,10 @@ int wifi_get_antenna_info(unsigned char *antenna)
 	int ret = 0;
 	u32 param_buf[1];
 
-	DCache_Clean((u32)antenna, sizeof(unsigned char));
-	param_buf[0] = (u32)antenna;
+	DCache_Clean((u32) antenna, sizeof(unsigned char));
+	param_buf[0] = (u32) antenna;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_ANTENNA_INFO, param_buf, 1);
-	DCache_Invalidate((u32)antenna, sizeof(unsigned char));
+	DCache_Invalidate((u32) antenna, sizeof(unsigned char));
 
 	return ret;
 #else
@@ -745,14 +736,14 @@ int wifi_get_auto_chl(unsigned char wlan_idx, unsigned char *channel_set, unsign
 	if (channel_set_temp == NULL) {
 		return -1;
 	}
-	rtw_memcpy(channel_set_temp, channel_set, (u32)channel_num);
+	rtw_memcpy(channel_set_temp, channel_set, (u32) channel_num);
 
-	param_buf[0] = (u32)wlan_idx;
-	param_buf[1] = (u32)channel_set_temp;
-	param_buf[2] = (u32)channel_num;
-	DCache_Clean((u32)channel_set_temp, (u32)channel_num);
+	param_buf[0] = (u32) wlan_idx;
+	param_buf[1] = (u32) channel_set_temp;
+	param_buf[2] = (u32) channel_num;
+	DCache_Clean((u32) channel_set_temp, (u32) channel_num);
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_AUTO_CHANNEL, param_buf, 3);
-	rtw_mfree((u8 *)channel_set_temp, 0);
+	rtw_mfree((u8 *) channel_set_temp, 0);
 	return ret;
 }
 
@@ -761,9 +752,9 @@ int wifi_del_station(unsigned char wlan_idx, unsigned char *hwaddr)
 	int ret = 0;
 	u32 param_buf[2];
 
-	DCache_Clean((u32)hwaddr, ETH_ALEN);
-	param_buf[0] = (u32)wlan_idx;
-	param_buf[1] = (u32)hwaddr;
+	DCache_Clean((u32) hwaddr, ETH_ALEN);
+	param_buf[0] = (u32) wlan_idx;
+	param_buf[1] = (u32) hwaddr;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_DEL_STA, param_buf, 2);
 	return ret;
 
@@ -775,9 +766,9 @@ int wifi_ap_switch_chl_and_inform(unsigned char new_chl, unsigned char chl_switc
 	u32 param_buf[3];
 	p_ap_channel_switch_callback = callback;
 
-	param_buf[0] = (u32)new_chl;
-	param_buf[1] = (u32)chl_switch_cnt;
-	param_buf[2] = (u32)callback;
+	param_buf[0] = (u32) new_chl;
+	param_buf[1] = (u32) chl_switch_cnt;
+	param_buf[2] = (u32) callback;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_AP_CH_SWITCH, param_buf, 3);
 	return ret;
 }
@@ -786,7 +777,7 @@ void wifi_set_no_beacon_timeout(unsigned char timeout_sec)
 {
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)timeout_sec;
+	param_buf[0] = (u32) timeout_sec;
 	inic_ipc_api_host_message_send(IPC_API_WIFI_SET_NO_BEACON_TIMEOUT, param_buf, 1);
 }
 
@@ -806,10 +797,10 @@ int wifi_csi_config(rtw_csi_action_parm_t *act_param)
 	int ret = 0;
 	u32 param_buf[1];
 
-	param_buf[0] = (u32)act_param;
-	DCache_Clean((u32)act_param, sizeof(rtw_csi_action_parm_t));
+	param_buf[0] = (u32) act_param;
+	DCache_Clean((u32) act_param, sizeof(rtw_csi_action_parm_t));
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_CONFIG_CSI, param_buf, 1);
-	DCache_Invalidate((u32)act_param, sizeof(rtw_csi_action_parm_t));
+	DCache_Invalidate((u32) act_param, sizeof(rtw_csi_action_parm_t));
 	return ret;
 }
 
@@ -823,56 +814,55 @@ int wifi_csi_report(u32 buf_len, u8 *csi_buf, u32 *len)
 		return -1;
 	}
 
-	u32 *len_temp = (u32 *)rtw_zmalloc(sizeof(u32));
+	u32 *len_temp = (u32 *) rtw_zmalloc(sizeof(u32));
 	if (len_temp == NULL) {
-		rtw_mfree((u8 *)csi_buf_temp, 0);
+		rtw_mfree((u8 *) csi_buf_temp, 0);
 		return -1;
 	}
 
-	param_buf[0] = (u32)csi_buf_temp;
-	param_buf[1] = (u32)buf_len;
-	param_buf[2] = (u32)len_temp;
-	DCache_CleanInvalidate((u32)csi_buf_temp, buf_len);
-	DCache_CleanInvalidate((u32)len_temp, sizeof(u32));
+	param_buf[0] = (u32) csi_buf_temp;
+	param_buf[1] = (u32) buf_len;
+	param_buf[2] = (u32) len_temp;
+	DCache_CleanInvalidate((u32) csi_buf_temp, buf_len);
+	DCache_CleanInvalidate((u32) len_temp, sizeof(u32));
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_CSI_REPORT, param_buf, 4);
-	DCache_Invalidate((u32)csi_buf_temp, buf_len);
+	DCache_Invalidate((u32) csi_buf_temp, buf_len);
 	rtw_memcpy(csi_buf, csi_buf_temp, buf_len);
 
-	DCache_Invalidate((u32)len_temp, sizeof(u32));
+	DCache_Invalidate((u32) len_temp, sizeof(u32));
 	rtw_memcpy(len, len_temp, sizeof(u32));
 
-	rtw_mfree((u8 *)csi_buf_temp, 0);
-	rtw_mfree((u8 *)len_temp, 0);
+	rtw_mfree((u8 *) csi_buf_temp, 0);
+	rtw_mfree((u8 *) len_temp, 0);
 	return ret;
 }
+
 //----------------------------------------------------------------------------//
 #ifdef CONFIG_PLATFORM_TIZENRT_OS
-int wifi_get_tx_powertable(u32* powertable)
+int wifi_get_tx_powertable(u32 *powertable)
 {
 	u32 param_buf[1];
 	int ret = 0;
 
-	param_buf[0] = (u32)powertable;
-	DCache_CleanInvalidate((u32)powertable, 28*4);
+	param_buf[0] = (u32) powertable;
+	DCache_CleanInvalidate((u32) powertable, 28 * 4);
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_TX_POWERTABLE, param_buf, 1);
-	DCache_Invalidate((u32)powertable, 28*4);
+	DCache_Invalidate((u32) powertable, 28 * 4);
 
 	return ret;
 }
+
 void wifi_print_tx_powertable(void)
 {
 	u32 powertable[28];
 	(void)wifi_get_tx_powertable(powertable);
 
 	vddbg("RTL8720E Realmap\r\n");
-	vddbg("CCK      : %g %g %g %g\r\n",((double)(powertable[3]&0x000000FF)/4),((double)((powertable[3]&0x0000FF00)>>8)/4),((double)((powertable[3]&0x00FF0000)>>16)/4),((double)((powertable[3]&0xFF000000)>>24)/4));
-	vddbg("OFDM     : %g %g %g %g %g %g %g %g\r\n",((double)(powertable[7]&0x000000FF)/4),((double)((powertable[7]&0x0000FF00)>>8)/4),((double)((powertable[7]&0x00FF0000)>>16)/4),((double)((powertable[7]&0xFF000000)>>24)/4),
-			((double)(powertable[11]&0x000000FF)/4),((double)((powertable[11]&0x0000FF00)>>8)/4),((double)((powertable[11]&0x00FF0000)>>16)/4),((double)((powertable[11]&0xFF000000)>>24)/4));
-	vddbg("11nHT20  : %g %g %g %g %g %g %g %g %g %g %g %g \r\n",((double)(powertable[15]&0x000000FF)/4),((double)((powertable[15]&0x0000FF00)>>8)/4),((double)((powertable[15]&0x00FF0000)>>16)/4),((double)((powertable[15]&0xFF000000)>>24)/4),
-			((double)(powertable[19]&0x000000FF)/4),((double)((powertable[19]&0x0000FF00)>>8)/4),((double)((powertable[19]&0x00FF0000)>>16)/4),((double)((powertable[19]&0xFF000000)>>24)/4),
-			((double)(powertable[23]&0x000000FF)/4),((double)((powertable[23]&0x0000FF00)>>8)/4),((double)((powertable[23]&0x00FF0000)>>16)/4),((double)((powertable[23]&0xFF000000)>>24)/4));
-	vddbg("HE DCM   : %g %g %g %g\r\n",((double)(powertable[27]&0x000000FF)/4),((double)((powertable[27]&0x0000FF00)>>8)/4),((double)((powertable[27]&0x00FF0000)>>16)/4),((double)((powertable[27]&0xFF000000)>>24)/4));
+	vddbg("CCK      : %g %g %g %g\r\n", ((double)(powertable[3] & 0x000000FF) / 4), ((double)((powertable[3] & 0x0000FF00) >> 8) / 4), ((double)((powertable[3] & 0x00FF0000) >> 16) / 4), ((double)((powertable[3] & 0xFF000000) >> 24) / 4));
+	vddbg("OFDM     : %g %g %g %g %g %g %g %g\r\n", ((double)(powertable[7] & 0x000000FF) / 4), ((double)((powertable[7] & 0x0000FF00) >> 8) / 4), ((double)((powertable[7] & 0x00FF0000) >> 16) / 4), ((double)((powertable[7] & 0xFF000000) >> 24) / 4), ((double)(powertable[11] & 0x000000FF) / 4), ((double)((powertable[11] & 0x0000FF00) >> 8) / 4), ((double)((powertable[11] & 0x00FF0000) >> 16) / 4), ((double)((powertable[11] & 0xFF000000) >> 24) / 4));
+	vddbg("11nHT20  : %g %g %g %g %g %g %g %g %g %g %g %g \r\n", ((double)(powertable[15] & 0x000000FF) / 4), ((double)((powertable[15] & 0x0000FF00) >> 8) / 4), ((double)((powertable[15] & 0x00FF0000) >> 16) / 4), ((double)((powertable[15] & 0xFF000000) >> 24) / 4), ((double)(powertable[19] & 0x000000FF) / 4), ((double)((powertable[19] & 0x0000FF00) >> 8) / 4), ((double)((powertable[19] & 0x00FF0000) >> 16) / 4), ((double)((powertable[19] & 0xFF000000) >> 24) / 4), ((double)(powertable[23] & 0x000000FF) / 4), ((double)((powertable[23] & 0x0000FF00) >> 8) / 4), ((double)((powertable[23] & 0x00FF0000) >> 16) / 4), ((double)((powertable[23] & 0xFF000000) >> 24) / 4));
+	vddbg("HE DCM   : %g %g %g %g\r\n", ((double)(powertable[27] & 0x000000FF) / 4), ((double)((powertable[27] & 0x0000FF00) >> 8) / 4), ((double)((powertable[27] & 0x00FF0000) >> 16) / 4), ((double)((powertable[27] & 0xFF000000) >> 24) / 4));
 }
 #endif
-#endif	//#if CONFIG_WLAN
+#endif							//#if CONFIG_WLAN

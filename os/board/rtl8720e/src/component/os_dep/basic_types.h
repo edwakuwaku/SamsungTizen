@@ -21,7 +21,7 @@
 #define __BASIC_TYPES_H__
 
 #include <stdint.h>
-#include <stddef.h> /* for size_t */
+#include <stddef.h>				/* for size_t */
 
 #define PLATFORM_LITTLE_ENDIAN                  0
 #define PLATFORM_BIG_ENDIAN                     1
@@ -78,12 +78,12 @@
 #define UNUSED(X)      (void)X
 #endif
 
-typedef unsigned int	        uint;
-typedef	signed int		        sint;
+typedef unsigned int uint;
+typedef signed int sint;
 
 #ifdef __ICCARM__
-typedef signed long long        __int64_t;
-typedef unsigned long long      __uint64_t;
+typedef signed long long __int64_t;
+typedef unsigned long long __uint64_t;
 #endif
 
 #define s8                      int8_t
@@ -95,9 +95,9 @@ typedef unsigned long long      __uint64_t;
 #define s64                     int64_t
 #define u64                     uint64_t
 
-typedef int8_t                  i8;
-typedef int16_t                 i16;
-typedef int32_t                 i32;
+typedef int8_t i8;
+typedef int16_t i16;
+typedef int32_t i32;
 
 typedef uint8_t __u8;
 typedef int8_t __s8;
@@ -105,19 +105,18 @@ typedef uint16_t __u16;
 typedef int16_t __s16;
 typedef uint32_t __u32;
 typedef int32_t __s32;
-typedef	uint64_t __u64;
-typedef int64_t                 __s64;
-typedef int8_t                  __i8;
-typedef int16_t                 __i16;
-typedef int32_t                 __i32;
-
+typedef uint64_t __u64;
+typedef int64_t __s64;
+typedef int8_t __i8;
+typedef int16_t __i16;
+typedef int32_t __i32;
 
 #ifndef BOOL
-typedef unsigned char           BOOL;
+typedef unsigned char BOOL;
 #endif
 #ifndef __cplusplus
 #ifndef bool
-typedef unsigned char           bool;
+typedef unsigned char bool;
 #endif
 #endif
 
@@ -141,17 +140,17 @@ typedef enum _RTK_STATUS_ {
 typedef void *PVOID;
 #endif
 
-typedef     u32 dma_addr_t;
+typedef u32 dma_addr_t;
 
-typedef     void (*proc_t)(void *);
+typedef void (*proc_t)(void *);
 
 #ifndef CONFIG_PLATFORM_TIZENRT_OS
-typedef     unsigned int __kernel_size_t;
+typedef unsigned int __kernel_size_t;
 #endif
-typedef     int __kernel_ssize_t;
+typedef int __kernel_ssize_t;
 
-typedef 	__kernel_size_t	SIZE_T;
-typedef	    __kernel_ssize_t	SSIZE_T;
+typedef __kernel_size_t SIZE_T;
+typedef __kernel_ssize_t SSIZE_T;
 #define     FIELD_OFFSET(s,field)	((SSIZE_T)&((s*)(0))->field)
 
 #define MEM_ALIGNMENT_OFFSET	(sizeof (SIZE_T))
@@ -225,14 +224,14 @@ typedef	    __kernel_ssize_t	SSIZE_T;
 #define BIT(__n)       (1U<<(__n))
 #endif
 
-#if   defined ( __CC_ARM )                                            /* ARM Compiler 4/5 */
+#if   defined ( __CC_ARM )		/* ARM Compiler 4/5 */
 #define SECTION(_name)      __attribute__ ((__section__(_name)))
 #define ALIGNMTO(_bound)    __attribute__ ((aligned (_bound)))
 #define _PACKED_            __attribute__ ((packed))
 #define _LONG_CALL_
 #define _WEAK               __attribute__ ((weak))
 #define __NO_INLINE         __attribute__ ((noinline))
-#elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)       /* ARM Compiler 6 */
+#elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)	/* ARM Compiler 6 */
 #define SECTION(_name)      __attribute__ ((__section__(_name)))
 #define ALIGNMTO(_bound)    __attribute__ ((aligned (_bound)))
 #define _PACKED_            __attribute__ ((packed))
@@ -299,7 +298,6 @@ typedef	    __kernel_ssize_t	SSIZE_T;
 #endif
 #endif
 
-
 /*
  *	Call endian free function when
  *		1. Read/write packet content.
@@ -341,34 +339,34 @@ typedef	    __kernel_ssize_t	SSIZE_T;
 #endif
 
 //
-//	Example:
-//		BIT_LEN_MASK_32(0) => 0x00000000
-//		BIT_LEN_MASK_32(1) => 0x00000001
-//		BIT_LEN_MASK_32(2) => 0x00000003
-//		BIT_LEN_MASK_32(32) => 0xFFFFFFFF
+//  Example:
+//      BIT_LEN_MASK_32(0) => 0x00000000
+//      BIT_LEN_MASK_32(1) => 0x00000001
+//      BIT_LEN_MASK_32(2) => 0x00000003
+//      BIT_LEN_MASK_32(32) => 0xFFFFFFFF
 //
 #define BIT_LEN_MASK_32(__BitLen) \
 	(0xFFFFFFFF >> (32 - (__BitLen)))
 //
-//	Example:
-//		BIT_OFFSET_LEN_MASK_32(0, 2) => 0x00000003
-//		BIT_OFFSET_LEN_MASK_32(16, 2) => 0x00030000
+//  Example:
+//      BIT_OFFSET_LEN_MASK_32(0, 2) => 0x00000003
+//      BIT_OFFSET_LEN_MASK_32(16, 2) => 0x00030000
 //
 #define BIT_OFFSET_LEN_MASK_32(__BitOffset, __BitLen) \
 	(BIT_LEN_MASK_32(__BitLen) << (__BitOffset))
 
 //
-//	Description:
-//		Return 4-byte value in host byte ordering from
-//		4-byte pointer in litten-endian system.
+//  Description:
+//      Return 4-byte value in host byte ordering from
+//      4-byte pointer in litten-endian system.
 //
 #define LE_P4BYTE_TO_HOST_4BYTE(__pStart) \
 	ReadEF4Byte(__pStart)
 
 //
-//	Description:
-//		Translate subfield (continuous bits in little-endian) of 4-byte value in litten byte to
-//		4-byte value in host byte ordering.
+//  Description:
+//      Translate subfield (continuous bits in little-endian) of 4-byte value in litten byte to
+//      4-byte value in host byte ordering.
 //
 #define LE_BITS_TO_4BYTE(__pStart, __BitOffset, __BitLen) \
 	( \
@@ -378,9 +376,9 @@ typedef	    __kernel_ssize_t	SSIZE_T;
 	)
 
 //
-//	Description:
-//		Mask subfield (continuous bits in little-endian) of 4-byte value in litten byte oredering
-//		and return the result in 4-byte value in host byte ordering.
+//  Description:
+//      Mask subfield (continuous bits in little-endian) of 4-byte value in litten byte oredering
+//      and return the result in 4-byte value in host byte ordering.
 //
 #define LE_BITS_CLEARED_TO_4BYTE(__pStart, __BitOffset, __BitLen) \
 	( \
@@ -390,8 +388,8 @@ typedef	    __kernel_ssize_t	SSIZE_T;
 	)
 
 //
-//	Description:
-//		Set subfield of little-endian 4-byte value to specified value.
+//  Description:
+//      Set subfield of little-endian 4-byte value to specified value.
 //
 #define SET_BITS_TO_LE_4BYTE(__pStart, __BitOffset, __BitLen, __Value) \
 	WriteEF4Byte(__pStart, \
@@ -427,7 +425,6 @@ typedef	    __kernel_ssize_t	SSIZE_T;
 		EF2Byte(LE_BITS_CLEARED_TO_2BYTE(__pStart, __BitOffset, __BitLen) \
 			| ( (((u16)__Value) & BIT_LEN_MASK_16(__BitLen)) << (__BitOffset) )) \
 		)
-
 
 #define BIT_LEN_MASK_8(__BitLen) \
 		(0xFF >> (8 - (__BitLen)))
@@ -480,7 +477,7 @@ typedef	    __kernel_ssize_t	SSIZE_T;
 // Get the N-bytes aligment offset from the current length
 #define N_BYTE_ALIGMENT(__Value, __Aligment) ((__Aligment == 1) ? (__Value) : (((__Value + __Aligment - 1) / __Aligment) * __Aligment))
 
-typedef unsigned char	BOOLEAN, *PBOOLEAN;
+typedef unsigned char BOOLEAN, *PBOOLEAN;
 
 #define TEST_FLAG(__Flag,__testFlag)		(((__Flag) & (__testFlag)) != 0)
 #define SET_FLAG(__Flag, __setFlag)			((__Flag) |= __setFlag)
@@ -496,7 +493,7 @@ typedef unsigned char	BOOLEAN, *PBOOLEAN;
 #if defined ( __ICCARM__ )
 #define __inline__                      inline
 #define __inline                        inline
-#define __inline_definition			//In dialect C99, inline means that a function's definition is provided 
+#define __inline_definition		//In dialect C99, inline means that a function's definition is provided
 //only for inlining, and that there is another definition
 //(without inline) somewhere else in the program.
 //That means that this program is incomplete, because if
@@ -511,7 +508,7 @@ typedef unsigned char	BOOLEAN, *PBOOLEAN;
 #elif defined ( __CC_ARM   )
 #define __inline__			__inline	//__linine__ is not supported in keil compilor, use __inline instead
 #define inline				__inline
-#define __inline_definition			// for dialect C99
+#define __inline_definition		// for dialect C99
 #elif defined   (  __GNUC__  )
 #define __inline__                      inline
 #define __inline                        inline
@@ -547,8 +544,8 @@ typedef unsigned char	BOOLEAN, *PBOOLEAN;
 
 // for standard library
 #ifdef __ICCARM__
-#define __extension__		/* Ignore */
-#define	__restrict			/* Ignore */
+#define __extension__			/* Ignore */
+#define	__restrict				/* Ignore */
 #endif
 
-#endif// __BASIC_TYPES_H__
+#endif							// __BASIC_TYPES_H__

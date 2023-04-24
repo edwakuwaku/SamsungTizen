@@ -17,7 +17,6 @@
 #ifndef __OSDEP_SERVICE_MEMORY_H_
 #define __OSDEP_SERVICE_MEMORY_H_
 
-
 /*************************** Memory Management *******************************/
 
 /**
@@ -25,7 +24,7 @@
  * @param[in] sz: The size of memory to be allocated.
  * @return	  The pointer to the beginning of the memory
  */
-void	*rtw_vmalloc(uint32_t sz);
+void *rtw_vmalloc(uint32_t sz);
 
 /**
  * @brief  This function allocates the virtually contiguous memory
@@ -33,7 +32,7 @@ void	*rtw_vmalloc(uint32_t sz);
  * @param[in] sz: The size of memory to be allocated.
  * @return	  The pointer to the beginning of the memory
  */
-void	*rtw_zvmalloc(uint32_t sz);
+void *rtw_zvmalloc(uint32_t sz);
 
 /**
  * @brief  This function frees the virtually contiguous memory.
@@ -41,7 +40,7 @@ void	*rtw_zvmalloc(uint32_t sz);
  * @param[in] sz: The size of memory allocated.
  * @return	  None
  */
-void	rtw_vmfree(uint8_t *pbuf, uint32_t sz);
+void rtw_vmfree(uint8_t *pbuf, uint32_t sz);
 
 /**
  * @brief  This function allocates the memory
@@ -49,14 +48,14 @@ void	rtw_vmfree(uint8_t *pbuf, uint32_t sz);
  * @param[in] sz: The size of memory to be allocated.
  * @return	  The pointer to the beginning of the memory
  */
-void	*rtw_zmalloc(uint32_t sz);
+void *rtw_zmalloc(uint32_t sz);
 
 /**
  * @brief  This function allocates the memory.
  * @param[in] sz: The size of memory to be allocated.
  * @return	  The pointer to the beginning of the memory
  */
-void	*rtw_malloc(uint32_t sz);
+void *rtw_malloc(uint32_t sz);
 
 /**
  * @brief  This function allocates the memory, nlements*elementSize bytes in size.
@@ -64,7 +63,7 @@ void	*rtw_malloc(uint32_t sz);
  * @param[in] elementSize: The size of each element
  * @return	  The pointer to the beginning of the memory
  */
-void	*rtw_calloc(uint32_t nelements, uint32_t elmentSize);
+void *rtw_calloc(uint32_t nelements, uint32_t elmentSize);
 
 /**
  * @brief  This function frees the virtually contiguous memory.
@@ -72,7 +71,7 @@ void	*rtw_calloc(uint32_t nelements, uint32_t elmentSize);
  * @param[in] sz: The size of memory allocated.
  * @return	  None
  */
-void	rtw_mfree(uint8_t *pbuf, uint32_t sz);
+void rtw_mfree(uint8_t *pbuf, uint32_t sz);
 
 #define rtw_free(buf)		rtw_mfree((uint8_t *)buf, 0)
 
@@ -84,7 +83,7 @@ void	rtw_mfree(uint8_t *pbuf, uint32_t sz);
  * @param[in] sz: Size of memory to copy.
  * @return	  None
  */
-void	rtw_memcpy(void *dst, void *src, uint32_t sz);
+void rtw_memcpy(void *dst, void *src, uint32_t sz);
 
 /**
  * @brief  This function compares the first "sz" bytes of the block of memory pointed by "dst"
@@ -96,7 +95,7 @@ void	rtw_memcpy(void *dst, void *src, uint32_t sz);
  * @return	0: The contents of both memory blocks are equal.
  * @return	<0: The first byte that does not match in both memory blocks has a greater value in dst than in src.
  */
-int	rtw_memcmp(void *dst, void *src, uint32_t sz);
+int rtw_memcmp(void *dst, void *src, uint32_t sz);
 
 /**
  * @brief  This function sets the first "sz" bytes of the block of memory pointed by "pbuf" to the specified "c".
@@ -105,6 +104,6 @@ int	rtw_memcmp(void *dst, void *src, uint32_t sz);
  * @param[in] sz: Size of memory to be set to the value "c".
  * @return	  None
  */
-void	rtw_memset(void *pbuf, int c, uint32_t sz);
+void rtw_memset(void *pbuf, int c, uint32_t sz);
 /*************************** End Memory Management *******************************/
 #endif

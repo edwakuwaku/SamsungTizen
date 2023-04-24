@@ -6,4 +6,4 @@ struct _rom_wlan_ram_map {
 	void (*rtw_mfree)(unsigned char *pbuf, unsigned int sz);
 };
 
-#endif	/* ROM_WLAN_RAM_MAP_H */
+#endif							/* ROM_WLAN_RAM_MAP_H */

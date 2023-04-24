@@ -38,17 +38,17 @@ extern "C" {
 /**
   * @brief  The enumeration lists the disconnect reasons.
   */
-  //Defined in rtw_wifi_constants.h
+//Defined in rtw_wifi_constants.h
 //typedef enum {
-//	RTW_NO_ERROR,        /**< no error */
-//	RTW_NONE_NETWORK,   /**< none network */
-//	RTW_AUTH_FAIL,            /**< auth fail */
-//	RTW_ASSOC_FAIL,          /**< assocation fail */
-//	RTW_WRONG_PASSWORD, /**< wrong password */
-//	RTW_4WAY_HANDSHAKE_TIMEOUT, /**< 4 way handshake timeout*/
-//	RTW_CONNECT_FAIL,  /**< connect fail*/
-//	RTW_DHCP_FAIL,        /**< dhcp fail*/
-//	RTW_UNKNOWN,         /**< unknown*/
+//  RTW_NO_ERROR,        /**< no error */
+//  RTW_NONE_NETWORK,   /**< none network */
+//  RTW_AUTH_FAIL,            /**< auth fail */
+//  RTW_ASSOC_FAIL,          /**< assocation fail */
+//  RTW_WRONG_PASSWORD, /**< wrong password */
+//  RTW_4WAY_HANDSHAKE_TIMEOUT, /**< 4 way handshake timeout*/
+//  RTW_CONNECT_FAIL,  /**< connect fail*/
+//  RTW_DHCP_FAIL,        /**< dhcp fail*/
+//  RTW_UNKNOWN,         /**< unknown*/
 //} rtw_connect_error_flag_t;
 
 enum WIFI_INDICATE_MODE {
@@ -69,9 +69,7 @@ int wifi_if1_open(void);
 int wifi_if2_open(void);
 void wifi_stop_bss_network(void);
 u8 wifi_set_chplan(u8 chplan);
-int wifi_set_platform_rom_func(void *(*calloc_func)(size_t, size_t),
-							   void (*free_func)(void *),
-							   int (*rand_func)(void *, unsigned char *, size_t));
+int wifi_set_platform_rom_func(void *(*calloc_func)(size_t, size_t), void(*free_func)(void *), int(*rand_func)(void *, unsigned char *, size_t));
 void wifi_heap_statistics(u8 start);
 
 extern int rtw_joinbss_set_bssid(unsigned char wlan_idx, __u8 *bssid);
@@ -106,10 +104,9 @@ extern void _promisc_stop_tx_beacn(void);
 extern void _promisc_resume_tx_beacn(void);
 
 #ifdef CONFIG_PLATFORM_TIZENRT_OS
-extern int wifi_get_tx_powertable(u32* powertable);
+extern int wifi_get_tx_powertable(u32 *powertable);
 #endif
 #ifdef	__cplusplus
 }
 #endif
-
-#endif //#ifndef __RTW_INTF_USER_H__
+#endif							//#ifndef __RTW_INTF_USER_H__

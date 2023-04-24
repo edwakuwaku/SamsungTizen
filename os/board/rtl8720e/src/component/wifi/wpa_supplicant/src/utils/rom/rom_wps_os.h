@@ -25,4 +25,4 @@ extern struct _rom_wlan_ram_map rom_wlan_ram_map;
 extern uint8_t *WPS_realloc(uint8_t *old_buf, uint32_t old_sz, uint32_t new_sz);
 #define os_realloc(p, os, ns) WPS_realloc(((uint8_t*)(p)),(os),(ns))
 
-#endif /* ROM_WPS_OS_H */
+#endif							/* ROM_WPS_OS_H */

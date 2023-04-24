@@ -43,7 +43,6 @@ enum tls_fail_reason {
 	TLS_FAIL_DOMAIN_MISMATCH = 10,
 };
 
-
 #define TLS_MAX_ALT_SUBJECT 10
 
 union tls_event_data {
@@ -81,8 +80,7 @@ struct tls_config {
 	const char *openssl_ciphers;
 	unsigned int tls_session_lifetime;
 
-	void (*event_cb)(void *ctx, enum tls_event ev,
-					 union tls_event_data *data);
+	void (*event_cb)(void *ctx, enum tls_event ev, union tls_event_data *data);
 	void *cb_ctx;
 };
 
@@ -181,7 +179,6 @@ struct tls_connection_params {
 	const char *ocsp_stapling_response;
 };
 
-
 /**
  * tls_init - Initialize TLS library
  * @conf: Configuration data for TLS library
@@ -274,9 +271,7 @@ enum {
  * TLS_SET_PARAMS_ENGINE_PRV_BAD_PIN (-4) on PIN error causing PKCS#11 engine
  * failure.
  */
-int __must_check
-tls_connection_set_params(void *tls_ctx, struct tls_connection *conn,
-						  const struct tls_connection_params *params);
+int __must_check tls_connection_set_params(void *tls_ctx, struct tls_connection *conn, const struct tls_connection_params *params);
 
 /**
  * tls_global_set_params - Set TLS parameters for all TLS connection
@@ -290,8 +285,7 @@ tls_connection_set_params(void *tls_ctx, struct tls_connection *conn,
  * TLS_SET_PARAMS_ENGINE_PRV_BAD_PIN (-4) on PIN error causing PKCS#11 engine
  * failure.
  */
-int __must_check tls_global_set_params(
-	void *tls_ctx, const struct tls_connection_params *params);
+int __must_check tls_global_set_params(void *tls_ctx, const struct tls_connection_params *params);
 
 /**
  * tls_global_set_verify - Set global certificate verification options
@@ -312,12 +306,7 @@ int __must_check tls_global_set_verify(void *tls_ctx, int check_crl);
  * @session_ctx_len: Length of @session_ctx in bytes.
  * Returns: 0 on success, -1 on failure
  */
-int __must_check tls_connection_set_verify(void *tls_ctx,
-		struct tls_connection *conn,
-		int verify_peer,
-		unsigned int flags,
-		const u8 *session_ctx,
-		size_t session_ctx_len);
+int __must_check tls_connection_set_verify(void *tls_ctx, struct tls_connection *conn, int verify_peer, unsigned int flags, const u8 *session_ctx, size_t session_ctx_len);
 
 /**
  * tls_connection_get_random - Get random data from TLS connection
@@ -326,9 +315,7 @@ int __must_check tls_connection_set_verify(void *tls_ctx,
  * @data: Structure of client/server random data (filled on success)
  * Returns: 0 on success, -1 on failure
  */
-int __must_check tls_connection_get_random(void *tls_ctx,
-		struct tls_connection *conn,
-		struct tls_random *data);
+int __must_check tls_connection_get_random(void *tls_ctx, struct tls_connection *conn, struct tls_random *data);
 
 /**
  * tls_connection_prf - Use TLS-PRF to derive keying material
@@ -348,12 +335,7 @@ int __must_check tls_connection_get_random(void *tls_ctx,
  * client_random|server_random (or server_random|client_random). For TLSv1.2 and
  * newer, a different PRF is needed, though.
  */
-int __must_check  tls_connection_prf(void *tls_ctx,
-									 struct tls_connection *conn,
-									 const char *label,
-									 int server_random_first,
-									 int skip_keyblock,
-									 u8 *out, size_t out_len);
+int __must_check tls_connection_prf(void *tls_ctx, struct tls_connection *conn, const char *label, int server_random_first, int skip_keyblock, u8 *out, size_t out_len);
 
 /**
  * tls_connection_handshake - Process TLS handshake (client side)
@@ -382,16 +364,9 @@ int __must_check  tls_connection_prf(void *tls_ctx,
  * tls_connection_established() should return 1 once the TLS handshake has been
  * completed successfully.
  */
-struct wpabuf *tls_connection_handshake(void *tls_ctx,
-										struct tls_connection *conn,
-										const struct wpabuf *in_data,
-										struct wpabuf **appl_data);
+struct wpabuf *tls_connection_handshake(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data, struct wpabuf **appl_data);
 
-struct wpabuf *tls_connection_handshake2(void *tls_ctx,
-		struct tls_connection *conn,
-		const struct wpabuf *in_data,
-		struct wpabuf **appl_data,
-		int *more_data_needed);
+struct wpabuf *tls_connection_handshake2(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data, struct wpabuf **appl_data, int *more_data_needed);
 
 /**
  * tls_connection_server_handshake - Process TLS handshake (server side)
@@ -403,10 +378,7 @@ struct wpabuf *tls_connection_handshake2(void *tls_ctx,
  *
  * The caller is responsible for freeing the returned output data.
  */
-struct wpabuf *tls_connection_server_handshake(void *tls_ctx,
-		struct tls_connection *conn,
-		const struct wpabuf *in_data,
-		struct wpabuf **appl_data);
+struct wpabuf *tls_connection_server_handshake(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data, struct wpabuf **appl_data);
 
 /**
  * tls_connection_encrypt - Encrypt data into TLS tunnel
@@ -419,9 +391,7 @@ struct wpabuf *tls_connection_server_handshake(void *tls_ctx,
  * send data in the encrypted tunnel. The caller is responsible for freeing the
  * returned output data.
  */
-struct wpabuf *tls_connection_encrypt(void *tls_ctx,
-									  struct tls_connection *conn,
-									  const struct wpabuf *in_data);
+struct wpabuf *tls_connection_encrypt(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data);
 
 /**
  * tls_connection_decrypt - Decrypt data from TLS tunnel
@@ -434,14 +404,9 @@ struct wpabuf *tls_connection_encrypt(void *tls_ctx,
  * receive data from the encrypted tunnel. The caller is responsible for
  * freeing the returned output data.
  */
-struct wpabuf *tls_connection_decrypt(void *tls_ctx,
-									  struct tls_connection *conn,
-									  const struct wpabuf *in_data);
+struct wpabuf *tls_connection_decrypt(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data);
 
-struct wpabuf *tls_connection_decrypt2(void *tls_ctx,
-									   struct tls_connection *conn,
-									   const struct wpabuf *in_data,
-									   int *more_data_needed);
+struct wpabuf *tls_connection_decrypt2(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data, int *more_data_needed);
 
 /**
  * tls_connection_resumed - Was session resumption used
@@ -456,7 +421,7 @@ enum {
 	TLS_CIPHER_RC4_SHA /* 0x0005 */,
 	TLS_CIPHER_AES128_SHA /* 0x002f */,
 	TLS_CIPHER_RSA_DHE_AES128_SHA /* 0x0031 */,
-	TLS_CIPHER_ANON_DH_AES128_SHA /* 0x0034 */
+	TLS_CIPHER_ANON_DH_AES128_SHA	/* 0x0034 */
 };
 
 /**
@@ -467,9 +432,7 @@ enum {
  * (TLS_CIPHER_*).
  * Returns: 0 on success, -1 on failure
  */
-int __must_check tls_connection_set_cipher_list(void *tls_ctx,
-		struct tls_connection *conn,
-		u8 *ciphers);
+int __must_check tls_connection_set_cipher_list(void *tls_ctx, struct tls_connection *conn, u8 *ciphers);
 
 /**
  * tls_get_version - Get the current TLS version number
@@ -481,8 +444,7 @@ int __must_check tls_connection_set_cipher_list(void *tls_ctx,
  *
  * Get the currently used TLS version number.
  */
-int __must_check tls_get_version(void *tls_ctx, struct tls_connection *conn,
-								 char *buf, size_t buflen);
+int __must_check tls_get_version(void *tls_ctx, struct tls_connection *conn, char *buf, size_t buflen);
 
 /**
  * tls_get_cipher - Get current cipher name
@@ -494,8 +456,7 @@ int __must_check tls_get_version(void *tls_ctx, struct tls_connection *conn,
  *
  * Get the name of the currently used cipher.
  */
-int __must_check tls_get_cipher(void *tls_ctx, struct tls_connection *conn,
-								char *buf, size_t buflen);
+int __must_check tls_get_cipher(void *tls_ctx, struct tls_connection *conn, char *buf, size_t buflen);
 
 /**
  * tls_connection_enable_workaround - Enable TLS workaround options
@@ -506,8 +467,7 @@ int __must_check tls_get_cipher(void *tls_ctx, struct tls_connection *conn,
  * This function is used to enable connection-specific workaround options for
  * buffer SSL/TLS implementations.
  */
-int __must_check tls_connection_enable_workaround(void *tls_ctx,
-		struct tls_connection *conn);
+int __must_check tls_connection_enable_workaround(void *tls_ctx, struct tls_connection *conn);
 
 /**
  * tls_connection_client_hello_ext - Set TLS extension for ClientHello
@@ -518,10 +478,7 @@ int __must_check tls_connection_enable_workaround(void *tls_ctx,
  * @data_len: Extension payload length
  * Returns: 0 on success, -1 on failure
  */
-int __must_check tls_connection_client_hello_ext(void *tls_ctx,
-		struct tls_connection *conn,
-		int ext_type, const u8 *data,
-		size_t data_len);
+int __must_check tls_connection_client_hello_ext(void *tls_ctx, struct tls_connection *conn, int ext_type, const u8 *data, size_t data_len);
 
 /**
  * tls_connection_get_failed - Get connection failure status
@@ -548,20 +505,14 @@ int tls_connection_get_read_alerts(void *tls_ctx, struct tls_connection *conn);
  * Returns: Number of times a fatal write (locally detected error) has happened
  * during this connection.
  */
-int tls_connection_get_write_alerts(void *tls_ctx,
-									struct tls_connection *conn);
+int tls_connection_get_write_alerts(void *tls_ctx, struct tls_connection *conn);
 
 typedef int (*tls_session_ticket_cb)
-(void *ctx, const u8 *ticket, size_t len, const u8 *client_random,
- const u8 *server_random, u8 *master_secret);
+(void *ctx, const u8 *ticket, size_t len, const u8 *client_random, const u8 *server_random, u8 *master_secret);
 
-int __must_check  tls_connection_set_session_ticket_cb(
-	void *tls_ctx, struct tls_connection *conn,
-	tls_session_ticket_cb cb, void *ctx);
+int __must_check tls_connection_set_session_ticket_cb(void *tls_ctx, struct tls_connection *conn, tls_session_ticket_cb cb, void *ctx);
 
-void tls_connection_set_log_cb(struct tls_connection *conn,
-							   void (*log_cb)(void *ctx, const char *msg),
-							   void *ctx);
+void tls_connection_set_log_cb(struct tls_connection *conn, void (*log_cb)(void *ctx, const char *msg), void *ctx);
 
 #define TLS_BREAK_VERIFY_DATA BIT(0)
 #define TLS_BREAK_SRV_KEY_X_HASH BIT(1)
@@ -576,14 +527,12 @@ void tls_connection_set_test_flags(struct tls_connection *conn, u32 flags);
 
 int tls_get_library_version(char *buf, size_t buf_len);
 
-void tls_connection_set_success_data(struct tls_connection *conn,
-									 struct wpabuf *data);
+void tls_connection_set_success_data(struct tls_connection *conn, struct wpabuf *data);
 
 void tls_connection_set_success_data_resumed(struct tls_connection *conn);
 
-const struct wpabuf *
-tls_connection_get_success_data(struct tls_connection *conn);
+const struct wpabuf *tls_connection_get_success_data(struct tls_connection *conn);
 
 void tls_connection_remove_session(struct tls_connection *conn);
 
-#endif /* TLS_H */
+#endif							/* TLS_H */

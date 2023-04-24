@@ -346,7 +346,6 @@
 #define SET_HE_CAP_PPE_PU_IDX_BITMASK(_pEleStart, _val) \
 	SET_BITS_TO_LE_1BYTE(_pEleStart, 3, 4, _val)
 
-
 /* get HE capabilities element HE MAC capability information field: 6octets */
 /* BIT0~7 */
 #define GET_HE_MAC_CAP_HTC_HE_SUPPORT(_pEleStart) \
@@ -777,7 +776,6 @@
 #define GET_HE_MU_EDCA_VO_TIMER(_pEleStart) \
 	LE_BITS_TO_1BYTE((_pEleStart) + 12, 0, 8)
 
-
 /* get HE operation element VHT operation information field: 3octets (option)
 	* channel_width; channel center frequency segment0; channel center frequency segment1
 	* refer to rtw_vht.h
@@ -880,4 +878,3 @@ struct HE_caps_element {
 };
 
 #endif
-

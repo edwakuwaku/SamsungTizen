@@ -6,8 +6,8 @@
 */
 #if defined(__GNUC__)
 
-#define __time_t_defined   //__time_t is defined here because it is used by sys/_timespec.h as a guard in defining time_t.
-#define time_t long long   //defined time_t to be long long before it is defined in sys/_timespec.h
+#define __time_t_defined		//__time_t is defined here because it is used by sys/_timespec.h as a guard in defining time_t.
+#define time_t long long		//defined time_t to be long long before it is defined in sys/_timespec.h
 /*
  time.h has to be included because it contains some structures and function
  that will be used by gmtime_r(), __wrap_localtime), __wrap_mktime() in libc_wrap.c.

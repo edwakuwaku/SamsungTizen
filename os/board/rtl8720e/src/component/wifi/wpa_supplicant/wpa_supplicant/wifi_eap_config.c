@@ -74,11 +74,11 @@ void reset_config(void)
 
 void judge_station_disconnect(void)
 {
-	rtw_wifi_setting_t setting = {0};
+	rtw_wifi_setting_t setting = { 0 };
 
 	wifi_get_setting(STA_WLAN_INDEX, &setting);
 
-	/* disconnect first if already connected*/
+	/* disconnect first if already connected */
 	if (strlen((char *)setting.ssid) > 0) {
 		wifi_disconnect();
 	}
@@ -89,13 +89,13 @@ extern void eap_sm_deinit(void);
 void eap_disconnected_hdl(char *buf, int buf_len, int flags, void *handler_user_data)
 {
 	/* To avoid gcc warnings */
-	(void) buf;
-	(void) buf_len;
-	(void) flags;
-	(void) handler_user_data;
+	(void)buf;
+	(void)buf_len;
+	(void)flags;
+	(void)handler_user_data;
 
-//	printf("disconnected\n");
-#if (RTL8192E_SUPPORT == 0)//devin_li rtl8192es_temp_mask	
+//  printf("disconnected\n");
+#if (RTL8192E_SUPPORT == 0)		//devin_li rtl8192es_temp_mask
 	wifi_unreg_event_handler(WIFI_EVENT_WPA_EAPOL_RECVD, eap_eapol_recvd_hdl);
 	wifi_unreg_event_handler(WIFI_EVENT_DISCONNECT, eap_disconnected_hdl);
 	//eap_peer_unregister_methods();
@@ -181,7 +181,7 @@ void eap_config(void){
 int eap_start(char *method)
 {
 	/* To avoid gcc warnings */
-	(void) method;
+	(void)method;
 #ifdef CONFIG_ENABLE_EAP
 	int ret = -1;
 
@@ -231,8 +231,6 @@ int eap_start(char *method)
 	wifi_reg_event_handler(WIFI_EVENT_WPA_EAPOL_START, eap_eapol_start_hdl, NULL);
 	wifi_reg_event_handler(WIFI_EVENT_WPA_EAPOL_RECVD, eap_eapol_recvd_hdl, NULL);
 
-
-
 	ret = connect_by_open_system(eap_target_ssid);
 
 #if CONFIG_LWIP_LAYER
@@ -254,7 +252,7 @@ int eap_start(char *method)
 	if (ret != 0) {
 		judge_station_disconnect();
 		eap_disconnected_hdl(NULL, 0, 0, NULL);
-		rtw_msleep_os(200);	//wait handler done
+		rtw_msleep_os(200);		//wait handler done
 		printf("\r\nERROR: connect to AP by %s failed\n", method);
 	}
 
@@ -273,7 +271,7 @@ int eap_start(char *method)
 int connect_by_open_system(char *target_ssid)
 {
 	int ret;
-	rtw_network_info_t connect_param = {0};
+	rtw_network_info_t connect_param = { 0 };
 	if (target_ssid != NULL) {
 		rtw_memcpy(connect_param.ssid.val, target_ssid, strlen(target_ssid));
 		connect_param.ssid.len = strlen(target_ssid);
@@ -302,24 +300,24 @@ void eap_autoreconnect_thread(void *method)
 void eap_autoreconnect_hdl(u8 method_id)
 {
 	/* To avoid gcc warnings */
-	(void) method_id;
+	(void)method_id;
 #ifdef CONFIG_ENABLE_EAP
 	char *method;
 	switch (method_id) {
-	case 25: // EAP_TYPE_PEAP
+	case 25:					// EAP_TYPE_PEAP
 		method = "peap";
 		break;
-	case 13: // EAP_TYPE_TLS
+	case 13:					// EAP_TYPE_TLS
 		method = "tls";
 		break;
-	case 21: // EAP_TYPE_TTLS
+	case 21:					// EAP_TYPE_TTLS
 		method = "ttls";
 		break;
 	default:
 		printf("invalid eap method\n");
 		return;
 	}
-	if (xTaskCreate(eap_autoreconnect_thread, ((const char *)"eap_autoreconnect_thread"), 1024, (void *) method, tskIDLE_PRIORITY + 1, NULL) != pdPASS) {
+	if (xTaskCreate(eap_autoreconnect_thread, ((const char *)"eap_autoreconnect_thread"), 1024, (void *)method, tskIDLE_PRIORITY + 1, NULL) != pdPASS) {
 		printf("\n\r%s xTaskCreate failed\n", __FUNCTION__);
 	}
 #endif
@@ -357,7 +355,7 @@ static int eap_verify(void *data, mbedtls_x509_crt *crt, int depth, uint32_t *fl
 {
 
 	//char buf[1024];
-	((void) data);
+	((void)data);
 
 	printf("\nVerify requested for (Depth %d):\n", depth);
 	//mbedtls_x509_crt_info(buf, sizeof(buf) - 1, "", crt);
@@ -469,7 +467,7 @@ void eap_server_cert_free(void)
 int eap_cert_setup(struct eap_tls *tls_context)
 {
 	/* To avoid gcc warnings */
-	(void) tls_context;
+	(void)tls_context;
 #if (defined(ENABLE_EAP_SSL_VERIFY_CLIENT) && ENABLE_EAP_SSL_VERIFY_CLIENT)
 	if (eap_client_cert != NULL && eap_client_key != NULL) {
 		if (mbedtls_x509_crt_parse(_cli_crt, eap_client_cert, strlen(eap_client_cert) + 1) != 0) {

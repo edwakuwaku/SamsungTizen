@@ -22,13 +22,12 @@
 #define CONFIG_TLS  1
 #define CONFIG_PEAP 1
 #define CONFIG_TTLS 1
-#else  /* default config */
+#else							/* default config */
 #define CONFIG_TLS  0
 #define CONFIG_PEAP 0
 #define CONFIG_TTLS 0
-#endif /* PRE_CONFIG_EAP*/
+#endif							/* PRE_CONFIG_EAP */
 
 /************************ End of EAP configurations ***************************/
 
-#endif /* #ifndef AUTOCONF_EAP_H */
-
+#endif							/* #ifndef AUTOCONF_EAP_H */

@@ -25,4 +25,4 @@ extern "C" {
 #define _strncpy(dst, src, cnt)	strncpy(dst, src, cnt)
 #define DiagPrintf		printf
 
-#endif //PLATFORM_STDLIB_RTL8195BHP_H
+#endif							//PLATFORM_STDLIB_RTL8195BHP_H

@@ -17,7 +17,6 @@ enum {
 	MSG_EXCESSIVE, MSG_MSGDUMP, MSG_DEBUG, MSG_INFO, MSG_ALWAYS, MSG_WARNING, MSG_ERROR
 };
 
-
 #define wpa_debug_print_timestamp() do { } while (0)
 #define wpa_hexdump(l,t,b,le) do { } while (0)
 #define wpa_hexdump_buf_key(l,t,b) do { } while (0)
@@ -32,7 +31,6 @@ static inline int wpa_debug_reopen_file(void)
 {
 	return 0;
 }
-
 
 #define wprintf(fmt, arg...) printf("[%d] "fmt, rtw_get_current_time(),##arg)
 
@@ -56,10 +54,8 @@ static inline int wpa_debug_reopen_file(void)
 	}while(0)
 #define wpa_msg(ctx,level,fmt,arg...) wpa_printf((level),(fmt), ##arg)
 void wpa_hexdump_key(int level, const char *title, const void *buf, size_t len);
-void wpa_hexdump_buf(int level, const char *title,
-					 const struct wpabuf *buf);
-void wpa_hexdump_ascii(int level, const char *title, const void *buf,
-					   size_t len);
+void wpa_hexdump_buf(int level, const char *title, const struct wpabuf *buf);
+void wpa_hexdump_ascii(int level, const char *title, const void *buf, size_t len);
 
 #ifdef EAPOL_TEST
 #define WPA_ASSERT(a)						       \
@@ -74,6 +70,6 @@ void wpa_hexdump_ascii(int level, const char *title, const void *buf,
 #else
 #define WPA_ASSERT(a) do { } while (0)
 #endif
-#endif //CONFIG_NO_STDOUT_DEBUG
+#endif							//CONFIG_NO_STDOUT_DEBUG
 
-#endif /* WPA_DEBUG_H */
+#endif							/* WPA_DEBUG_H */

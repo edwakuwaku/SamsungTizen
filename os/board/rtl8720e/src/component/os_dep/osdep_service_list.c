@@ -46,4 +46,3 @@ void rtw_list_delete(_list *plist)
 {
 	list_del_init(plist);
 }
-

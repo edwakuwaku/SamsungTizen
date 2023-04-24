@@ -16,11 +16,10 @@
 #ifndef AUTOCONF_DEBUG_H
 #define AUTOCONF_DEBUG_H
 
-
 /***************************** for Debug message ******************************/
 //#define CONFIG_DEBUG
 //#define CONFIG_DEBUG_RTL871X
-#define DBG 0 /* for phy dm debug */
+#define DBG 0					/* for phy dm debug */
 
 #define WLAN_INTF_DBG		0
 //#define CONFIG_DEBUG_DYNAMIC
@@ -39,7 +38,7 @@
 #define DBG_DM_DIG 1			/* DebugComponents: bit0 */
 #define DBG_DM_ANT_DIV 1		/* DebugComponents: bit6 */
 #define DBG_TX_RATE 1			/* DebugComponents: bit9 */
-#define DBG_DM_RA 1			/* DebugComponents: bit9 */
+#define DBG_DM_RA 1				/* DebugComponents: bit9 */
 #define DBG_DM_ADAPTIVITY 1		/* DebugComponents: bit17 */
 /***************************** RF debug ***************************************/
 #define DBG_PWR_TRACKING 1		/* DebugComponents: bit24 */
@@ -47,9 +46,7 @@
 #define DBG_RF_DPK 1			/* DebugComponents: */
 /************************** PHY common debug **********************************/
 #define DBG_PWR_INDEX 1			// DebugComponents: bit30 */
-#endif /* (DM_DBG == 1) */
+#endif							/* (DM_DBG == 1) */
 /***************************** for Debug message ******************************/
 
-
-#endif /* #ifndef AUTOCONF_DEBUG_H */
-
+#endif							/* #ifndef AUTOCONF_DEBUG_H */

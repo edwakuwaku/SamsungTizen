@@ -22,7 +22,7 @@
 #include <basic_types.h>
 
 #if defined(__GNUC__)
-#include <cmsis_gcc.h>	// for __get_xPSR()
+#include <cmsis_gcc.h>			// for __get_xPSR()
 #endif
 #else
 #include "platform_autoconf.h"
@@ -331,8 +331,8 @@ extern void rtw_list_delete(_list *plist);
 
 extern int rtw_if_wifi_thread(char *name);
 
-int rtw_printf(const char *format,...);
-int rtw_printf_info(const char *format,...);
+int rtw_printf(const char *format, ...);
+int rtw_printf_info(const char *format, ...);
 
 #if (defined CONFIG_PLATFORM_8711B) || (defined CONFIG_PLATFORM_8721D)
 extern u32 random_seed;
@@ -373,5 +373,4 @@ extern u32 random_seed;
 #include "osdep_service_time.h"
 #include "osdep_service_timer.h"
 
-#endif	//#ifndef __OSDEP_SERVICE_H_
-
+#endif							//#ifndef __OSDEP_SERVICE_H_

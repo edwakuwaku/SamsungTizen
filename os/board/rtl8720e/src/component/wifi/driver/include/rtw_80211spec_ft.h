@@ -86,12 +86,10 @@ struct ft_mdie {
 	u8 ft_capab;
 };
 
-
 struct rsn_ie_hdr {
-	u8 elem_id; /* WLAN_EID_RSN */
+	u8 elem_id;					/* WLAN_EID_RSN */
 	u8 len;
-	u8 version[2]; /* little endian */
+	u8 version[2];				/* little endian */
 };
 
 #endif
-

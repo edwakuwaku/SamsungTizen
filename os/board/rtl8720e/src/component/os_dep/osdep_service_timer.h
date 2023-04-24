@@ -17,18 +17,18 @@
 #ifndef __OSDEP_SERVICE_TIMER_H_
 #define __OSDEP_SERVICE_TIMER_H_
 
-typedef void	            *_timerHandle;
+typedef void *_timerHandle;
 typedef void (*TIMER_FUN)(void *context);
 
 struct timer_list {
 	struct list_head list;
-	_timerHandle 	timer_hdl;
-	unsigned long	data;
+	_timerHandle timer_hdl;
+	unsigned long data;
 	unsigned char statically_alloc;	/*1: static allocate; 0: dynamic allocate */
 	void (*function)(void *);
 };
 
-typedef struct timer_list	_timer;
+typedef struct timer_list _timer;
 #define rtw_timer_list timer_list
 
 /*************************** Timers *******************************/
@@ -46,11 +46,7 @@ typedef struct timer_list	_timer;
  * @return  If the timer is successfully create then a handle to the newly
  * created timer is returned.  If the timer cannot be created, then 0 is returned.
  */
-_timerHandle rtw_timerCreate(const signed char *pcTimerName,
-							 u32 xTimerPeriodInTicks,
-							 uint32_t uxAutoReload,
-							 void *pvTimerID,
-							 TIMER_FUN pxCallbackFunction);
+_timerHandle rtw_timerCreate(const signed char *pcTimerName, u32 xTimerPeriodInTicks, uint32_t uxAutoReload, void *pvTimerID, TIMER_FUN pxCallbackFunction);
 
 /**
  * @brief  This function deletes a timer that was previously created using rtw_timerCreate.
@@ -107,10 +103,7 @@ uint32_t rtw_timerStop(_timerHandle xTimer, u32 xBlockTime);
  * priority of the timer service/daemon task relative to other tasks in the
  * system.
  */
-uint32_t rtw_timerChangePeriod(_timerHandle xTimer,
-							   u32 xNewPeriod,
-							   u32 xBlockTime);
-
+uint32_t rtw_timerChangePeriod(_timerHandle xTimer, u32 xNewPeriod, u32 xBlockTime);
 
 /*************************** End Timers *******************************/
 #endif

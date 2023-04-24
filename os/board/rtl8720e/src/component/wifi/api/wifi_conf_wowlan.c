@@ -79,12 +79,11 @@ static uint16_t _checksum32to16(uint32_t checksum32)
 #ifdef CONFIG_WOWLAN_SSL_KEEP_ALIVE
 
 static uint8_t ssl_offload = 0;
-extern void rtw_hal_set_ssl_offload(uint8_t *ctr, uint8_t *iv, uint8_t *enc_key, uint8_t *dec_key, uint8_t *hmac_key, uint8_t *content, size_t len,
-									uint8_t is_etm);
+extern void rtw_hal_set_ssl_offload(uint8_t *ctr, uint8_t *iv, uint8_t *enc_key, uint8_t *dec_key, uint8_t *hmac_key, uint8_t *content, size_t len, uint8_t is_etm);
 
 int wifi_set_ssl_offload(uint8_t *ctr, uint8_t *iv, uint8_t *enc_key, uint8_t *dec_key, uint8_t *hmac_key, uint8_t *content, size_t len, uint8_t is_etm)
 {
-	rtw_hal_set_ssl_offload(ctr, iv, enc_key, dec_key, hmac_key, content,  len,  is_etm);
+	rtw_hal_set_ssl_offload(ctr, iv, enc_key, dec_key, hmac_key, content, len, is_etm);
 	ssl_offload = 1;
 	return 0;
 }
@@ -123,24 +122,24 @@ extern void rtw_set_keepalive_offload(uint8_t *eth_frame, uint32_t frame_len, ui
 int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len, uint32_t interval_ms, uint32_t resend_ms, uint8_t wake_sys)
 {
 	/* To avoid gcc warnings */
-	(void) socket_fd;
-	(void) content;
-	(void) len;
-	(void) interval_ms;
+	(void)socket_fd;
+	(void)content;
+	(void)len;
+	(void)interval_ms;
 
 	struct sockaddr_in peer_addr, sock_addr;
 	socklen_t peer_addr_len = sizeof(peer_addr);
 	socklen_t sock_addr_len = sizeof(sock_addr);
-	getpeername(socket_fd, (struct sockaddr *) &peer_addr, &peer_addr_len);
-	getsockname(socket_fd, (struct sockaddr *) &sock_addr, &sock_addr_len);
-	uint8_t *peer_ip = (uint8_t *) &peer_addr.sin_addr;
+	getpeername(socket_fd, (struct sockaddr *)&peer_addr, &peer_addr_len);
+	getsockname(socket_fd, (struct sockaddr *)&sock_addr, &sock_addr_len);
+	uint8_t *peer_ip = (uint8_t *)&peer_addr.sin_addr;
 	uint16_t peer_port = ntohs(peer_addr.sin_port);
-	uint8_t *sock_ip = (uint8_t *) &sock_addr.sin_addr;
+	uint8_t *sock_ip = (uint8_t *)&sock_addr.sin_addr;
 	uint16_t sock_port = ntohs(sock_addr.sin_port);
 
 	// ip header
-	uint8_t ip_header[IP_HDR_LEN] = {0x45, 0x00, /*len*/ 0x00, 0x00 /*len*/, /*id*/ 0x00, 0x00 /*id*/, 0x00, 0x00, 0xff, /*protocol*/ 0x00 /*protocol*/,
-									 /*chksum*/ 0x00, 0x00 /*chksum*/, /*srcip*/ 0x00, 0x00, 0x00, 0x00 /*srcip*/, /*dstip*/ 0x00, 0x00, 0x00, 0x00 /*dstip*/
+	uint8_t ip_header[IP_HDR_LEN] = { 0x45, 0x00, /*len */ 0x00, 0x00 /*len */, /*id */ 0x00, 0x00 /*id */, 0x00, 0x00, 0xff, /*protocol */ 0x00 /*protocol */,
+									  /*chksum */ 0x00, 0x00 /*chksum */, /*srcip */ 0x00, 0x00, 0x00, 0x00 /*srcip */, /*dstip */ 0x00, 0x00, 0x00, 0x00	/*dstip */
 									};
 	// len
 	uint16_t ip_len = IP_HDR_LEN + TCP_HDR_LEN + len;
@@ -172,8 +171,8 @@ int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len,
 	ip_header[11] = (uint8_t)(ip_checksum16 & 0xff);
 
 	// pseudo header
-	uint8_t pseudo_header[12] = {/*srcip*/ 0x00, 0x00, 0x00, 0x00 /*srcip*/, /*dstip*/ 0x00, 0x00, 0x00, 0x00 /*dstip*/,
-										   0x00, /*protocol*/ 0x00 /*protocol*/, /*l4len*/ 0x00, 0x00 /*l4len*/
+	uint8_t pseudo_header[12] = { /*srcip */ 0x00, 0x00, 0x00, 0x00 /*srcip */, /*dstip */ 0x00, 0x00, 0x00, 0x00 /*dstip */,
+											 0x00, /*protocol */ 0x00 /*protocol */, /*l4len */ 0x00, 0x00	/*l4len */
 								};
 	// src ip
 	pseudo_header[0] = sock_ip[0];
@@ -193,8 +192,8 @@ int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len,
 	pseudo_header[11] = (uint8_t)(l4_len & 0xff);
 
 	// tcp header
-	uint8_t tcp_header[TCP_HDR_LEN] = {/*srcport*/ 0x00, 0x00 /*srcport*/, /*dstport*/ 0x00, 0x00 /*dstport*/, /*seqno*/ 0x00, 0x00, 0x00, 0x00 /*seqno*/,
-												   /*ackno*/ 0x00, 0x00, 0x00, 0x00 /*ackno*/, 0x50, 0x18, /*window*/ 0x00, 0x00 /*window*/, /*checksum*/ 0x00, 0x00 /*checksum*/, 0x00, 0x00
+	uint8_t tcp_header[TCP_HDR_LEN] = { /*srcport */ 0x00, 0x00 /*srcport */, /*dstport */ 0x00, 0x00 /*dstport */, /*seqno */ 0x00, 0x00, 0x00, 0x00 /*seqno */,
+													 /*ackno */ 0x00, 0x00, 0x00, 0x00 /*ackno */, 0x50, 0x18, /*window */ 0x00, 0x00 /*window */, /*checksum */ 0x00, 0x00 /*checksum */, 0x00, 0x00
 									  };
 	// src port
 	tcp_header[0] = (uint8_t)(sock_port >> 8);
@@ -204,8 +203,8 @@ int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len,
 	tcp_header[3] = (uint8_t)(peer_port & 0xff);
 
 	// eth header
-	uint8_t eth_header[ETH_HDR_LEN] = {/*dstaddr*/ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 /*dstaddr*/,
-												   /*srcaddr*/ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 /*srcaddr*/, 0x08, 0x00
+	uint8_t eth_header[ETH_HDR_LEN] = { /*dstaddr */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 /*dstaddr */,
+													 /*srcaddr */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 /*srcaddr */, 0x08, 0x00
 									  };
 
 	ip4_addr_t *dst_ip, *dst_ip_ret = NULL;
@@ -213,7 +212,7 @@ int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len,
 	uint8_t *mask = LwIP_GetMASK(0);
 	uint8_t *temp_ip = LwIP_GetIP(0);
 	dst_ip = (ip4_addr_t *) peer_ip;
-	if (!ip4_addr_netcmp(dst_ip, (ip4_addr_t *)temp_ip, (ip4_addr_t *)mask)) {
+	if (!ip4_addr_netcmp(dst_ip, (ip4_addr_t *) temp_ip, (ip4_addr_t *) mask)) {
 		//outside local network
 		dst_ip = (ip4_addr_t *) LwIP_GetGW(0);
 	} else {
@@ -291,18 +290,18 @@ int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len,
 	tcp_header[16] = (uint8_t)(tcp_checksum16 >> 8);
 	tcp_header[17] = (uint8_t)(tcp_checksum16 & 0xff);
 
-	netifapi_netif_set_link_down(&xnetif[0]); // simulate system enter sleep
+	netifapi_netif_set_link_down(&xnetif[0]);	// simulate system enter sleep
 
 	// eth frame without FCS
 	uint32_t frame_len = sizeof(eth_header) + sizeof(ip_header) + sizeof(tcp_header) + len;
-	uint8_t *eth_frame = (uint8_t *) malloc(frame_len);
+	uint8_t *eth_frame = (uint8_t *)malloc(frame_len);
 	memcpy(eth_frame, eth_header, sizeof(eth_header));
 	memcpy(eth_frame + sizeof(eth_header), ip_header, sizeof(ip_header));
 	memcpy(eth_frame + sizeof(eth_header) + sizeof(ip_header), tcp_header, sizeof(tcp_header));
 	memcpy(eth_frame + sizeof(eth_header) + sizeof(ip_header) + sizeof(tcp_header), content, len);
 
 #ifdef CONFIG_ARP_KEEP_ALIVE
-	rtw_set_arp_rsp_keep_alive(_TRUE, (uint8_t *)dst_ip);
+	rtw_set_arp_rsp_keep_alive(_TRUE, (uint8_t *) dst_ip);
 #endif
 	rtw_set_keepalive_offload(eth_frame, frame_len, interval_ms, resend_ms, wake_sys);
 
@@ -322,7 +321,7 @@ int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len,
 		//
 		wowlan_pattern_t fin_pattern;
 		//u8 fin_mask[6] = {0x3f, 0x70, 0x80, 0xc0, 0x0F, 0x80};
-		u8 fin_mask[6] = {0x3f, 0x70, 0x80, 0xc0, 0x3F, 0x80};
+		u8 fin_mask[6] = { 0x3f, 0x70, 0x80, 0xc0, 0x3F, 0x80 };
 
 		memset(&fin_pattern, 0, sizeof(wowlan_pattern_t));
 		memcpy(fin_pattern.eth_da, mac, 6);
@@ -336,7 +335,7 @@ int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len,
 		fin_pattern.src_port[1] = peer_port & 0xFF;
 		fin_pattern.dest_port[0] = (sock_port >> 8) & 0xFF;
 		fin_pattern.dest_port[1] = sock_port & 0xFF;
-		fin_pattern.flag2[0] = 0x11; // FIN + ACK
+		fin_pattern.flag2[0] = 0x11;	// FIN + ACK
 		memcpy(fin_pattern.mask, fin_mask, 6);
 		wifi_wowlan_set_pattern(fin_pattern);
 	}
@@ -347,23 +346,11 @@ int wifi_set_tcp_keep_alive_offload(int socket_fd, uint8_t *content, size_t len,
 #endif
 
 #ifdef CONFIG_WOWLAN_PARAM
-extern void rtw_set_wowlan_param(u8  fwdis_period,
-								 u8  fwdis_trypktnum,
-								 u8  pno_enable,
-								 u8  pno_timeout,
-								 u8  l2_keepalive_period);
-int wifi_wowlan_set_fwdecision_param(u8  fwdis_period,
-									 u8  fwdis_trypktnum,
-									 u8  pno_enable,
-									 u8  pno_timeout,
-									 u8  l2_keepalive_period)
+extern void rtw_set_wowlan_param(u8 fwdis_period, u8 fwdis_trypktnum, u8 pno_enable, u8 pno_timeout, u8 l2_keepalive_period);
+int wifi_wowlan_set_fwdecision_param(u8 fwdis_period, u8 fwdis_trypktnum, u8 pno_enable, u8 pno_timeout, u8 l2_keepalive_period)
 {
 	int ret = 0;
-	rtw_set_wowlan_param(fwdis_period,
-						 fwdis_trypktnum,
-						 pno_enable,
-						 pno_timeout,
-						 l2_keepalive_period);
+	rtw_set_wowlan_param(fwdis_period, fwdis_trypktnum, pno_enable, pno_timeout, l2_keepalive_period);
 
 	return ret;
 }
@@ -412,13 +399,11 @@ int wifi_wowlan_set_smartdtim(uint8_t check_period, uint8_t threshold, uint8_t c
 
 		rtw_set_lps_dtim(dtim);
 	}
-
 	//check check_period& threshold
-	if (threshold >=  check_period) {
+	if (threshold >= check_period) {
 		printf("warning: threshold >= check_period\r\n");
 		threshold = check_period / 2;
 	}
-
 	//check change_dtim
 	if (change_dtim >= dtim) {
 		printf("warning: change_dtim >= dtim\r\n");
@@ -432,11 +417,9 @@ int wifi_wowlan_set_smartdtim(uint8_t check_period, uint8_t threshold, uint8_t c
 #endif
 
 #ifdef CONFIG_ARP_REQUEST_KEEP_ALIVE
-extern void rtw_set_arpreq_keepalive(u8  powerbit,
-									 u8  dtim1to);
+extern void rtw_set_arpreq_keepalive(u8 powerbit, u8 dtim1to);
 
-int wifi_wowlan_set_arpreq_keepalive(u8  powerbit,
-									 u8  dtim1to)
+int wifi_wowlan_set_arpreq_keepalive(u8 powerbit, u8 dtim1to)
 {
 	int ret = 0;
 	rtw_set_arpreq_keepalive(powerbit, dtim1to);
@@ -446,12 +429,9 @@ int wifi_wowlan_set_arpreq_keepalive(u8  powerbit,
 #endif
 
 #ifdef CONFIG_WOWLAN_IO_WDT
-extern void rtw_set_wdt(u8  gpio,
-						u8  interval);
+extern void rtw_set_wdt(u8 gpio, u8 interval);
 
-
-int wifi_wowlan_set_wdt(u8  gpio,
-						u8  interval)
+int wifi_wowlan_set_wdt(u8 gpio, u8 interval)
 {
 	int ret = 0;
 	rtw_set_wdt(gpio, interval);
@@ -463,29 +443,29 @@ int wifi_wowlan_set_wdt(u8  gpio,
 extern void rtw_set_dhcp_offload(uint8_t *eth_frame, uint32_t frame_len, uint32_t lease_time, uint32_t t1_renew_time);
 
 struct dhcprenew_msg {
-	uint8_t op; 		/* Message op code/message type. 1 = BOOTREQUEST, 2 = BOOTREPLY */
-	uint8_t	htype;		/* Hardware address type */
-	uint8_t hlen;		/* Hardware address length */
-	uint8_t hops;		/* Client sets to zero, optionally used by relay agents
-				   when booting via a relay agent */
-	uint8_t xid[4];		/* Transaction ID, a random number chosen by the client,
-				   used by the client and server to associate messages and
-				   responses between a client and a server */
-	uint16_t secs;		/* Filled in by client, seconds elapsed since client began address
-				   acquisition or renewal process.*/
-	uint16_t flags;		/* bit 0: Broadcast flag, bit 1~15:MBZ must 0*/
-	uint8_t ciaddr[4];	/* Client IP address; only filled in if client is in BOUND,
-				   RENEW or REBINDING state and can respond to ARP requests. */
-	uint8_t yiaddr[4];	/* 'your' (client) IP address */
-	uint8_t siaddr[4];	/* IP address of next server to use in bootstrap;
-				   returned in DHCPOFFER, DHCPACK by server. */
-	uint8_t giaddr[4];	/* Relay agent IP address, used in booting via a relay agent.*/
-	uint8_t chaddr[16];	/* Client hardware address */
-	uint8_t sname[64];	/* Optional server host name, null terminated string.*/
-	uint8_t file[128];	/* Boot file name, null terminated string; "generic" name or
-			           null in DHCPDISCOVER, fully qualified directory-path name in DHCPOFFER.*/
+	uint8_t op;					/* Message op code/message type. 1 = BOOTREQUEST, 2 = BOOTREPLY */
+	uint8_t htype;				/* Hardware address type */
+	uint8_t hlen;				/* Hardware address length */
+	uint8_t hops;				/* Client sets to zero, optionally used by relay agents
+								   when booting via a relay agent */
+	uint8_t xid[4];				/* Transaction ID, a random number chosen by the client,
+								   used by the client and server to associate messages and
+								   responses between a client and a server */
+	uint16_t secs;				/* Filled in by client, seconds elapsed since client began address
+								   acquisition or renewal process. */
+	uint16_t flags;				/* bit 0: Broadcast flag, bit 1~15:MBZ must 0 */
+	uint8_t ciaddr[4];			/* Client IP address; only filled in if client is in BOUND,
+								   RENEW or REBINDING state and can respond to ARP requests. */
+	uint8_t yiaddr[4];			/* 'your' (client) IP address */
+	uint8_t siaddr[4];			/* IP address of next server to use in bootstrap;
+								   returned in DHCPOFFER, DHCPACK by server. */
+	uint8_t giaddr[4];			/* Relay agent IP address, used in booting via a relay agent. */
+	uint8_t chaddr[16];			/* Client hardware address */
+	uint8_t sname[64];			/* Optional server host name, null terminated string. */
+	uint8_t file[128];			/* Boot file name, null terminated string; "generic" name or
+								   null in DHCPDISCOVER, fully qualified directory-path name in DHCPOFFER. */
 	uint32_t cookie;
-	uint8_t options[64];   /* Optional parameters field. reference the RFC 2132 */
+	uint8_t options[64];		/* Optional parameters field. reference the RFC 2132 */
 };
 
 #if CONFIG_LWIP_LAYER==0
@@ -505,7 +485,7 @@ int wifi_set_dhcp_offload(void)
 	dhcp_ip = LwIP_GetIP(0);
 	uint8_t *dhcp_payload = NULL;
 	int len = 0;
-	uint32_t  seconds_elapsed = xTaskGetTickCount();
+	uint32_t seconds_elapsed = xTaskGetTickCount();
 	uint32_t lease_time, t1_time, xid, xid_temp;
 	/* dhcp msg */
 	struct dhcprenew_msg *dhcprenew_msg = NULL;
@@ -517,7 +497,6 @@ int wifi_set_dhcp_offload(void)
 	dhcprenew_msg->hlen = 6;
 	dhcprenew_msg->hops = 0;
 
-
 	// dhcprenew_msg->xid[0] = 0x00;
 	// dhcprenew_msg->xid[1] = 0x00;
 	// dhcprenew_msg->xid[2] = 0xCD;
@@ -528,7 +507,7 @@ int wifi_set_dhcp_offload(void)
 	printf("xid = %d\r\n", xid);
 	xid_temp = PP_HTONL(xid);
 	memcpy(dhcprenew_msg->xid, &xid_temp, 4);
-	dhcprenew_msg->secs = (uint16_t)((xTaskGetTickCount() - seconds_elapsed) / configTICK_RATE_HZ);			//Realtek add
+	dhcprenew_msg->secs = (uint16_t)((xTaskGetTickCount() - seconds_elapsed) / configTICK_RATE_HZ);	//Realtek add
 
 	/* we don't need the broadcast flag since we can receive unicast traffic
 	   before being fully configured! */
@@ -555,14 +534,14 @@ int wifi_set_dhcp_offload(void)
 	dhcprenew_msg->options[3] = 0xFF;
 
 	len = 244;
-	dhcp_payload = (uint8_t *)dhcprenew_msg;
+	dhcp_payload = (uint8_t *) dhcprenew_msg;
 
 	// ip header
-	uint8_t ip_header[IP_HDR_LEN] = {0x45, 0x00, /*len*/ 0x00, 0x00 /*len*/, /*id*/ 0x00, 0x00 /*id*/, 0x00, 0x00, 0xff, /*protocol*/ 0x00 /*protocol*/,
-									 /*chksum*/ 0x00, 0x00 /*chksum*/, /*srcip*/ 0x00, 0x00, 0x00, 0x00 /*srcip*/, /*dstip*/ 0x00, 0x00, 0x00, 0x00 /*dstip*/
+	uint8_t ip_header[IP_HDR_LEN] = { 0x45, 0x00, /*len */ 0x00, 0x00 /*len */, /*id */ 0x00, 0x00 /*id */, 0x00, 0x00, 0xff, /*protocol */ 0x00 /*protocol */,
+									  /*chksum */ 0x00, 0x00 /*chksum */, /*srcip */ 0x00, 0x00, 0x00, 0x00 /*srcip */, /*dstip */ 0x00, 0x00, 0x00, 0x00	/*dstip */
 									};
 	// len
-	uint16_t ip_len = IP_HDR_LEN + 8 /* UDP Header*/ + len;
+	uint16_t ip_len = IP_HDR_LEN + 8 /* UDP Header */  + len;
 	ip_header[2] = (uint8_t)(ip_len >> 8);
 	ip_header[3] = (uint8_t)(ip_len & 0xff);
 	// id
@@ -592,8 +571,8 @@ int wifi_set_dhcp_offload(void)
 
 	// pseudo header
 #if 0
-	uint8_t pseudo_header[12] = {/*srcip*/ 0x00, 0x00, 0x00, 0x00 /*srcip*/, /*dstip*/ 0x00, 0x00, 0x00, 0x00 /*dstip*/,
-										   0x00, /*protocol*/ 0x00 /*protocol*/, /*l4len*/ 0x00, 0x00 /*l4len*/
+	uint8_t pseudo_header[12] = { /*srcip */ 0x00, 0x00, 0x00, 0x00 /*srcip */, /*dstip */ 0x00, 0x00, 0x00, 0x00 /*dstip */,
+											 0x00, /*protocol */ 0x00 /*protocol */, /*l4len */ 0x00, 0x00	/*l4len */
 								};
 	// src ip
 	pseudo_header[0] = dhcp_ip[0];
@@ -613,17 +592,16 @@ int wifi_set_dhcp_offload(void)
 	pseudo_header[11] = (uint8_t)(l4_len & 0xff);
 #endif
 	// udp header
-	uint8_t udp_header[8] = {/*srcport*/ 0x00, 0x44 /*srcport*/, /*dstport*/ 0x00, 0x43 /*dstport*/, /*len*/ 0x00, 0x00 /*len*/, /*checksum*/ 0x00, 0x00 /*checksum*/};
+	uint8_t udp_header[8] = { /*srcport */ 0x00, 0x44 /*srcport */, /*dstport */ 0x00, 0x43 /*dstport */, /*len */ 0x00, 0x00 /*len */, /*checksum */ 0x00, 0x00 /*checksum */  };
 
 	// len
-	uint16_t udp_len = 8 /* UDP Header*/ + len;
+	uint16_t udp_len = 8 /* UDP Header */  + len;
 	udp_header[4] = (uint8_t)(udp_len >> 8);
 	udp_header[5] = (uint8_t)(udp_len & 0xff);
 
-
 	// eth header
-	uint8_t eth_header[ETH_HDR_LEN] = {/*dstaddr*/ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF /*dstaddr*/,
-												   /*srcaddr*/ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 /*srcaddr*/, 0x08, 0x00
+	uint8_t eth_header[ETH_HDR_LEN] = { /*dstaddr */ 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF /*dstaddr */,
+													 /*srcaddr */ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 /*srcaddr */, 0x08, 0x00
 									  };
 
 	ip4_addr_t *dst_ip, *dst_ip_ret = NULL;
@@ -636,14 +614,13 @@ int wifi_set_dhcp_offload(void)
 		memcpy(eth_header, dst_eth_ret->addr, ETH_ALEN);
 	}
 
-
 	printf("LwIP_GetMAC2\r\n");
 	// src addr
 	memcpy(eth_header + ETH_ALEN, LwIP_GetMAC(0), ETH_ALEN);
 
 	// eth frame without FCS
 	uint32_t frame_len = sizeof(eth_header) + sizeof(ip_header) + 8 + len;
-	uint8_t *eth_frame = (uint8_t *) malloc(frame_len);
+	uint8_t *eth_frame = (uint8_t *)malloc(frame_len);
 	memcpy(eth_frame, eth_header, sizeof(eth_header));
 	memcpy(eth_frame + sizeof(eth_header), ip_header, sizeof(ip_header));
 	memcpy(eth_frame + sizeof(eth_header) + sizeof(ip_header), udp_header, 8);
@@ -690,7 +667,7 @@ int wifi_wlan_redl_fw(void)
 int wifi_wowlan_ctrl(int enable)
 {
 	int ret = 0;
-	u8 param = (u8)enable;
+	u8 param = (u8) enable;
 
 	ret = rtw_wowlan_ctrl(STA_WLAN_INDEX, RTW_WOWLAN_CTRL, &param);
 
@@ -726,11 +703,9 @@ int wifi_wowlan_set_pattern(wowlan_pattern_t pattern)
 	wowlan_pattern_t wowlan_pattern;
 
 #if 1
-	printf("eth_da: %02X %02X %02X %02X %02X %02X\r\n",
-		   pattern.eth_da[0], pattern.eth_da[1], pattern.eth_da[2], pattern.eth_da[3], pattern.eth_da[4], pattern.eth_da[5]
+	printf("eth_da: %02X %02X %02X %02X %02X %02X\r\n", pattern.eth_da[0], pattern.eth_da[1], pattern.eth_da[2], pattern.eth_da[3], pattern.eth_da[4], pattern.eth_da[5]
 		  );
-	printf("eth_sa: %02X %02X %02X %02X %02X %02X\r\n",
-		   pattern.eth_sa[0], pattern.eth_sa[1], pattern.eth_sa[2], pattern.eth_sa[3], pattern.eth_sa[4], pattern.eth_sa[5]
+	printf("eth_sa: %02X %02X %02X %02X %02X %02X\r\n", pattern.eth_sa[0], pattern.eth_sa[1], pattern.eth_sa[2], pattern.eth_sa[3], pattern.eth_sa[4], pattern.eth_sa[5]
 		  );
 	printf("eth_proto_type: %02X %02X\r\n", pattern.eth_proto_type[0], pattern.eth_proto_type[1]);
 	printf("header_len: %02X\r\n", pattern.header_len[0]);
@@ -740,13 +715,10 @@ int wifi_wowlan_set_pattern(wowlan_pattern_t pattern)
 	printf("src_port: %02X %02X\r\n", pattern.src_port[0], pattern.src_port[1]);
 	printf("dest_port: %02X %02X\r\n", pattern.dest_port[0], pattern.dest_port[1]);
 	printf("flag2: %02X\r\n", pattern.flag2[0]);
-	printf("mask: %02X %02X %02X %02X %02X %02X\r\n",
-		   pattern.mask[0], pattern.mask[1], pattern.mask[2], pattern.mask[3], pattern.mask[4], pattern.mask[5]
+	printf("mask: %02X %02X %02X %02X %02X %02X\r\n", pattern.mask[0], pattern.mask[1], pattern.mask[2], pattern.mask[3], pattern.mask[4], pattern.mask[5]
 		  );
 
-	printf("payload_mask: %02X %02X %02X %02X %02X %02X %02X %02X %02X\r\n",
-		   pattern.payload_mask[0], pattern.payload_mask[1], pattern.payload_mask[2], pattern.payload_mask[3], pattern.payload_mask[4], pattern.payload_mask[5],
-		   pattern.payload_mask[6], pattern.payload_mask[7], pattern.payload_mask[8]
+	printf("payload_mask: %02X %02X %02X %02X %02X %02X %02X %02X %02X\r\n", pattern.payload_mask[0], pattern.payload_mask[1], pattern.payload_mask[2], pattern.payload_mask[3], pattern.payload_mask[4], pattern.payload_mask[5], pattern.payload_mask[6], pattern.payload_mask[7], pattern.payload_mask[8]
 		  );
 
 	int i;
@@ -766,4 +738,4 @@ int wifi_wowlan_set_pattern(wowlan_pattern_t pattern)
 #endif
 #endif
 
-#endif	//#if CONFIG_WLAN
+#endif							//#if CONFIG_WLAN

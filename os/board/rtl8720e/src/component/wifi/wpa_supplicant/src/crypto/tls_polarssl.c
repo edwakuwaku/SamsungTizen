@@ -10,7 +10,7 @@
 #include "utils/common.h"
 #include "tls.h"
 
-#define DEBUG_LEVEL   0 // For debug: 5
+#define DEBUG_LEVEL   0			// For debug: 5
 
 int ErrorCnt = 0;
 
@@ -21,9 +21,7 @@ struct tls_connection {
 
 	u8 client_random[32];
 	u8 server_random[32];
-	int (*tls_prf)(const unsigned char *, size_t, const char *,
-				   const unsigned char *, size_t,
-				   unsigned char *, size_t);
+	int (*tls_prf)(const unsigned char *, size_t, const char *, const unsigned char *, size_t, unsigned char *, size_t);
 };
 // buffer BIO info (ptr, len, len left), might improve the performance if using circular buffer
 struct buf_BIO {
@@ -31,7 +29,6 @@ struct buf_BIO {
 	int len;
 	int len_left;
 };
-
 
 /* used to test the buffer I/O read write functions
 int test_BIO(struct tls_connection * conn){
@@ -60,11 +57,10 @@ int test_BIO(struct tls_connection * conn){
 
 static volatile size_t min_heap_size = 0;
 
-
 static int my_random(void *p_rng, unsigned char *output, size_t output_len)
 {
 	/* To avoid gcc warnings */
-	(void) p_rng;
+	(void)p_rng;
 
 	rtw_get_random_bytes(output, output_len);
 	return 0;
@@ -73,7 +69,7 @@ static int my_random(void *p_rng, unsigned char *output, size_t output_len)
 void my_debug(void *ctx, int level, const char *str)
 {
 	/* To avoid gcc warnings */
-	(void) ctx;
+	(void)ctx;
 
 	if (level <= DEBUG_LEVEL) {
 		printf("\n\r%s", str);
@@ -176,7 +172,7 @@ int buf_write_store(void *ctx, const unsigned char *buf, size_t len)
 int buf_read(void *ctx, unsigned char *buf, size_t len)
 {
 	/* To avoid gcc warnins */
-	(void) ctx;
+	(void)ctx;
 
 	struct buf_BIO *bio = conn_buf_in;
 
@@ -197,12 +193,10 @@ int buf_read(void *ctx, unsigned char *buf, size_t len)
 	return read_len;
 }
 
-
-
 int buf_write(void *ctx, const unsigned char *buf, size_t len)
 {
 	/* To avoid gcc warnins */
-	(void) ctx;
+	(void)ctx;
 
 	struct buf_BIO *bio = conn_buf_out;
 
@@ -264,11 +258,11 @@ struct eap_tls {
 	void *fd;
 };
 
-extern int mbedtls_platform_set_calloc_free(void *(*calloc_func)(size_t, size_t), void (*free_func)(void *));
+extern int mbedtls_platform_set_calloc_free(void *(*calloc_func)(size_t, size_t), void(*free_func)(void *));
 void *tls_init(const struct tls_config *conf)
 {
 	/* To avoid gcc warnings */
-	(void) conf;
+	(void)conf;
 
 	struct eap_tls *tls_context;
 
@@ -297,7 +291,7 @@ void *tls_init(const struct tls_config *conf)
 void tls_deinit(void *ssl_ctx)
 {
 	if (ssl_ctx != NULL) {
-		struct eap_tls *tls_context = (struct eap_tls *) ssl_ctx;
+		struct eap_tls *tls_context = (struct eap_tls *)ssl_ctx;
 		mbedtls_net_free(tls_context->fd);
 		mbedtls_ssl_free(tls_context->ssl);
 		mbedtls_ssl_config_free(tls_context->conf);
@@ -309,7 +303,7 @@ void tls_deinit(void *ssl_ctx)
 int tls_get_errors(void *tls_ctx)
 {
 	/* To avoid gcc warnings */
-	(void) tls_ctx;
+	(void)tls_ctx;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_get_errors");
 	return ErrorCnt;
@@ -318,7 +312,7 @@ int tls_get_errors(void *tls_ctx)
 struct tls_connection *tls_connection_init(void *tls_ctx)
 {
 	volatile int ret;
-	struct eap_tls *tls_context = (struct eap_tls *) tls_ctx;
+	struct eap_tls *tls_context = (struct eap_tls *)tls_ctx;
 
 	struct tls_connection *conn;
 	conn = os_zalloc(sizeof(*conn));
@@ -338,10 +332,7 @@ struct tls_connection *tls_connection_init(void *tls_ctx)
 	//test_BIO(conn);
 	mbedtls_ssl_set_bio(tls_context->ssl, tls_context->fd, buf_write, buf_read, NULL);
 
-	if ((ret = mbedtls_ssl_config_defaults(tls_context->conf,
-										   MBEDTLS_SSL_IS_CLIENT,
-										   MBEDTLS_SSL_TRANSPORT_STREAM,
-										   MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
+	if ((ret = mbedtls_ssl_config_defaults(tls_context->conf, MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM, MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
 
 		wpa_printf(MSG_INFO, "TLS: mbedtls_ssl_config_defaults() failed");
 		return NULL;
@@ -364,11 +355,10 @@ struct tls_connection *tls_connection_init(void *tls_ctx)
 	return conn;
 }
 
-
 void tls_connection_deinit(void *tls_ctx, struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) tls_ctx;
+	(void)tls_ctx;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_deinit start");
 	if (conn != NULL) {
@@ -382,11 +372,10 @@ void tls_connection_deinit(void *tls_ctx, struct tls_connection *conn)
 	ErrorCnt = 0;
 }
 
-
 int tls_connection_established(void *tls_ctx, struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
+	(void)conn;
 
 	mbedtls_ssl_context *ssl = ((struct eap_tls *)tls_ctx)->ssl;
 
@@ -399,7 +388,6 @@ int tls_connection_established(void *tls_ctx, struct tls_connection *conn)
 	}
 }
 
-
 int tls_connection_shutdown(void *tls_ctx, struct tls_connection *conn)
 {
 	if (conn == NULL) {
@@ -409,62 +397,53 @@ int tls_connection_shutdown(void *tls_ctx, struct tls_connection *conn)
 	return -1;
 }
 
-int tls_connection_set_params(void *tls_ctx, struct tls_connection *conn,
-							  const struct tls_connection_params *params)
+int tls_connection_set_params(void *tls_ctx, struct tls_connection *conn, const struct tls_connection_params *params)
 {
 	/* To avoid gcc warnings */
-	(void) tls_ctx;
-	(void) conn;
-	(void) params;
+	(void)tls_ctx;
+	(void)conn;
+	(void)params;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_set_params");
 	//return -1;
 	return 0;
 }
 
-
-int tls_global_set_params(void *tls_ctx,
-						  const struct tls_connection_params *params)
+int tls_global_set_params(void *tls_ctx, const struct tls_connection_params *params)
 {
 	/* To avoid gcc warnings */
-	(void) params;
-	(void) tls_ctx;
+	(void)params;
+	(void)tls_ctx;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_global_set_params");
 	return -1;
 }
 
-
 int tls_global_set_verify(void *tls_ctx, int check_crl)
 {
 	/* To avoid gcc warnings */
-	(void) tls_ctx;
-	(void) check_crl;
+	(void)tls_ctx;
+	(void)check_crl;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_global_set_verify");
 	return -1;
 }
 
-
-int tls_connection_set_verify(void *tls_ctx, struct tls_connection *conn,
-							  int verify_peer, unsigned int flags,
-							  const u8 *session_ctx, size_t session_ctx_len)
+int tls_connection_set_verify(void *tls_ctx, struct tls_connection *conn, int verify_peer, unsigned int flags, const u8 *session_ctx, size_t session_ctx_len)
 {
 	/* To avoid gcc warnings */
-	(void) tls_ctx;
-	(void) conn;
-	(void) verify_peer;
-	(void) flags;
-	(void) session_ctx;
-	(void) session_ctx_len;
+	(void)tls_ctx;
+	(void)conn;
+	(void)verify_peer;
+	(void)flags;
+	(void)session_ctx;
+	(void)session_ctx_len;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_set_verify");
 	return -1;
 }
 
-
-int tls_connection_get_random(void *tls_ctx, struct tls_connection *conn,
-							  struct tls_random *keys)
+int tls_connection_get_random(void *tls_ctx, struct tls_connection *conn, struct tls_random *keys)
 {
 	mbedtls_ssl_context *ssl = ((struct eap_tls *)tls_ctx)->ssl;
 
@@ -482,13 +461,11 @@ int tls_connection_get_random(void *tls_ctx, struct tls_connection *conn,
 }
 
 // return 0: success
-int tls_connection_prf(void *tls_ctx, struct tls_connection *conn,
-					   const char *label, int server_random_first,
-					   int skip_keyblock, u8 *out, size_t out_len)
+int tls_connection_prf(void *tls_ctx, struct tls_connection *conn, const char *label, int server_random_first, int skip_keyblock, u8 *out, size_t out_len)
 {
 	/* To avoid gcc warnings */
-	(void) server_random_first;
-	(void) skip_keyblock;
+	(void)server_random_first;
+	(void)skip_keyblock;
 
 	//wpa_printf(MSG_DEBUG, "TLS: tls_connection_prf");
 	mbedtls_ssl_context *ssl = ((struct eap_tls *)tls_ctx)->ssl;
@@ -506,9 +483,9 @@ int tls_connection_prf(void *tls_ctx, struct tls_connection *conn,
 	os_memcpy(rnd, conn->client_random, 32);
 	os_memcpy(rnd + 32, conn->server_random, 32);
 
-//	dump_buf(conn->client_random, 32);
-//	dump_buf(conn->server_random, 32);
-//	dump_buf(session->master, 48);
+//  dump_buf(conn->client_random, 32);
+//  dump_buf(conn->server_random, 32);
+//  dump_buf(session->master, 48);
 
 	if (conn->tls_prf != NULL) {
 		ret = conn->tls_prf(session->master, 48, label, rnd, 64, out, out_len);
@@ -521,13 +498,10 @@ int tls_connection_prf(void *tls_ctx, struct tls_connection *conn,
 
 extern void eap_server_cert_free(void);
 extern void eap_client_cert_free(void);
-struct wpabuf *tls_connection_handshake(void *tls_ctx,
-										struct tls_connection *conn,
-										const struct wpabuf *in_data,
-										struct wpabuf **appl_data)
+struct wpabuf *tls_connection_handshake(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data, struct wpabuf **appl_data)
 {
 	/* To avoid gcc warnings */
-	(void) appl_data;
+	(void)appl_data;
 
 	mbedtls_ssl_context *ssl = ((struct eap_tls *)tls_ctx)->ssl;
 
@@ -540,8 +514,7 @@ struct wpabuf *tls_connection_handshake(void *tls_ctx,
 	buf_clear(conn->buf_in, 1);
 
 	// write input data to input buffer
-	if (in_data && wpabuf_len(in_data) > 0 &&
-		buf_write_store(conn_buf_in, wpabuf_head(in_data), wpabuf_len(in_data)) < 0) {
+	if (in_data && wpabuf_len(in_data) > 0 && buf_write_store(conn_buf_in, wpabuf_head(in_data), wpabuf_len(in_data)) < 0) {
 		return NULL;
 	}
 
@@ -589,8 +562,7 @@ struct wpabuf *tls_connection_handshake(void *tls_ctx,
 	size = conn_buf_out->len;
 	out_data = wpabuf_alloc(size);
 	if (out_data == NULL) {
-		wpa_printf(MSG_INFO, "SSL: Failed to allocate memory for "
-				   "handshake output (%d bytes)", size);
+		wpa_printf(MSG_INFO, "SSL: Failed to allocate memory for " "handshake output (%d bytes)", size);
 		return NULL;
 	}
 	buf_read_store(conn_buf_out, out_data->buf, size);
@@ -606,31 +578,24 @@ struct wpabuf *tls_connection_handshake(void *tls_ctx,
 
 }
 
-
-struct wpabuf *tls_connection_server_handshake(void *tls_ctx,
-		struct tls_connection *conn,
-		const struct wpabuf *in_data,
-		struct wpabuf **appl_data)
+struct wpabuf *tls_connection_server_handshake(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data, struct wpabuf **appl_data)
 {
 
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) tls_ctx;
-	(void) in_data;
-	(void) appl_data;
+	(void)conn;
+	(void)tls_ctx;
+	(void)in_data;
+	(void)appl_data;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_server_handshake");
 	return NULL;
 }
 
-
-struct wpabuf *tls_connection_encrypt(void *tls_ctx,
-									  struct tls_connection *conn,
-									  const struct wpabuf *in_data)
+struct wpabuf *tls_connection_encrypt(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data)
 {
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_encrypt");
 
-	mbedtls_ssl_context *ssl = ((struct eap_tls *) tls_ctx)->ssl;
+	mbedtls_ssl_context *ssl = ((struct eap_tls *)tls_ctx)->ssl;
 	struct wpabuf *out_data;
 	int size;
 	int res;
@@ -649,8 +614,7 @@ struct wpabuf *tls_connection_encrypt(void *tls_ctx,
 	size = wpabuf_len(in_data) + 300;
 	out_data = wpabuf_alloc(size);
 	if (out_data == NULL) {
-		wpa_printf(MSG_INFO, "TLS: Failed to allocate memory for "
-				   "encrypted output (%d bytes)", size);
+		wpa_printf(MSG_INFO, "TLS: Failed to allocate memory for " "encrypted output (%d bytes)", size);
 		return NULL;
 	}
 
@@ -669,10 +633,7 @@ struct wpabuf *tls_connection_encrypt(void *tls_ctx,
 	return out_data;
 }
 
-
-struct wpabuf *tls_connection_decrypt(void *tls_ctx,
-									  struct tls_connection *conn,
-									  const struct wpabuf *in_data)
+struct wpabuf *tls_connection_decrypt(void *tls_ctx, struct tls_connection *conn, const struct wpabuf *in_data)
 {
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_decrypt");
 
@@ -682,8 +643,7 @@ struct wpabuf *tls_connection_decrypt(void *tls_ctx,
 	int res;
 
 	// write input data to input buffer
-	if (in_data && wpabuf_len(in_data) > 0 &&
-		buf_write_store(conn_buf_in, wpabuf_head(in_data), wpabuf_len(in_data)) < 0) {
+	if (in_data && wpabuf_len(in_data) > 0 && buf_write_store(conn_buf_in, wpabuf_head(in_data), wpabuf_len(in_data)) < 0) {
 		wpa_printf(MSG_INFO, "TLS: tls_connection_decrypt failed - buf_write");
 		return NULL;
 	}
@@ -703,8 +663,7 @@ struct wpabuf *tls_connection_decrypt(void *tls_ctx,
 	size = (wpabuf_len(in_data) + 500) * 3;
 	out_data = wpabuf_alloc(size);
 	if (out_data == NULL) {
-		wpa_printf(MSG_INFO, "TLS: Failed to allocate memory for "
-				   "decrypted output (%d bytes)", size);
+		wpa_printf(MSG_INFO, "TLS: Failed to allocate memory for " "decrypted output (%d bytes)", size);
 		return NULL;
 	}
 
@@ -728,116 +687,100 @@ struct wpabuf *tls_connection_decrypt(void *tls_ctx,
 int tls_connection_resumed(void *tls_ctx, struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) tls_ctx;
+	(void)conn;
+	(void)tls_ctx;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_resumed");
 	return 0;
 }
 
-
-int tls_connection_set_cipher_list(void *tls_ctx, struct tls_connection *conn,
-								   u8 *ciphers)
+int tls_connection_set_cipher_list(void *tls_ctx, struct tls_connection *conn, u8 *ciphers)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) tls_ctx;
-	(void) ciphers;
+	(void)conn;
+	(void)tls_ctx;
+	(void)ciphers;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_set_cipher_list");
 	return -1;
 }
 
-
-int tls_get_version(void *ssl_ctx, struct tls_connection *conn,
-					char *buf, size_t buflen)
+int tls_get_version(void *ssl_ctx, struct tls_connection *conn, char *buf, size_t buflen)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) ssl_ctx;
-	(void) buf;
-	(void) buflen;
+	(void)conn;
+	(void)ssl_ctx;
+	(void)buf;
+	(void)buflen;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_get_version");
 	return -1;
 }
 
-
-int tls_get_cipher(void *tls_ctx, struct tls_connection *conn,
-				   char *buf, size_t buflen)
+int tls_get_cipher(void *tls_ctx, struct tls_connection *conn, char *buf, size_t buflen)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) tls_ctx;
-	(void) buf;
-	(void) buflen;
+	(void)conn;
+	(void)tls_ctx;
+	(void)buf;
+	(void)buflen;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_get_cipher");
 	return -1;
 }
 
-
-int tls_connection_enable_workaround(void *tls_ctx,
-									 struct tls_connection *conn)
+int tls_connection_enable_workaround(void *tls_ctx, struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) tls_ctx;
+	(void)conn;
+	(void)tls_ctx;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_enable_workaround");
 	return -1;
 }
 
-
-int tls_connection_client_hello_ext(void *tls_ctx, struct tls_connection *conn,
-									int ext_type, const u8 *data,
-									size_t data_len)
+int tls_connection_client_hello_ext(void *tls_ctx, struct tls_connection *conn, int ext_type, const u8 *data, size_t data_len)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) tls_ctx;
-	(void) ext_type;
-	(void) data;
-	(void) data_len;
+	(void)conn;
+	(void)tls_ctx;
+	(void)ext_type;
+	(void)data;
+	(void)data_len;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_client_hello_ext");
 	return -1;
 }
 
-
 int tls_connection_get_failed(void *tls_ctx, struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) tls_ctx;
+	(void)conn;
+	(void)tls_ctx;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_get_failed");
 	return 0;
 }
 
-
 int tls_connection_get_read_alerts(void *tls_ctx, struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) tls_ctx;
+	(void)conn;
+	(void)tls_ctx;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_get_read_alerts");
 	return 0;
 }
 
-
-int tls_connection_get_write_alerts(void *tls_ctx,
-									struct tls_connection *conn)
+int tls_connection_get_write_alerts(void *tls_ctx, struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) tls_ctx;
+	(void)conn;
+	(void)tls_ctx;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_get_write_alerts");
 	return 0;
 }
-
 
 int tls_get_library_version(char *buf, size_t buf_len)
 {
@@ -845,43 +788,36 @@ int tls_get_library_version(char *buf, size_t buf_len)
 	return os_snprintf(buf, buf_len, "none");
 }
 
-
-void tls_connection_set_success_data(struct tls_connection *conn,
-									 struct wpabuf *data)
+void tls_connection_set_success_data(struct tls_connection *conn, struct wpabuf *data)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
-	(void) data;
+	(void)conn;
+	(void)data;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_set_success_data");
 }
 
-
 void tls_connection_set_success_data_resumed(struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
+	(void)conn;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_set_success_data_resumed");
 }
 
-
-const struct wpabuf *
-tls_connection_get_success_data(struct tls_connection *conn)
+const struct wpabuf *tls_connection_get_success_data(struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
+	(void)conn;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_get_success_data");
 	return NULL;
 }
 
-
 void tls_connection_remove_session(struct tls_connection *conn)
 {
 	/* To avoid gcc warnings */
-	(void) conn;
+	(void)conn;
 
 	wpa_printf(MSG_DEBUG, "TLS: tls_connection_get_success_data");
 }
-

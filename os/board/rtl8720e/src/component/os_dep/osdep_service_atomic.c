@@ -108,5 +108,3 @@ int ATOMIC_DEC_AND_TEST(ATOMIC_T *v)
 {
 	return ATOMIC_DEC_RETURN(v) == 0;
 }
-
-

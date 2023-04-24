@@ -13,7 +13,7 @@ typedef MemChunk heap_buf_t;
 
 // A heap
 typedef struct Heap {
-	struct _MemChunk *FreeList;     ///< Head of the free list
+	struct _MemChunk *FreeList;	///< Head of the free list
 } Heap;
 
 /**
@@ -34,7 +34,7 @@ static struct Heap g_reserved_heap;
 static HEAP_DEFINE_BUF(reserved_heap, RESERVED_HEAP_SIZE);
 
 static int g_heap_inited = 0;
-static	_lock	heap_lock;
+static _lock heap_lock;
 
 static void reserved_heap_init(void)
 {
@@ -51,11 +51,11 @@ static void *reserved_heap_allocmem(int size)
 {
 	MemChunk *chunk, *prev;
 	struct Heap *h = &g_reserved_heap;
-	_irqL 	irqL;
+	_irqL irqL;
 
 	rtw_enter_critical(&heap_lock, &irqL);
 
-	if (!g_heap_inited)	{
+	if (!g_heap_inited) {
 		reserved_heap_init();
 	}
 
@@ -70,9 +70,7 @@ static void *reserved_heap_allocmem(int size)
 	/* Walk on the free list looking for any chunk big enough to
 	 * fit the requested block size.
 	 */
-	for (prev = (MemChunk *)&h->FreeList, chunk = h->FreeList;
-		 chunk;
-		 prev = chunk, chunk = chunk->next) {
+	for (prev = (MemChunk *)&h->FreeList, chunk = h->FreeList; chunk; prev = chunk, chunk = chunk->next) {
 		if (chunk->size >= size) {
 			if (chunk->size == size) {
 				/* Just remove this chunk from the free list */
@@ -87,26 +85,25 @@ static void *reserved_heap_allocmem(int size)
 
 				rtw_exit_critical(&heap_lock, &irqL);
 
-				return (void *)((uint8_t *)chunk + chunk->size);
+				return (void *)((uint8_t *) chunk + chunk->size);
 			}
 		}
 	}
 
 	rtw_exit_critical(&heap_lock, &irqL);
 
-	return NULL; /* fail */
+	return NULL;				/* fail */
 }
-
 
 static void reserved_heap_freemem(void *mem, int size)
 {
 	MemChunk *prev;
 	struct Heap *h = &g_reserved_heap;
-	_irqL 	irqL;
+	_irqL irqL;
 
 	rtw_enter_critical(&heap_lock, &irqL);
 
-	if (!g_heap_inited)	{
+	if (!g_heap_inited) {
 		reserved_heap_init();
 	}
 
@@ -119,28 +116,28 @@ static void reserved_heap_freemem(void *mem, int size)
 	}
 
 	/* Special cases: first chunk in the free list or memory completely full */
-	if (((uint8_t *)mem) < ((uint8_t *)h->FreeList) || !h->FreeList) {
+	if (((uint8_t *) mem) < ((uint8_t *) h->FreeList) || !h->FreeList) {
 		/* Insert memory block before the current free list head */
-		prev = (MemChunk *)mem;
+		prev = (MemChunk *) mem;
 		prev->next = h->FreeList;
 		prev->size = size;
 		h->FreeList = prev;
-	} else { /* Normal case: not the first chunk in the free list */
+	} else {					/* Normal case: not the first chunk in the free list */
 		/*
 		 * Walk on the free list. Stop at the insertion point (when mem
 		 * is between prev and prev->next)
 		 */
 		prev = h->FreeList;
-		while (prev->next < (MemChunk *)mem && prev->next) {
+		while (prev->next < (MemChunk *) mem && prev->next) {
 			prev = prev->next;
 		}
 
 		/* Should it be merged with previous block? */
-		if (((uint8_t *)prev) + prev->size == ((uint8_t *)mem)) {
+		if (((uint8_t *) prev) + prev->size == ((uint8_t *) mem)) {
 			/* Yes */
 			prev->size += size;
-		} else { /* not merged with previous chunk */
-			MemChunk *curr = (MemChunk *)mem;
+		} else {				/* not merged with previous chunk */
+			MemChunk *curr = (MemChunk *) mem;
 
 			/* insert it after the previous node
 			 * and move the 'prev' pointer forward
@@ -156,7 +153,7 @@ static void reserved_heap_freemem(void *mem, int size)
 	}
 
 	/* Also merge with next chunk? */
-	if (((uint8_t *)prev) + prev->size == ((uint8_t *)prev->next)) {
+	if (((uint8_t *) prev) + prev->size == ((uint8_t *) prev->next)) {
 		prev->size += prev->next->size;
 		prev->next = prev->next->next;
 	}
@@ -168,12 +165,12 @@ int sram0_reserve_free_size(void)
 {
 	int free_mem = 0;
 	struct Heap *h = &g_reserved_heap;
-	_irqL 	irqL;
+	_irqL irqL;
 	MemChunk *chunk;
 
 	rtw_enter_critical(&heap_lock, &irqL);
 
-	if (!g_heap_inited)	{
+	if (!g_heap_inited) {
 		reserved_heap_init();
 	}
 
@@ -217,5 +214,3 @@ void sram0_reserve_free(void *mem)
 		reserved_heap_freemem(_mem, *_mem);
 	}
 }
-
-

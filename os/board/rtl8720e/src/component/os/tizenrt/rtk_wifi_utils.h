@@ -64,18 +64,18 @@ typedef _int32_t int32_t;
 typedef _uint32_t uint32_t;
 
 typedef enum WiFi_InterFace_ID {
-	RTK_WIFI_NONE,					// default
-	RTK_WIFI_STATION_IF,			// Station mode (turns on wpa_supplicant)
-	RTK_WIFI_SOFT_AP_IF,			// Soft AP mode (turns on hostapd)
-	RTK_WIFI_P2P_IF					// P2P mode (turns on wpa_supplicant)
+	RTK_WIFI_NONE,				// default
+	RTK_WIFI_STATION_IF,		// Station mode (turns on wpa_supplicant)
+	RTK_WIFI_SOFT_AP_IF,		// Soft AP mode (turns on hostapd)
+	RTK_WIFI_P2P_IF				// P2P mode (turns on wpa_supplicant)
 } WiFi_InterFace_ID_t;
 
 typedef struct rtk_reason {
-	uint32_t reason_code;				// Reason codes - 0 for success - error code see 'rtk reason codes' above
-	uint8_t locally_generated;			// Which side cause link down, 1 = locally, 0 = remotely - valid for STA mode only
-	int8_t ssid_len;					// length of ssid - # of valid octets
-	uint8_t ssid[33];	// 802.11 spec defined up to 32 octets of data
-	char bssid[17];	// BSS identification, char string e.g. xx:xx:xx:xx:xx:xx
+	uint32_t reason_code;		// Reason codes - 0 for success - error code see 'rtk reason codes' above
+	uint8_t locally_generated;	// Which side cause link down, 1 = locally, 0 = remotely - valid for STA mode only
+	int8_t ssid_len;			// length of ssid - # of valid octets
+	uint8_t ssid[33];			// 802.11 spec defined up to 32 octets of data
+	char bssid[17];				// BSS identification, char string e.g. xx:xx:xx:xx:xx:xx
 } rtk_reason_t;
 
 #define RTW_LWIP_LAYER 1
@@ -91,11 +91,10 @@ extern int8_t cmd_wifi_on(WiFi_InterFace_ID_t interface_id);
 extern int8_t cmd_wifi_off(void);
 extern int wifi_scan_networks(rtw_scan_param_t *scan_param, unsigned char block);
 extern int8_t cmd_wifi_connect(trwifi_ap_config_s *ap_connect_config, void *arg, uint32_t ap_channel);
-extern int wifi_get_mac_address(rtw_mac_t * mac);
+extern int wifi_get_mac_address(rtw_mac_t *mac);
 extern int wifi_is_connected_to_ap(void);
 extern int wifi_get_rssi(int *pRSSI);
 extern int8_t cmd_wifi_ap(trwifi_softap_config_s *softap_config);
 extern int wifi_set_autoreconnect(uint8_t mode);
 
 #endif
-

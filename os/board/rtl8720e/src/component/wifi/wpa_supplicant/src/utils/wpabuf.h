@@ -18,13 +18,12 @@
  * from this file to access data.
  */
 struct wpabuf {
-	size_t size; 		/* total size of the allocated buffer (i.e allocated buffer size)*/
-	size_t used; 		/* length of data in the buffer (i.e data length) */
-	u8 *buf; 		/* pointer to the head of the buffer (i.e buffer address) */
+	size_t size;				/* total size of the allocated buffer (i.e allocated buffer size) */
+	size_t used;				/* length of data in the buffer (i.e data length) */
+	u8 *buf;					/* pointer to the head of the buffer (i.e buffer address) */
 	unsigned int flags;
 	/* optionally followed by the allocated buffer */
 };
-
 
 int wpabuf_resize(struct wpabuf **buf, size_t add_len);
 struct wpabuf *wpabuf_alloc(size_t len);
@@ -36,7 +35,6 @@ void *wpabuf_put(struct wpabuf *buf, size_t len);
 struct wpabuf *wpabuf_concat(struct wpabuf *a, struct wpabuf *b);
 struct wpabuf *wpabuf_zeropad(struct wpabuf *buf, size_t len);
 void wpabuf_printf(struct wpabuf *buf, char *fmt, ...) PRINTF_FORMAT(2, 3);
-
 
 /**
  * wpabuf_size - Get the currently allocated size of a wpabuf buffer
@@ -158,7 +156,7 @@ static inline void wpabuf_put_be32(struct wpabuf *buf, u32 data)
 	WPA_PUT_BE32(pos, data);
 }
 
-// 							encr >> 16 B	64 - 16 = 48
+//                          encr >> 16 B    64 - 16 = 48
 static inline void wpabuf_put_data(struct wpabuf *buf, const void *data, size_t len)
 {
 	if (buf == NULL) {
@@ -169,8 +167,7 @@ static inline void wpabuf_put_data(struct wpabuf *buf, const void *data, size_t 
 	}
 }
 
-static inline void wpabuf_put_buf(struct wpabuf *dst,
-								  const struct wpabuf *src)
+static inline void wpabuf_put_buf(struct wpabuf *dst, const struct wpabuf *src)
 {
 	if (dst == NULL) {
 		return;
@@ -196,4 +193,4 @@ static inline void wpabuf_put_str(struct wpabuf *dst, const char *str)
 	wpabuf_put_data(dst, str, os_strlen(str));
 }
 
-#endif /* WPABUF_H */
+#endif							/* WPABUF_H */

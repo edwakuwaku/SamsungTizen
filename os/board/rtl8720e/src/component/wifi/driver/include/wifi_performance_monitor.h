@@ -10,7 +10,7 @@
 #endif
 
 struct WIFI_TIME {
-	//	RX related
+	//  RX related
 	u32 rx_mpdu_time;
 	u32 rx_mpdu_time1;
 	u32 rx_mpdu_time2;
@@ -85,4 +85,4 @@ void wifi_performance_print();
 #define WIFI_MONITOR_TIMER_END(x, len)
 #endif
 
-#endif //__WIFI_PERFORMANCE_MONITOR_H__
+#endif							//__WIFI_PERFORMANCE_MONITOR_H__

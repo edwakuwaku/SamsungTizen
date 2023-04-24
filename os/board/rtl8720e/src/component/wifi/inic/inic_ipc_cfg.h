@@ -18,7 +18,7 @@
 /* configuration for LP */
 #elif defined(ARM_CORE_CM4)
 /* configuration for HP */
-#endif /* ARM_CORE_CM0 */
+#endif							/* ARM_CORE_CM0 */
 
 #elif defined(CONFIG_PLATFORM_AMEBAD2)
 
@@ -126,5 +126,4 @@
 
 /* -------------------------- Function declaration -------------------------- */
 
-#endif /* __AMEBA_INIC_IPC_CFG_H__ */
-
+#endif							/* __AMEBA_INIC_IPC_CFG_H__ */

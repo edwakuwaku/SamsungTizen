@@ -34,4 +34,4 @@ void inic_ipc_msg_q_deinit(void);
 u8 inic_ipc_msg_get_queue_status(void);
 void inic_ipc_ipc_send_msg(inic_ipc_ex_msg_t *p_ipc_msg);
 
-#endif /* __INIC_IPC_MSG_QUEUE_H__ */
+#endif							/* __INIC_IPC_MSG_QUEUE_H__ */

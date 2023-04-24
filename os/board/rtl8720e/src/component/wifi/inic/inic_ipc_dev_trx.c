@@ -34,18 +34,18 @@
 /* xmit buffer to store the data from IPC host to queue. */
 struct ipc_dev_tx_buf {
 	_list list;
-	inic_ipc_ex_msg_t ipc_msg; /* to store ipc message from host */
+	inic_ipc_ex_msg_t ipc_msg;	/* to store ipc message from host */
 };
 
 /* ipc device tx structure */
 struct ipc_dev_priv {
-	_sema xmit_sema; /* tx sema */
-	_sema rx_pending_sema; /* rx pending sema */
-	_sema rx_done_sema; /* sema to notice rx done */
-	_queue xmit_queue; /* xmit queue */
-	u32 tx_bytes; /* xmit bytes */
-	u32 tx_pkts; /* xmit number of packets */
-	u8 rx_pending_flag; /* host rx pending flag */
+	_sema xmit_sema;			/* tx sema */
+	_sema rx_pending_sema;		/* rx pending sema */
+	_sema rx_done_sema;			/* sema to notice rx done */
+	_queue xmit_queue;			/* xmit queue */
+	u32 tx_bytes;				/* xmit bytes */
+	u32 tx_pkts;				/* xmit number of packets */
+	u8 rx_pending_flag;			/* host rx pending flag */
 };
 
 /* -------------------------- Function declaration -------------------------- */
@@ -117,10 +117,10 @@ static void inic_xmit_tasklet_handler(struct ipc_dev_tx_buf *p_xmit_buf)
 	case IPC_WIFI_CMD_XIMT_PKTS:
 		skb = (struct sk_buff *)(p_ipc_msg->msg_addr);
 #ifdef CONFIG_ENABLE_CACHE
-		DCache_Invalidate(((u32)skb - sizeof(struct list_head)), sizeof(struct skb_info));
-		DCache_Invalidate(((u32)skb->head - sizeof(struct list_head)), sizeof(struct skb_data));
+		DCache_Invalidate(((u32) skb - sizeof(struct list_head)), sizeof(struct skb_info));
+		DCache_Invalidate(((u32) skb->head - sizeof(struct list_head)), sizeof(struct skb_data));
 
-#endif /* CONFIG_ENABLE_CACHE */
+#endif							/* CONFIG_ENABLE_CACHE */
 
 		g_ipc_dev_priv.tx_bytes += skb->len;
 		g_ipc_dev_priv.tx_pkts++;
@@ -129,8 +129,7 @@ static void inic_xmit_tasklet_handler(struct ipc_dev_tx_buf *p_xmit_buf)
 		WIFI_MONITOR_TIMER_END(wlan_send_skb_time, skb->len);
 		break;
 	default:
-		DBG_8195A("Device Unknown Event(%d)!\n", \
-				  p_ipc_msg->event_num);
+		DBG_8195A("Device Unknown Event(%d)!\n", p_ipc_msg->event_num);
 		break;
 	}
 }
@@ -158,14 +157,13 @@ static void inic_xmit_tasklet(void)
 			WIFI_MONITOR_TIMER_END(xmit_handler_time, 502);
 
 			/* release the memory for this packet. */
-			rtw_mfree((u8 *)p_xmit_buf, sizeof(struct ipc_dev_tx_buf));
+			rtw_mfree((u8 *) p_xmit_buf, sizeof(struct ipc_dev_tx_buf));
 			p_xmit_buf = inic_dequeue_xmitbuf(p_xmit_queue);
 		}
 	} while (1);
 
 	vTaskDelete(NULL);
 }
-
 
 /* ---------------------------- Public Functions ---------------------------- */
 
@@ -192,9 +190,7 @@ void inic_ipc_dev_init_priv(void)
 	g_ipc_dev_priv.rx_pending_flag = 0;
 
 	/* Initialize the tX task */
-	if (pdTRUE != xTaskCreate((TaskFunction_t)inic_xmit_tasklet, \
-							  (const char *const)"inic_ipc_dev_tx_tasklet", 1024, NULL, \
-							  tskIDLE_PRIORITY + CONFIG_INIC_IPC_DEV_XMIT_PRI, NULL)) {
+	if (pdTRUE != xTaskCreate((TaskFunction_t) inic_xmit_tasklet, (const char *const)"inic_ipc_dev_tx_tasklet", 1024, NULL, tskIDLE_PRIORITY + CONFIG_INIC_IPC_DEV_XMIT_PRI, NULL)) {
 		DBG_8195A("Create inic_ipc_dev_tx_tasklet Err!!\n");
 	}
 }
@@ -210,11 +206,11 @@ void inic_ipc_dev_tx_handler(inic_ipc_ex_msg_t *p_ipc_msg)
 	struct ipc_dev_tx_buf *p_xmit_buf = NULL;
 
 	if (!wifi_is_running((unsigned char)p_ipc_msg->wlan_idx)) {
-		/*free skb and return*/
+		/*free skb and return */
 		struct sk_buff *skb = (struct sk_buff *)p_ipc_msg->msg_addr;
 		skb->busy = 0;
 		struct skb_info *skb_info = container_of(skb, struct skb_info, skb);
-		DCache_Clean((u32)skb_info, sizeof(struct skb_info));
+		DCache_Clean((u32) skb_info, sizeof(struct skb_info));
 		return;
 	}
 
@@ -252,19 +248,19 @@ void inic_ipc_dev_recv(int idx)
 	struct sk_buff *skb = NULL;
 	struct skb_info *skb_info = NULL;
 	struct skb_data *skb_data = NULL;
-	inic_ipc_ex_msg_t ipc_msg = {0};
+	inic_ipc_ex_msg_t ipc_msg = { 0 };
 
 	skb = wifi_if_get_recv_skb(idx);
 
 	ipc_msg.event_num = IPC_WIFI_EVT_RECV_PKTS;
-	ipc_msg.msg_addr = (u32)skb;
+	ipc_msg.msg_addr = (u32) skb;
 	ipc_msg.wlan_idx = idx;
 #ifdef CONFIG_ENABLE_CACHE
-	skb_data =  LIST_CONTAINOR(skb->head, struct skb_data, buf);
-	skb_info =  LIST_CONTAINOR(skb, struct skb_info, skb);
-	DCache_CleanInvalidate(((u32)skb_data), sizeof(struct skb_data));
-	DCache_CleanInvalidate(((u32)skb_info), sizeof(struct skb_info));
-#endif /* CONFIG_ENABLE_CACHE */
+	skb_data = LIST_CONTAINOR(skb->head, struct skb_data, buf);
+	skb_info = LIST_CONTAINOR(skb, struct skb_info, skb);
+	DCache_CleanInvalidate(((u32) skb_data), sizeof(struct skb_data));
+	DCache_CleanInvalidate(((u32) skb_info), sizeof(struct skb_info));
+#endif							/* CONFIG_ENABLE_CACHE */
 	inic_ipc_ipc_send_msg(&ipc_msg);
 }
 
@@ -278,4 +274,3 @@ void inic_ipc_dev_rx_done(inic_ipc_ex_msg_t *p_ipc_msg)
 	struct sk_buff *skb = (struct sk_buff *)p_ipc_msg->msg_addr;
 	kfree_skb(skb);
 }
-

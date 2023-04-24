@@ -126,7 +126,6 @@ void deinit_timer_wrapper(void)
 
 }
 
-
 void timer_wrapper(_timerHandle timer_hdl)
 {
 	_list *plist;
@@ -149,7 +148,7 @@ void timer_wrapper(_timerHandle timer_hdl)
 		DBG_ERR("Fail to find the timer_entry in timer table");
 	} else {
 		if (timer_entry->function) {
-			timer_entry->function((void *) timer_entry->data);
+			timer_entry->function((void *)timer_entry->data);
 		}
 	}
 }
@@ -164,7 +163,7 @@ void init_timer(struct timer_list *timer)
 #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
 		StaticTimer_t *timerbuf;
 
-		timerbuf = (StaticTimer_t *)get_timer_from_poll(&wrapper_timerbuf_list, &timerbuf_used_num);
+		timerbuf = (StaticTimer_t *) get_timer_from_poll(&wrapper_timerbuf_list, &timerbuf_used_num);
 
 		if (timerbuf == NULL) {
 			if (timerpool_flag) {
@@ -174,14 +173,13 @@ void init_timer(struct timer_list *timer)
 			goto exit1;
 		} else {
 			memset(timerbuf, '\0', sizeof(*timerbuf));
-			timer->timer_hdl = xTimerCreateStatic(
-								   (const char *)"Timer", 		// Just a text name, not used by the RTOS kernel.
-								   TIMER_MAX_DELAY,		// Timer Period, not 0
-								   _FALSE,		// Whether timer will auto-load themselves when expires
-								   NULL,			// Uniq id used to identify which timer expire..
-								   (TimerCallbackFunction_t)timer_wrapper,		// Timer callback
-								   timerbuf		// The buffer that will hold the software timer structure.
-							   );
+			timer->timer_hdl = xTimerCreateStatic((const char *)"Timer",	// Just a text name, not used by the RTOS kernel.
+												  TIMER_MAX_DELAY,	// Timer Period, not 0
+												  _FALSE,	// Whether timer will auto-load themselves when expires
+												  NULL,	// Uniq id used to identify which timer expire..
+												  (TimerCallbackFunction_t) timer_wrapper,	// Timer callback
+												  timerbuf	// The buffer that will hold the software timer structure.
+												 );
 			timer->statically_alloc = 1;
 		}
 
@@ -193,13 +191,12 @@ void init_timer(struct timer_list *timer)
 exit1:
 #endif
 
-		timer->timer_hdl = rtw_timerCreate(
-							   (signed const char *)"Timer", 		// Just a text name, not used by the RTOS kernel.
-							   TIMER_MAX_DELAY,		// Timer Period, not 0
-							   _FALSE,		// Whether timer will auto-load themselves when expires
-							   NULL,			// Uniq id used to identify which timer expire..
-							   timer_wrapper		// Timer callback
-						   );
+		timer->timer_hdl = rtw_timerCreate((signed const char *)"Timer",	// Just a text name, not used by the RTOS kernel.
+										   TIMER_MAX_DELAY,	// Timer Period, not 0
+										   _FALSE,	// Whether timer will auto-load themselves when expires
+										   NULL,	// Uniq id used to identify which timer expire..
+										   timer_wrapper	// Timer callback
+										  );
 		timer->statically_alloc = 0;
 #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
 exit2:
@@ -211,7 +208,7 @@ exit2:
 			rtw_list_insert_head(&timer->list, &timer_table);
 			restore_flags(irq_flags);
 
-			timer_used_num ++;
+			timer_used_num++;
 			if (timer_used_num > max_timer_used_num) {
 				max_timer_used_num = timer_used_num;
 			}
@@ -228,7 +225,6 @@ void mod_timer(struct timer_list *timer, u32 delay_time_ms)
 	} else if (rtw_timerIsTimerActive(timer->timer_hdl) == _TRUE) {
 		rtw_timerStop(timer->timer_hdl, TIMER_MAX_DELAY);
 	}
-
 	//Set Timer period
 	if (timer->timer_hdl != NULL)
 		if (rtw_timerChangePeriod(timer->timer_hdl, rtw_ms_to_systime(delay_time_ms), TIMER_MAX_DELAY) == _FAIL) {
@@ -236,7 +232,7 @@ void mod_timer(struct timer_list *timer, u32 delay_time_ms)
 		}
 }
 
-void  cancel_timer_ex(struct timer_list *timer)
+void cancel_timer_ex(struct timer_list *timer)
 {
 	_list *plist;
 	struct timer_list *timer_entry = NULL;
@@ -265,7 +261,7 @@ void  cancel_timer_ex(struct timer_list *timer)
 	}
 }
 
-void  del_timer_sync(struct timer_list *timer)
+void del_timer_sync(struct timer_list *timer)
 {
 	_list *plist;
 	struct timer_list *timer_entry;
@@ -304,15 +300,15 @@ void  del_timer_sync(struct timer_list *timer)
 	} else {
 		rtw_timerDelete(timer->timer_hdl, TIMER_MAX_DELAY);
 		timer->timer_hdl = NULL;
-		timer_used_num --;
+		timer_used_num--;
 	}
 }
 
 void rtw_init_timer(_timer *ptimer, void *adapter, TIMER_FUN pfunc, void *cntx, const char *name)
 {
 	/* To avoid gcc warnings */
-	(void) adapter;
-	(void) name;
+	(void)adapter;
+	(void)name;
 
 	ptimer->function = pfunc;
 	ptimer->data = (u32) cntx;
@@ -334,6 +330,3 @@ void rtw_del_timer(_timer *ptimer)
 {
 	del_timer_sync(ptimer);
 }
-
-
-

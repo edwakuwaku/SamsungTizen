@@ -21,34 +21,31 @@ extern "C" {
 #endif
 #include <rtw_autoconf.h>
 
-
-
 typedef enum pta_type {
-	PTA_AUTO                 = 0,
-	PTA_WIFI			= 1,
-	PTA_BT				= 2
+	PTA_AUTO = 0,
+	PTA_WIFI = 1,
+	PTA_BT = 2
 } pta_type_t;
 
 typedef enum bt_rfk_type {
-	BT_RX_DCK       = 0,
-	BT_LOK             = 1,
-	BT_LOK_RES      = 2,
-	BT_DAC_DCK     = 3
+	BT_RX_DCK = 0,
+	BT_LOK = 1,
+	BT_LOK_RES = 2,
+	BT_DAC_DCK = 3
 } bt_rfk_type_t;
 
 struct bt_rfk_param {
 	bt_rfk_type_t type;
-	uint8_t  rfk_data1;
-	uint8_t  rfk_data2;
-	uint8_t  rfk_data3;
-	uint8_t  rfk_data4;
+	uint8_t rfk_data1;
+	uint8_t rfk_data2;
+	uint8_t rfk_data3;
+	uint8_t rfk_data4;
 };
-
 
 //----- ------------------------------------------------------------------
 // BT Interface opened for upper layer
 //----- ------------------------------------------------------------------
-void rltk_bt_set_gnt_bt(pta_type_t  gnt_bt);
+void rltk_bt_set_gnt_bt(pta_type_t gnt_bt);
 void rltk_bt_set_gnt_bt_with_clk_source(pta_type_t gnt_bt);
 const unsigned char *rltk_bt_get_patch_code(void);
 unsigned int rltk_bt_get_patch_code_len(void);
@@ -60,5 +57,4 @@ int rltk_coex_bt_rfk(struct bt_rfk_param *rfk_param);
 #ifdef	__cplusplus
 }
 #endif
-
-#endif //#ifndef __BT_INTF_H__
+#endif							//#ifndef __BT_INTF_H__

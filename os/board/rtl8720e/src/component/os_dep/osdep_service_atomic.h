@@ -47,7 +47,7 @@
 
 /* old implement */
 // typedef struct {
-// 	volatile int counter;
+//  volatile int counter;
 // } atomic_t;
 
 // #define ATOMIC_T atomic_t
@@ -80,8 +80,6 @@
 
 #define GFP_ATOMIC			1
 
-
-
 /*************************** ATOMIC Integer *******************************/
 
 /**
@@ -91,7 +89,7 @@
  * @return	  None
  * @note    The guaranteed useful range of an atomic_t is only 24 bits.
 */
-void 	ATOMIC_SET(ATOMIC_T *v, int i);
+void ATOMIC_SET(ATOMIC_T *v, int i);
 
 /**
  * @brief  This function atomically reads the value of the variable.
@@ -99,7 +97,7 @@ void 	ATOMIC_SET(ATOMIC_T *v, int i);
  * @return	  The value of the variable.
  * @note	The guaranteed useful range of an atomic_t is only 24 bits.
 */
-int		ATOMIC_READ(ATOMIC_T *v);
+int ATOMIC_READ(ATOMIC_T *v);
 
 /**
  * @brief  This function adds "i" to the contained "v".
@@ -107,7 +105,7 @@ int		ATOMIC_READ(ATOMIC_T *v);
  * @param[in] i: value to add.
  * @return	  None
 */
-void 	ATOMIC_ADD(ATOMIC_T *v, int i);
+void ATOMIC_ADD(ATOMIC_T *v, int i);
 
 /**
  * @brief  This function subtracts "i" from th econtained "v".
@@ -115,21 +113,21 @@ void 	ATOMIC_ADD(ATOMIC_T *v, int i);
  * @param[in] i: value to subtract.
  * @return	  None
 */
-void 	ATOMIC_SUB(ATOMIC_T *v, int i);
+void ATOMIC_SUB(ATOMIC_T *v, int i);
 
 /**
  * @brief  This function adds 1 to the contained "v".
  * @param[in] v: Pointer of type atomic_t.
  * @return	  None
 */
-void 	ATOMIC_INC(ATOMIC_T *v);
+void ATOMIC_INC(ATOMIC_T *v);
 
 /**
  * @brief  This function subtracts 1 from th econtained "v".
  * @param[in] v: Pointer of type atomic_t.
  * @return	  None
 */
-void 	ATOMIC_DEC(ATOMIC_T *v);
+void ATOMIC_DEC(ATOMIC_T *v);
 
 /**
  * @brief  This function adds "i" to the contained "v" and returns the result.
@@ -137,7 +135,7 @@ void 	ATOMIC_DEC(ATOMIC_T *v);
  * @param[in] i: value to add.
  * @return	  None
 */
-int 	ATOMIC_ADD_RETURN(ATOMIC_T *v, int i);
+int ATOMIC_ADD_RETURN(ATOMIC_T *v, int i);
 
 /**
  * @brief  This function subtracts "i" from th econtained "v" and returns the result.
@@ -145,21 +143,21 @@ int 	ATOMIC_ADD_RETURN(ATOMIC_T *v, int i);
  * @param[in] i: value to subtract.
  * @return	  None
 */
-int 	ATOMIC_SUB_RETURN(ATOMIC_T *v, int i);
+int ATOMIC_SUB_RETURN(ATOMIC_T *v, int i);
 
 /**
  * @brief  This function adds 1 to the contained "v" and returns the result.
  * @param[in] v: Pointer of type atomic_t.
  * @return	  None
 */
-int 	ATOMIC_INC_RETURN(ATOMIC_T *v);
+int ATOMIC_INC_RETURN(ATOMIC_T *v);
 
 /**
  * @brief  This function subtracts 1 from th econtained "v" and returns the result.
  * @param[in] v: Pointer of type atomic_t.
  * @return	  None
 */
-int 	ATOMIC_DEC_RETURN(ATOMIC_T *v);
+int ATOMIC_DEC_RETURN(ATOMIC_T *v);
 
 /**
  * @brief  This function subtracts 1 from th econtained "v" and test if the result equals 0.

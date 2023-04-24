@@ -38,9 +38,9 @@ int promisc_recv_func(void *padapter, void *rframe)
 int promisc_recv_lens_func(void *padapter, u8 *payload, u8 plen)
 {
 	/* To avoid gcc warnings */
-	(void) padapter;
-	(void) payload;
-	(void) plen;
+	(void)padapter;
+	(void)payload;
+	(void)plen;
 
 	// Never reach here if not define CONFIG_PROMISC
 #ifdef CONFIG_PROMISC
@@ -58,15 +58,15 @@ int promisc_filter_retransmit_pkt(unsigned char enable, unsigned char filter_int
 {
 #ifdef CONFIG_PROMISC
 #if CONFIG_UNSUPPORT_PLCPHDR_RPT
-	return _promisc_filter_retransmit_plcp_pkt((u8)enable, (u8)filter_interval_ms);
+	return _promisc_filter_retransmit_plcp_pkt((u8) enable, (u8) filter_interval_ms);
 #else
-	(void) enable;
-	(void) filter_interval_ms;
-	return -1;//_promisc_filter_retransmit_normal_pkt(enable);
+	(void)enable;
+	(void)filter_interval_ms;
+	return -1;					//_promisc_filter_retransmit_normal_pkt(enable);
 #endif
 #else
-	(void) enable;
-	(void) filter_interval_ms;
+	(void)enable;
+	(void)filter_interval_ms;
 	return -1;
 #endif
 }
@@ -78,11 +78,11 @@ int promisc_filter_with_len(u16 len)
 #if defined(CONFIG_UNSUPPORT_PLCPHDR_RPT) && CONFIG_UNSUPPORT_PLCPHDR_RPT
 	return _promisc_filter_with_len(len);
 #else
-	(void) len;
+	(void)len;
 	return -1;
 #endif
 #else
-	(void) len;
+	(void)len;
 	return -1;
 #endif
 }
@@ -108,7 +108,7 @@ unsigned char is_promisc_enabled(void)
 int promisc_get_fixed_channel(void *fixed_bssid, unsigned char *ssid, int *ssid_length)
 {
 #ifdef CONFIG_PROMISC
-	return _promisc_get_fixed_channel(fixed_bssid, (u8 *)ssid, ssid_length);
+	return _promisc_get_fixed_channel(fixed_bssid, (u8 *) ssid, ssid_length);
 #else
 	return 0;
 #endif
@@ -117,14 +117,14 @@ int promisc_get_fixed_channel(void *fixed_bssid, unsigned char *ssid, int *ssid_
 void promisc_filter_by_ap_and_phone_mac(unsigned char enable, void *ap_mac, void *phone_mac)
 {
 #ifdef CONFIG_PROMISC
-	_promisc_filter_by_ap_and_phone_mac((u8)enable, ap_mac, phone_mac);
+	_promisc_filter_by_ap_and_phone_mac((u8) enable, ap_mac, phone_mac);
 #endif
 }
 
 int promisc_set_mgntframe(unsigned char enable)
 {
 #ifdef CONFIG_PROMISC
-	_promisc_set_mgntframe((u8)enable);
+	_promisc_set_mgntframe((u8) enable);
 #endif
 	return -1;
 }
@@ -132,7 +132,7 @@ int promisc_set_mgntframe(unsigned char enable)
 int promisc_get_chnl_by_bssid(unsigned char *bssid)
 {
 #ifdef CONFIG_PROMISC
-	_promisc_get_chnl_by_bssid((u8 *)bssid);
+	_promisc_get_chnl_by_bssid((u8 *) bssid);
 #endif
 	return 0;
 }
@@ -140,7 +140,7 @@ int promisc_get_chnl_by_bssid(unsigned char *bssid)
 void promisc_update_candi_ap_rssi_avg(signed char rssi, unsigned char cnt)
 {
 #ifdef CONFIG_PROMISC
-	_promisc_update_candi_ap_rssi_avg((s8)rssi, (u8)cnt);
+	_promisc_update_candi_ap_rssi_avg((s8) rssi, (u8) cnt);
 #endif
 }
 
@@ -187,7 +187,8 @@ static struct eth_buffer eth_buffer;
 #ifdef CONFIG_PROMISC
 #define MAX_PACKET_FILTER_INFO 5
 #define FILTER_ID_INIT_VALUE 10
-rtw_packet_filter_info_t paff_array[MAX_PACKET_FILTER_INFO] = {0};
+rtw_packet_filter_info_t paff_array[MAX_PACKET_FILTER_INFO] = { 0 };
+
 static u8 packet_filter_enable_num = 0;
 
 void promisc_init_packet_filter(void)
@@ -305,7 +306,7 @@ int promisc_remove_packet_filter(u8 filter_id)
 /*	Make callback simple to prevent latency to wlan rx when promiscuous mode */
 static void promisc_callback(unsigned char *buf, unsigned int len, void *userdata)
 {
-	struct eth_frame *frame = (struct eth_frame *) rtw_malloc(sizeof(struct eth_frame));
+	struct eth_frame *frame = (struct eth_frame *)rtw_malloc(sizeof(struct eth_frame));
 
 	if (frame) {
 		frame->prev = NULL;
@@ -313,7 +314,7 @@ static void promisc_callback(unsigned char *buf, unsigned int len, void *userdat
 		memcpy(frame->da, buf, 6);
 		memcpy(frame->sa, buf + 6, 6);
 		frame->len = len;
-		frame->rssi = ((ieee80211_frame_info_t *)userdata)->rssi;
+		frame->rssi = ((ieee80211_frame_info_t *) userdata)->rssi;
 
 		rtw_enter_critical(NULL, NULL);
 
@@ -364,7 +365,7 @@ static void promisc_test(int duration, unsigned char len_used)
 	wifi_enter_promisc_mode();
 	wifi_set_promisc(RTW_PROMISC_ENABLE, promisc_callback, len_used);
 
-	for (ch = 1; ch <= 13; ch ++) {
+	for (ch = 1; ch <= 13; ch++) {
 		if (wifi_set_freq(STA_WLAN_INDEX, ch) == 0) {
 			printf("\n\n\rSwitch to channel(%d)", ch);
 		}
@@ -380,18 +381,18 @@ static void promisc_test(int duration, unsigned char len_used)
 				if (frame) {
 					int i;
 					printf("\n\rDA:");
-					for (i = 0; i < 6; i ++) {
+					for (i = 0; i < 6; i++) {
 						printf(" %02x", frame->da[i]);
 					}
 					printf(", SA:");
-					for (i = 0; i < 6; i ++) {
+					for (i = 0; i < 6; i++) {
 						printf(" %02x", frame->sa[i]);
 					}
 					printf(", len=%d", frame->len);
 					printf(", RSSI=%d", frame->rssi);
-					rtw_free((void *) frame);
+					rtw_free((void *)frame);
 				} else {
-					rtw_mdelay_os(1);    //delay 1 tick
+					rtw_mdelay_os(1);	//delay 1 tick
 				}
 			} else {
 				break;
@@ -402,19 +403,19 @@ static void promisc_test(int duration, unsigned char len_used)
 	wifi_set_promisc(RTW_PROMISC_DISABLE, NULL, 0);
 
 	while ((frame = retrieve_frame()) != NULL) {
-		rtw_free((void *) frame);
+		rtw_free((void *)frame);
 	}
 }
 
 static void promisc_callback_all(unsigned char *buf, unsigned int len, void *userdata)
 {
-	struct eth_frame *frame = (struct eth_frame *) rtw_malloc(sizeof(struct eth_frame));
+	struct eth_frame *frame = (struct eth_frame *)rtw_malloc(sizeof(struct eth_frame));
 
 	if (frame) {
 		frame->prev = NULL;
 		frame->next = NULL;
 #if defined(CONFIG_UNSUPPORT_PLCPHDR_RPT) && CONFIG_UNSUPPORT_PLCPHDR_RPT
-		if (((ieee80211_frame_info_t *)userdata)->type == RTW_RX_UNSUPPORT) {
+		if (((ieee80211_frame_info_t *) userdata)->type == RTW_RX_UNSUPPORT) {
 			//NOTICE: buf structure now is rtw_rx_info_t.
 			frame->type = 0xFF;
 			memset(frame->da, 0, 6);
@@ -429,13 +430,13 @@ static void promisc_callback_all(unsigned char *buf, unsigned int len, void *use
 
 		frame->len = len;
 		/*
-		* type is the first byte of Frame Control Field of 802.11 frame
-		* If the from/to ds information is needed, type could be reused as follows:
-		* frame->type = ((((ieee80211_frame_info_t *)userdata)->i_fc & 0x0100) == 0x0100) ? 2 : 1;
-		* 1: from ds; 2: to ds
-		*/
+		 * type is the first byte of Frame Control Field of 802.11 frame
+		 * If the from/to ds information is needed, type could be reused as follows:
+		 * frame->type = ((((ieee80211_frame_info_t *)userdata)->i_fc & 0x0100) == 0x0100) ? 2 : 1;
+		 * 1: from ds; 2: to ds
+		 */
 
-		frame->rssi = ((ieee80211_frame_info_t *)userdata)->rssi;
+		frame->rssi = ((ieee80211_frame_info_t *) userdata)->rssi;
 
 		rtw_enter_critical(NULL, NULL);
 
@@ -451,6 +452,7 @@ static void promisc_callback_all(unsigned char *buf, unsigned int len, void *use
 		rtw_exit_critical(NULL, NULL);
 	}
 }
+
 static void promisc_test_all(int duration, unsigned char len_used)
 {
 	int ch;
@@ -462,7 +464,7 @@ static void promisc_test_all(int duration, unsigned char len_used)
 	wifi_enter_promisc_mode();
 	wifi_set_promisc(RTW_PROMISC_ENABLE_2, promisc_callback_all, len_used);
 
-	for (ch = 1; ch <= 13; ch ++) {
+	for (ch = 1; ch <= 13; ch++) {
 		if (wifi_set_freq(STA_WLAN_INDEX, ch) == 0) {
 			printf("\n\n\rSwitch to channel(%d)", ch);
 		}
@@ -479,18 +481,18 @@ static void promisc_test_all(int duration, unsigned char len_used)
 					int i;
 					printf("\n\rTYPE: 0x%x, ", frame->type);
 					printf("DA:");
-					for (i = 0; i < 6; i ++) {
+					for (i = 0; i < 6; i++) {
 						printf(" %02x", frame->da[i]);
 					}
 					printf(", SA:");
-					for (i = 0; i < 6; i ++) {
+					for (i = 0; i < 6; i++) {
 						printf(" %02x", frame->sa[i]);
 					}
 					printf(", len=%d", frame->len);
 					printf(", RSSI=%d", frame->rssi);
-					rtw_free((void *) frame);
+					rtw_free((void *)frame);
 				} else {
-					rtw_mdelay_os(1);    //delay 1 tick
+					rtw_mdelay_os(1);	//delay 1 tick
 				}
 			} else {
 				break;
@@ -501,7 +503,7 @@ static void promisc_test_all(int duration, unsigned char len_used)
 	wifi_set_promisc(RTW_PROMISC_DISABLE, NULL, 0);
 
 	while ((frame = retrieve_frame()) != NULL) {
-		rtw_free((void *) frame);
+		rtw_free((void *)frame);
 	}
 }
 
@@ -521,4 +523,4 @@ void cmd_promisc(int argc, char **argv)
 		printf("\n\rUsage: %s DURATION_SECONDS [with_len]", argv[0]);
 	}
 }
-#endif	//#if CONFIG_WLAN
+#endif							//#if CONFIG_WLAN

@@ -17,11 +17,7 @@ struct _rtw_timer_entry {
 static _list _rtw_timer_table;
 static _mutex _rtw_timer_mutex = NULL;
 
-_timerHandle rtw_timerCreate(const signed char *pcTimerName,
-							 u32 xTimerPeriodInTicks,
-							 u32 uxAutoReload,
-							 void *pvTimerID,
-							 TIMER_FUN pxCallbackFunction)
+_timerHandle rtw_timerCreate(const signed char *pcTimerName, u32 xTimerPeriodInTicks, u32 uxAutoReload, void *pvTimerID, TIMER_FUN pxCallbackFunction)
 {
 	struct timer_list_priv *timer = (struct timer_list_priv *)kmm_zalloc(sizeof(struct timer_list_priv));
 	if (timer == NULL) {
@@ -45,9 +41,9 @@ _timerHandle rtw_timerCreate(const signed char *pcTimerName,
 	timer->data = pvTimerID;
 	timer->function = pxCallbackFunction;
 
-	if(_rtw_timer_mutex == NULL) {
+	if (_rtw_timer_mutex == NULL) {
 		unsigned int irq_flags = save_and_cli();
-		if(_rtw_timer_mutex == NULL) {
+		if (_rtw_timer_mutex == NULL) {
 			rtw_mutex_init(&_rtw_timer_mutex);
 			INIT_LIST_HEAD(&_rtw_timer_table);
 		}
@@ -73,8 +69,7 @@ _timerHandle rtw_timerCreate(const signed char *pcTimerName,
 	return (_timerHandle) timer;
 }
 
-u32 rtw_timerDelete(_timerHandle xTimer,
-					u32 xBlockTime)
+u32 rtw_timerDelete(_timerHandle xTimer, u32 xBlockTime)
 {
 	struct timer_list_priv *timer = (struct timer_list_priv *)xTimer;
 
@@ -119,8 +114,7 @@ u32 rtw_timerIsTimerActive(_timerHandle xTimer)
 	return timer->live;
 }
 
-u32  rtw_timerStop(_timerHandle xTimer,
-				   u32 xBlockTime)
+u32 rtw_timerStop(_timerHandle xTimer, u32 xBlockTime)
 {
 	struct timer_list_priv *timer = (struct timer_list_priv *)xTimer;
 
@@ -161,9 +155,7 @@ void rtw_timer_wrapper(void *timer)
 	}
 }
 
-u32  rtw_timerChangePeriod(_timerHandle xTimer,
-						   u32 xNewPeriod,
-						   u32 xBlockTime)
+u32 rtw_timerChangePeriod(_timerHandle xTimer, u32 xNewPeriod, u32 xBlockTime)
 {
 	int ret;
 	struct timer_list_priv *timer = (struct timer_list_priv *)xTimer;
@@ -182,6 +174,3 @@ u32  rtw_timerChangePeriod(_timerHandle xTimer,
 
 	return _SUCCESS;
 }
-
-
-

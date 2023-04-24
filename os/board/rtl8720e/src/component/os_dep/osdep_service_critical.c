@@ -14,19 +14,19 @@
 #define portGET_CORE_ID()			0
 #endif
 
-#if 1 //Justin: temporary solution for enter critical code for tizenRT
+#if 1							//Justin: temporary solution for enter critical code for tizenRT
 static irqstate_t initial_tizen_flags, up_tizen_flag;
 static int flagcnt = 0;
 #endif
 
-#if 1 //Justin: temporary solution for enter critical code for tizenRT
+#if 1							//Justin: temporary solution for enter critical code for tizenRT
 void save_and_cli_temp(void);
 void restore_flags_temp(void);
 void save_and_cli_temp()
 {
-	if(flagcnt){
+	if (flagcnt) {
 		up_tizen_flag = irqsave();
-	}else{
+	} else {
 		initial_tizen_flags = irqsave();
 	}
 	flagcnt++;
@@ -35,9 +35,9 @@ void save_and_cli_temp()
 void restore_flags_temp()
 {
 	flagcnt--;
-	if(flagcnt){
+	if (flagcnt) {
 		irqrestore(up_tizen_flag);
-	}else{
+	} else {
 		irqrestore(initial_tizen_flags);
 	}
 }
@@ -46,16 +46,16 @@ void restore_flags_temp()
 void rtw_enter_critical(_lock *plock, _irqL *pirqL)
 {
 	/* To avoid gcc warnings */
-	(void) pirqL;
-	(void) plock;
+	(void)pirqL;
+	(void)plock;
 
 	if (rtw_in_interrupt()) {
 		DBG_INFO("\n");
 	} else {
-#if 1 //temporary solution for enter critical code for tizenRT
+#if 1							//temporary solution for enter critical code for tizenRT
 		save_and_cli_temp();
-#else 
-	//printf("\n"); //suppress meaningless printout
+#else
+		//printf("\n"); //suppress meaningless printout
 #endif
 	}
 }
@@ -63,16 +63,16 @@ void rtw_enter_critical(_lock *plock, _irqL *pirqL)
 void rtw_exit_critical(_lock *plock, _irqL *pirqL)
 {
 	/* To avoid gcc warnings */
-	(void) pirqL;
-	(void) plock;
+	(void)pirqL;
+	(void)plock;
 
 	if (rtw_in_interrupt()) {
 		DBG_INFO("\n");
 	} else {
-#if 1 //temporary solution for enter critical code for tizenRT
+#if 1							//temporary solution for enter critical code for tizenRT
 		restore_flags_temp();
-#else 
-	//printf("\n"); //suppress meaningless printout
+#else
+		//printf("\n"); //suppress meaningless printout
 #endif
 	}
 }
@@ -80,14 +80,14 @@ void rtw_exit_critical(_lock *plock, _irqL *pirqL)
 void rtw_enter_critical_bh(_lock *plock, _irqL *pirqL)
 {
 	/* To avoid gcc warnings */
-	(void) pirqL;
+	(void)pirqL;
 	rtw_spin_lock(plock);
 }
 
 void rtw_exit_critical_bh(_lock *plock, _irqL *pirqL)
 {
 	/* To avoid gcc warnings */
-	(void) pirqL;
+	(void)pirqL;
 
 	rtw_spin_unlock(plock);
 }
@@ -117,7 +117,6 @@ void rtw_cpu_unlock(void)
 	printf("Not implement osdep service: rtw_cpu_unlock");
 }
 
-
 void rtw_spinlock_init(_lock *plock)
 {
 	if (*plock == NULL) {
@@ -134,7 +133,6 @@ void rtw_spinlock_init(_lock *plock)
 	sem_setprotocol(*plock, SEM_PRIO_NONE);
 }
 
-
 void rtw_spinlock_free(_lock *plock)
 {
 	int i;
@@ -148,7 +146,6 @@ void rtw_spinlock_free(_lock *plock)
 	}
 	*plock = NULL;
 }
-
 
 void rtw_spin_lock(_lock *plock)
 {
@@ -177,5 +174,3 @@ void restore_flags(unsigned int flag)
 void cli()
 {
 }
-
-

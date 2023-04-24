@@ -24,20 +24,20 @@
 /* node to store the message to the queue. */
 struct ipc_msg_node {
 	_list list;
-	inic_ipc_ex_msg_t ipc_msg; /* to store ipc message */
-	u8 is_used; /* sign whether to be used */
+	inic_ipc_ex_msg_t ipc_msg;	/* to store ipc message */
+	u8 is_used;					/* sign whether to be used */
 };
 
 /* message queue priv */
 struct ipc_msg_q_priv {
-	_queue msg_queue; /* msg queue */
+	_queue msg_queue;			/* msg queue */
 	_sema msg_q_sema;
 	_sema msg_send_sema;
-	void (*task_hdl)(inic_ipc_ex_msg_t *); /* the haddle function of task */
-	u8 b_queue_working; /* flag to notice the queue is working */
-	struct ipc_msg_node ipc_msg_pool[IPC_MSG_QUEUE_DEPTH]; /* static pool for queue node */
-	u8 queue_free; /* the free size of queue */
-	u8 rsvd[40]; /* keep total size 64B alignment */
+	void (*task_hdl)(inic_ipc_ex_msg_t *);	/* the haddle function of task */
+	u8 b_queue_working;			/* flag to notice the queue is working */
+	struct ipc_msg_node ipc_msg_pool[IPC_MSG_QUEUE_DEPTH];	/* static pool for queue node */
+	u8 queue_free;				/* the free size of queue */
+	u8 rsvd[40];				/* keep total size 64B alignment */
 };
 
 /* -------------------------- Function declaration -------------------------- */
@@ -50,10 +50,10 @@ static struct ipc_msg_q_priv g_ipc_msg_q_priv __attribute__((aligned(64)));
 #ifdef IPC_DIR_MSG_TX
 inic_ipc_ex_msg_t g_inic_ipc_ex_msg __attribute__((aligned(64)));
 #else
-static inic_ipc_ex_msg_t g_inic_ipc_ex_msg = {0};
+static inic_ipc_ex_msg_t g_inic_ipc_ex_msg = { 0 };
 #endif
 #if defined(configNUM_CORES) && (configNUM_CORES > 1)
-static spinlock_t ipc_msg_queue_lock = {0};
+static spinlock_t ipc_msg_queue_lock = { 0 };
 #endif
 struct task_struct ipc_msgQ_wlan_task;
 /* ---------------------------- Private Functions --------------------------- */
@@ -67,7 +67,7 @@ struct task_struct ipc_msgQ_wlan_task;
 static sint enqueue_ipc_msg_node(struct ipc_msg_node *p_node, _queue *p_queue)
 {
 #if defined(configNUM_CORES) && (configNUM_CORES > 1)
-	/* this function is called in ISR, no need to mask interrupt since gic already do it*/
+	/* this function is called in ISR, no need to mask interrupt since gic already do it */
 	spin_lock(&ipc_msg_queue_lock);
 #else
 	_irqL irqL;
@@ -190,7 +190,7 @@ void inic_ipc_msg_q_init(void (*task_hdl)(inic_ipc_ex_msg_t *))
 	}
 	g_ipc_msg_q_priv.queue_free = IPC_MSG_QUEUE_DEPTH;
 	/* Initialize the queue task */
-	if (rtw_create_task(&ipc_msgQ_wlan_task, (const char *const)"inic_msg_q_task", 1024, (0 + CONFIG_INIC_IPC_MSG_Q_PRI), (void*)inic_ipc_msg_q_task, NULL) != 1) {
+	if (rtw_create_task(&ipc_msgQ_wlan_task, (const char *const)"inic_msg_q_task", 1024, (0 + CONFIG_INIC_IPC_MSG_Q_PRI), (void *)inic_ipc_msg_q_task, NULL) != 1) {
 		DBG_8195A("Create inic_ipc_msg_q_task Err!!\n");
 	}
 	/* sign the queue is working */
@@ -284,7 +284,7 @@ u8 inic_ipc_msg_get_queue_status(void)
  */
 void inic_ipc_ipc_send_msg(inic_ipc_ex_msg_t *p_ipc_msg)
 {
-	IPC_MSG_STRUCT g_inic_ipc_msg = {0};
+	IPC_MSG_STRUCT g_inic_ipc_msg = { 0 };
 
 	u32 cnt = 100000;
 
@@ -293,7 +293,7 @@ void inic_ipc_ipc_send_msg(inic_ipc_ex_msg_t *p_ipc_msg)
 	/* Wait for another port ack acknowledgement last message sending */
 	while (g_inic_ipc_ex_msg.event_num != IPC_WIFI_MSG_READ_DONE) {
 		DelayUs(2);
-		DCache_Invalidate((u32)&g_inic_ipc_ex_msg, sizeof(inic_ipc_ex_msg_t));
+		DCache_Invalidate((u32) & g_inic_ipc_ex_msg, sizeof(inic_ipc_ex_msg_t));
 		cnt--;
 		if (cnt == 0) {
 			DBG_8195A("inic ipc wait timeout\n");
@@ -301,7 +301,7 @@ void inic_ipc_ipc_send_msg(inic_ipc_ex_msg_t *p_ipc_msg)
 		}
 	}
 	/* Get the warning of queue's depth not enough after recv MSG_READ_DONE,
-	delay send the next message */
+	   delay send the next message */
 	if (g_inic_ipc_ex_msg.msg_queue_status == IPC_WIFI_MSG_MEMORY_NOT_ENOUGH) {
 		rtw_mdelay_os(1);
 	}
@@ -311,17 +311,16 @@ void inic_ipc_ipc_send_msg(inic_ipc_ex_msg_t *p_ipc_msg)
 	g_inic_ipc_ex_msg.msg_addr = p_ipc_msg->msg_addr;
 	g_inic_ipc_ex_msg.msg_queue_status = p_ipc_msg->msg_queue_status;
 	g_inic_ipc_ex_msg.wlan_idx = p_ipc_msg->wlan_idx;
-	DCache_Clean((u32)&g_inic_ipc_ex_msg, sizeof(inic_ipc_ex_msg_t));
+	DCache_Clean((u32) & g_inic_ipc_ex_msg, sizeof(inic_ipc_ex_msg_t));
 
 #ifdef IPC_DIR_MSG_TX
 	g_inic_ipc_msg.msg_type = IPC_USER_POINT;
-	g_inic_ipc_msg.msg = (u32)&g_inic_ipc_ex_msg;
+	g_inic_ipc_msg.msg = (u32) & g_inic_ipc_ex_msg;
 	g_inic_ipc_msg.msg_len = sizeof(inic_ipc_ex_msg_t);
-	ipc_send_message(IPC_DIR_MSG_TX, IPC_INT_CHAN_WIFI_TRX_TRAN, \
-					 (PIPC_MSG_STRUCT)&g_inic_ipc_msg);
+	ipc_send_message(IPC_DIR_MSG_TX, IPC_INT_CHAN_WIFI_TRX_TRAN, (PIPC_MSG_STRUCT) & g_inic_ipc_msg);
 #else
-	ipc_send_message(IPC_INT_CHAN_WIFI_TRX_TRAN, (PIPC_MSG_STRUCT)&g_inic_ipc_ex_msg);
-#endif /* IPC_DIR_MSG_TX */
+	ipc_send_message(IPC_INT_CHAN_WIFI_TRX_TRAN, (PIPC_MSG_STRUCT) & g_inic_ipc_ex_msg);
+#endif							/* IPC_DIR_MSG_TX */
 
 	rtw_up_sema(&g_ipc_msg_q_priv.msg_send_sema);
 }

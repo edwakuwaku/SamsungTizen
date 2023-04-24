@@ -44,7 +44,6 @@
 #define CONFIG_SAE_DH_SUPPORT 1
 #endif
 
-
 /* For promiscuous mode */
 //#define CONFIG_PROMISC
 
@@ -105,9 +104,8 @@
 #include "autoconf_8720e.h"
 #endif
 /****************************** Ameba Series End ******************************/
-#endif /* (CONFIG_PLATFORM_AMEBA_X == 1) */
+#endif							/* (CONFIG_PLATFORM_AMEBA_X == 1) */
 /****************** Configurations for each platform end **********************/
-
 
 /************************ For EAP auth configurations *************************/
 #include "autoconf_eap.h"
@@ -126,9 +124,8 @@
 //#define CONFIG_IEEE80211R
 #endif
 
-
 #define CONFIG_BEACON_PERIOD 100
 
-#define CONFIG_ACM_METHOD 0	// 0:By SW 1:By HW.
+#define CONFIG_ACM_METHOD 0		// 0:By SW 1:By HW.
 
-#endif //WLANCONFIG_H
+#endif							//WLANCONFIG_H

@@ -55,21 +55,20 @@
 
 #define rtw_warn_on(condition) do {} while (0)
 
-
 /*************************** Time Management *******************************/
 
 /**
  * @brief  Get the count of ticks since the vTaskStartScheduler was called.
  * @return	The count of ticks since the vTaskStartScheduler was called.
  */
-uint32_t	rtw_get_current_time(void);
+uint32_t rtw_get_current_time(void);
 
 /**
  * @brief  Convert system time to milliseconds.
  * @param[in] systime: The system time to be converted.
  * @return : The milliseconds that converted by the system time.
  */
-uint32_t	rtw_systime_to_ms(uint32_t systime);
+uint32_t rtw_systime_to_ms(uint32_t systime);
 
 /**
  * @brief  Convert system time to seconds.
@@ -83,21 +82,21 @@ uint32_t rtw_systime_to_sec(uint32_t systime);
  * @param[in] systime: The milliseconds to be converted.
  * @return : The system time that converted by the milliseconds.
  */
-uint32_t	rtw_ms_to_systime(uint32_t ms);
+uint32_t rtw_ms_to_systime(uint32_t ms);
 
 /**
  * @brief  Convert seconds to system time.
  * @param[in] systime: The seconds to be converted.
  * @return : The system time that converted by the seconds.
  */
-uint32_t	rtw_sec_to_systime(uint32_t sec);
+uint32_t rtw_sec_to_systime(uint32_t sec);
 
 /**
  * @brief  Get the passing time from the "start" in milliseconds.
  * @param[in] start: The start time which is in system time format.
  * @return : The passing time from "start" in milliseconds.
  */
-int32_t	rtw_get_passing_time_ms(uint32_t start);
+int32_t rtw_get_passing_time_ms(uint32_t start);
 
 /**
  * @brief  Get the interval time from the "start" to "end" in milliseconds.
@@ -105,7 +104,7 @@ int32_t	rtw_get_passing_time_ms(uint32_t start);
  * @param[in] end: The end time which is in system time format.
  * @return : The interval time from "start" to "end" in milliseconds.
  */
-int32_t	rtw_get_time_interval_ms(uint32_t start, uint32_t end);
+int32_t rtw_get_time_interval_ms(uint32_t start, uint32_t end);
 /*************************** End Time Management *******************************/
 
 /**
@@ -113,34 +112,33 @@ int32_t	rtw_get_time_interval_ms(uint32_t start, uint32_t end);
  * @param[in] ms: The time that the function sleep in milliseconds
  * @return	  None
 */
-void	rtw_msleep_os(int ms);
+void rtw_msleep_os(int ms);
 
 /**
  * @brief  This function suspends execution of the calling thread for "us" microseconds.
  * @param[in] ms: The time that the function sleep in microseconds
  * @return	  None
 */
-void	rtw_usleep_os(int us);
-
+void rtw_usleep_os(int us);
 
 /**
  * @brief  This function delays a task for the giving time in milliseconds.
  * @param[in] ms: The amount of time, in milliseconds, that the calling task should block.
  * @return	  None
 */
-void	rtw_mdelay_os(int ms);
+void rtw_mdelay_os(int ms);
 
 /**
  * @brief  This function delays a task for the giving time in microseconds.
  * @param[in] ms: The amount of time, in microseconds, that the calling task should block.
  * @return	  None
 */
-void	rtw_udelay_os(int us);
+void rtw_udelay_os(int us);
 
 /**
  * @brief  This function for forcing a context switch.
  * @return	  None
 */
-void	rtw_yield_os(void);
+void rtw_yield_os(void);
 
 #endif

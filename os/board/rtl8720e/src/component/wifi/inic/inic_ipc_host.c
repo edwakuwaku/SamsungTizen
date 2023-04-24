@@ -44,13 +44,11 @@ static void inic_ipc_host_task_hdl(inic_ipc_ex_msg_t *p_ipc_msg)
 	switch (p_ipc_msg->event_num) {
 	/* receive the data from device */
 	case IPC_WIFI_EVT_RECV_PKTS:
-		inic_ipc_host_rx_handler(p_ipc_msg->wlan_idx,
-								 (struct sk_buff *)(p_ipc_msg->msg_addr));
+		inic_ipc_host_rx_handler(p_ipc_msg->wlan_idx, (struct sk_buff *)(p_ipc_msg->msg_addr));
 		break;
 	/* other contrl operations */
 	default:
-		DBG_8195A("Host Unknown event(%d)!\n\r", \
-				  p_ipc_msg->event_num);
+		DBG_8195A("Host Unknown event(%d)!\n\r", p_ipc_msg->event_num);
 		break;
 	}
 }
@@ -68,24 +66,24 @@ static void inic_ipc_host_task_hdl(inic_ipc_ex_msg_t *p_ipc_msg)
  */
 void inic_ipc_host_event_int_hdl(VOID *Data, u32 IrqStatus, u32 ChanNum)
 {
-	(void) Data;
-	(void) IrqStatus;
-	(void) ChanNum;
+	(void)Data;
+	(void)IrqStatus;
+	(void)ChanNum;
 
 	inic_ipc_ex_msg_t *p_ipc_msg = NULL;
 	sint ret = FAIL;
 
 #ifdef IPC_DIR_MSG_RX
-	PIPC_MSG_STRUCT p_ipc_recv_msg = ipc_get_message(IPC_DIR_MSG_RX, \
+	PIPC_MSG_STRUCT p_ipc_recv_msg = ipc_get_message(IPC_DIR_MSG_RX,
 									 IPC_D2H_WIFI_TRX_TRAN);
-	p_ipc_msg = (inic_ipc_ex_msg_t *)p_ipc_recv_msg->msg;
+	p_ipc_msg = (inic_ipc_ex_msg_t *) p_ipc_recv_msg->msg;
 #else
-	p_ipc_msg = (inic_ipc_ex_msg_t *)ipc_get_message(IPC_INT_CHAN_WIFI_TRX_TRAN);
-#endif /* IPC_DIR_MSG_RX */
+	p_ipc_msg = (inic_ipc_ex_msg_t *) ipc_get_message(IPC_INT_CHAN_WIFI_TRX_TRAN);
+#endif							/* IPC_DIR_MSG_RX */
 
 #ifdef CONFIG_ENABLE_CACHE
-	DCache_Invalidate((u32)p_ipc_msg, sizeof(inic_ipc_ex_msg_t));
-#endif /* CONFIG_ENABLE_CACHE */
+	DCache_Invalidate((u32) p_ipc_msg, sizeof(inic_ipc_ex_msg_t));
+#endif							/* CONFIG_ENABLE_CACHE */
 
 	if (inic_ipc_msg_get_queue_status()) {
 		/* put the ipc message to the queue */
@@ -102,11 +100,11 @@ void inic_ipc_host_event_int_hdl(VOID *Data, u32 IrqStatus, u32 ChanNum)
 	} else {
 		p_ipc_msg->msg_queue_status = IPC_WIFI_MSG_MEMORY_NOT_ENOUGH;
 	}
-	/* enqueuing message is seccussful, send acknowledgement to another port*/
+	/* enqueuing message is seccussful, send acknowledgement to another port */
 	p_ipc_msg->event_num = IPC_WIFI_MSG_READ_DONE;
 #ifdef CONFIG_ENABLE_CACHE
-	DCache_Clean((u32)p_ipc_msg, sizeof(inic_ipc_ex_msg_t));
-#endif /* CONFIG_ENABLE_CACHE */
+	DCache_Clean((u32) p_ipc_msg, sizeof(inic_ipc_ex_msg_t));
+#endif							/* CONFIG_ENABLE_CACHE */
 }
 
 /**
@@ -122,10 +120,10 @@ void inic_ipc_init_host(VOID)
 	/* Initialize the parameters of ipc host. */
 	inic_ipc_host_init_priv();
 }
+
 /* ---------------------------- Global Variables ---------------------------- */
 #if defined(CONFIG_PLATFORM_AMEBALITE) || defined(CONFIG_PLATFORM_AMEBAD2) || defined(CONFIG_PLATFORM_AMEBADPLUS)
-IPC_TABLE_DATA_SECTION
-const IPC_INIT_TABLE   ipc_host_event_table[] = {
-	{IPC_USER_POINT,	inic_ipc_host_event_int_hdl,	(VOID *) NULL, IPC_DIR_MSG_RX, IPC_D2H_WIFI_TRX_TRAN, IPC_RX_FULL},
+IPC_TABLE_DATA_SECTION const IPC_INIT_TABLE ipc_host_event_table[] = {
+	{IPC_USER_POINT, inic_ipc_host_event_int_hdl, (VOID *) NULL, IPC_DIR_MSG_RX, IPC_D2H_WIFI_TRX_TRAN, IPC_RX_FULL},
 };
 #endif

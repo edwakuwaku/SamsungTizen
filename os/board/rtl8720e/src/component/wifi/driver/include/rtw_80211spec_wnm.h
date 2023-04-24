@@ -52,7 +52,7 @@ enum rtw_ieee80211_wnm_actioncode {
 
 /*IEEE Std 80211k Figure 7-95b Neighbor Report element format*/
 struct nb_rpt_hdr {
-	u8 id; /*0x34: Neighbor Report Element ID*/
+	u8 id;						/*0x34: Neighbor Report Element ID */
 	u8 len;
 	u8 bssid[ETH_ALEN];
 	u32 bss_info;
@@ -65,8 +65,8 @@ struct nb_rpt_hdr {
 struct btm_term_duration {
 	u8 id;
 	u8 len;
-	u64 tsf;		/* value of the TSF counter when BSS termination will occur in the future */
-	u16 duration;		/* number of minutes for which the BSS is not present*/
+	u64 tsf;					/* value of the TSF counter when BSS termination will occur in the future */
+	u16 duration;				/* number of minutes for which the BSS is not present */
 };
 
 /*IEEE Std 80211v, Figure 7-10 BSS Transition Management Request frame body format */
@@ -89,8 +89,7 @@ struct btm_req_hdr {
 
 struct wnm_btm_cant {
 	struct nb_rpt_hdr nb_rpt;
-	u8 preference;	/* BSS Transition Candidate Preference */
+	u8 preference;				/* BSS Transition Candidate Preference */
 };
 
 #endif
-

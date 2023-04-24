@@ -22,4 +22,4 @@ typedef uint32_t RT_DEV_LOCK_E;
 void device_mutex_lock(RT_DEV_LOCK_E device);
 void device_mutex_unlock(RT_DEV_LOCK_E device);
 
-#endif //_DEVICE_LOCK_H_
+#endif							//_DEVICE_LOCK_H_

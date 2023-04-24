@@ -36,43 +36,27 @@
 #define RTW_GET_BE24(a) ((((uint32_t) (a)[0]) << 16) | (((uint32_t) (a)[1]) << 8) | \
 			 ((uint32_t) (a)[2]))
 
-__inline static __u16  ___swab16(__u16 x)
+__inline static __u16 ___swab16(__u16 x)
 {
 	__u16 __x = x;
-	return
-		((__u16)(
-			 (((__u16)(__x) & (__u16)0x00ffU) << 8) |
-			 (((__u16)(__x) & (__u16)0xff00U) >> 8)));
+	return ((__u16)((((__u16)(__x) & (__u16) 0x00ffU) << 8) | (((__u16)(__x) & (__u16) 0xff00U) >> 8)));
 
 }
 
-__inline static __u32  ___swab32(__u32 x)
+__inline static __u32 ___swab32(__u32 x)
 {
 	__u32 __x = (x);
-	return ((__u32)(
-				(((__u32)(__x) & (__u32)0x000000ffUL) << 24) |
-				(((__u32)(__x) & (__u32)0x0000ff00UL) <<  8) |
-				(((__u32)(__x) & (__u32)0x00ff0000UL) >>  8) |
-				(((__u32)(__x) & (__u32)0xff000000UL) >> 24)));
+	return ((__u32)((((__u32)(__x) & (__u32) 0x000000ffUL) << 24) | (((__u32)(__x) & (__u32) 0x0000ff00UL) << 8) | (((__u32)(__x) & (__u32) 0x00ff0000UL) >> 8) | (((__u32)(__x) & (__u32) 0xff000000UL) >> 24)));
 }
 
-__inline static __u64  ___swab64(__u64 x)
+__inline static __u64 ___swab64(__u64 x)
 {
 	__u64 __x = (x);
 
-	return
-		((__u64)(\
-				 (__u64)(((__u64)(__x) & (__u64)0x00000000000000ffULL) << 56) | \
-				 (__u64)(((__u64)(__x) & (__u64)0x000000000000ff00ULL) << 40) | \
-				 (__u64)(((__u64)(__x) & (__u64)0x0000000000ff0000ULL) << 24) | \
-				 (__u64)(((__u64)(__x) & (__u64)0x00000000ff000000ULL) <<  8) | \
-				 (__u64)(((__u64)(__x) & (__u64)0x000000ff00000000ULL) >>  8) | \
-				 (__u64)(((__u64)(__x) & (__u64)0x0000ff0000000000ULL) >> 24) | \
-				 (__u64)(((__u64)(__x) & (__u64)0x00ff000000000000ULL) >> 40) | \
-				 (__u64)(((__u64)(__x) & (__u64)0xff00000000000000ULL) >> 56)));
-	\
+	return ((__u64)((__u64)(((__u64)(__x) & (__u64) 0x00000000000000ffULL) << 56) | (__u64)(((__u64)(__x) & (__u64) 0x000000000000ff00ULL) << 40) | (__u64)(((__u64)(__x) & (__u64) 0x0000000000ff0000ULL) << 24) | (__u64)(((__u64)(__x) & (__u64) 0x00000000ff000000ULL) << 8) | (__u64)(((__u64)(__x) & (__u64) 0x000000ff00000000ULL) >> 8) | (__u64)(((__u64)(__x) & (__u64) 0x0000ff0000000000ULL) >> 24) | (__u64)(((__u64)(__x) & (__u64) 0x00ff000000000000ULL) >> 40) | (__u64)(((__u64)(__x) & (__u64) 0xff00000000000000ULL) >> 56)));
+
 }
-#endif // CONFIG_PLATFORM_MSTAR_TITANIA12
+#endif							// CONFIG_PLATFORM_MSTAR_TITANIA12
 
 #ifndef __arch__swab16
 __inline static __u16 __arch__swab16(__u16 x)
@@ -85,7 +69,7 @@ __inline static __u16 __arch__swab16(__u16 x)
 #ifndef __arch__swab32
 __inline static __u32 __arch__swab32(__u32 x)
 {
-	__u32 __tmp = (x) ;
+	__u32 __tmp = (x);
 	return ___swab32(__tmp);
 }
 #endif
@@ -94,10 +78,9 @@ __inline static __u32 __arch__swab32(__u32 x)
 
 __inline static __u64 __arch__swab64(__u64 x)
 {
-	__u64 __tmp = (x) ;
+	__u64 __tmp = (x);
 	return ___swab64(__tmp);
 }
-
 
 #endif
 
@@ -105,7 +88,7 @@ __inline static __u64 __arch__swab64(__u64 x)
 #define __swab16(x) __fswab16(x)
 #define __swab32(x) __fswab32(x)
 #define __swab64(x) __fswab64(x)
-#endif	// __swab16
+#endif							// __swab16
 
 __inline static __u16 __fswab16(__u16 x)
 {
@@ -116,7 +99,6 @@ __inline static __u32 __fswab32(__u32 x)
 {
 	return __arch__swab32(x);
 }
-
 
 /*
  * inside the kernel, we can use nicknames;
@@ -205,7 +187,6 @@ __inline static __u32 __fswab32(__u32 x)
 #define __be32_to_cpus(x) __swab32s((x))
 #define __cpu_to_be16s(x) __swab16s((x))
 #define __be16_to_cpus(x) __swab16s((x))
-#endif	// __constant_htonl
+#endif							// __constant_htonl
 
-#endif /* _RTL871X_BYTEORDER_H_ */
-
+#endif							/* _RTL871X_BYTEORDER_H_ */

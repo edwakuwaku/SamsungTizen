@@ -16,15 +16,12 @@ enum p2p_wps_method {
 #define P2P_NETMASK_ADDR1   255
 #define P2P_NETMASK_ADDR2   255
 #define P2P_NETMASK_ADDR3   0
-
 /*Gateway Address*/
 #define P2P_GW_ADDR0   192
 #define P2P_GW_ADDR1   168
 #define P2P_GW_ADDR2   42
 #define P2P_GW_ADDR3   1
-
-#define P2P_GO_NEGO_RESULT_SIZE	376//256
-
+#define P2P_GO_NEGO_RESULT_SIZE	376	//256
 xqueue_handle_t queue_for_p2p_nego;
 
 extern void dhcps_init(struct netif *pnetif);
@@ -77,7 +74,7 @@ int wifi_start_p2p_go(char *ssid, char *passphrase, u8 channel)
 {
 	extern struct netif xnetif[NET_IF_NUM];
 	struct netif *pnetif = &xnetif[0];
-	rtw_softap_info_t softAP_config = {0};
+	rtw_softap_info_t softAP_config = { 0 };
 
 	u32 addr = WIFI_MAKEU32(P2P_GW_ADDR0, P2P_GW_ADDR1, P2P_GW_ADDR2, P2P_GW_ADDR3);
 	u32 netmask = WIFI_MAKEU32(P2P_NETMASK_ADDR0, P2P_NETMASK_ADDR1, P2P_NETMASK_ADDR2, P2P_NETMASK_ADDR3);
@@ -116,13 +113,13 @@ void cmd_wifi_p2p_start(int argc, char **argv)
 	int go_intent = 1;
 #if 1
 	u32 r = 0;
-	os_get_random((u8 *) &r, sizeof(r));
-	go_intent = r % 15 + 1; /*1-15*/
+	os_get_random((u8 *)&r, sizeof(r));
+	go_intent = r % 15 + 1;		/*1-15 */
 
-	os_get_random((u8 *) &r, sizeof(r));
+	os_get_random((u8 *)&r, sizeof(r));
 	listen_ch = 1 + (r % 3) * 5;
 
-	os_get_random((u8 *) &r, sizeof(r));
+	os_get_random((u8 *)&r, sizeof(r));
 	op_ch = 1 + (r % 3) * 5;
 #endif
 	wifi_off();
@@ -134,14 +131,14 @@ void cmd_wifi_p2p_start(int argc, char **argv)
 int cmd_wifi_p2p_auto_go_start(int argc, char **argv)
 {
 	u8 *passphrase = "12345678";
-	u8 channel = 6;	// 1, 6, 11
+	u8 channel = 6;				// 1, 6, 11
 	const char *ssid_in = "DIRECT-34-Ameba";
 	const char *dev_name = "Ameba1234";	// max strlen 32
 	const char *manufacturer = "by customer";	// max strlen 64
 	const char *model_name = "customer";	// max strlen 32
 	const char *model_number = "v2.0";	// max strlen 32
 	const char *serial_number = "9";	// max strlen 32
-	const u8 pri_dev_type[8] = {0x00, 0x0A, 0x00, 0x50, 0xF2, 0x04, 0x00, 0x01};	// category ID:0x00,0x0A; sub category ID:0x00,0x01
+	const u8 pri_dev_type[8] = { 0x00, 0x0A, 0x00, 0x50, 0xF2, 0x04, 0x00, 0x01 };	// category ID:0x00,0x0A; sub category ID:0x00,0x01
 	u8 res[P2P_GO_NEGO_RESULT_SIZE];
 	u16 config_methods = WPS_CONFIG_DISPLAY | WPS_CONFIG_KEYPAD | WPS_CONFIG_PUSHBUTTON;
 
@@ -161,6 +158,7 @@ int cmd_wifi_p2p_auto_go_start(int argc, char **argv)
 	wifi_p2p_start_auto_go(res);
 	return 0;
 }
+
 void cmd_wifi_p2p_stop(int argc, char **argv)
 {
 	wifi_p2p_deinit();
@@ -172,7 +170,7 @@ void cmd_p2p_listen(int argc, char **argv)
 	u32 timeout = 0;
 
 	if (argc == 2) {
-		timeout = os_atoi((u8 *)argv[1]);
+		timeout = os_atoi((u8 *) argv[1]);
 		printf("\r\n%s(): timeout=%d\n", __func__, timeout);
 		if (timeout > 3600) {
 			timeout = 3600;
@@ -205,7 +203,7 @@ void cmd_p2p_connect(int argc, char **argv)
 {
 	enum p2p_wps_method config_method = WPS_PBC;
 	char *pin = NULL;
-	u8 dest[ETH_ALEN] = {0x44, 0x6d, 0x57, 0xd7, 0xce, 0x41};
+	u8 dest[ETH_ALEN] = { 0x44, 0x6d, 0x57, 0xd7, 0xce, 0x41 };
 	u8 res[P2P_GO_NEGO_RESULT_SIZE];
 	int ret = 0, result = 0;
 
@@ -244,8 +242,8 @@ void cmd_p2p_connect(int argc, char **argv)
 			return;
 		}
 	}
-#else //For test
-	u8 dest1[ETH_ALEN] = {0xea, 0x92, 0xa4, 0x9b, 0x61, 0xd6};  //NEXUS 4
+#else							//For test
+	u8 dest1[ETH_ALEN] = { 0xea, 0x92, 0xa4, 0x9b, 0x61, 0xd6 };	//NEXUS 4
 	//u8 dest1[ETH_ALEN] = {0x0e, 0x37, 0xdc, 0xfc, 0xc4, 0x12}; //HUAWEI U9508_c001
 	//u8 dest1[ETH_ALEN] = {0x42, 0xcb, 0xa8, 0xd3, 0x2c, 0x50}; //HUAWEI G610-T00
 	os_memcpy(dest, dest1, ETH_ALEN);
@@ -272,4 +270,4 @@ void cmd_p2p_connect(int argc, char **argv)
 	}
 }
 
-#endif //CONFIG_ENABLE_P2P
+#endif							//CONFIG_ENABLE_P2P

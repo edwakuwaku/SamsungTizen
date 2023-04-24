@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h> /* va_list */
+#include <stdarg.h>				/* va_list */
 #include "ameba.h"
 #endif
 
@@ -36,10 +36,7 @@ extern "C" {
 #include "basic_types.h"
 #endif
 
-
 #ifdef __cplusplus
 }
 #endif
-
-#endif //__PLATFORM_STDLIB_H__
-
+#endif							//__PLATFORM_STDLIB_H__

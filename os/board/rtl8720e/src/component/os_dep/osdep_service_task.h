@@ -30,30 +30,28 @@
 #define TASK_PRORITY_HIGH    			3
 #define TASK_PRORITY_SUPER    			4
 
-
-typedef void			    *_thread_hdl_;
-typedef void			    thread_return;
-typedef void			    *thread_context;
+typedef void *_thread_hdl_;
+typedef void thread_return;
+typedef void *thread_context;
 
 typedef thread_return(*thread_func_t)(thread_context context);
 
 #define CONFIG_THREAD_COMM_SEMA
 struct task_struct {
 	const char *task_name;
-	_thread_hdl_ task;	/* I: workqueue thread */
+	_thread_hdl_ task;			/* I: workqueue thread */
 
 #ifdef CONFIG_THREAD_COMM_SIGNAL
-	const char *name;	/* I: workqueue thread name */
-	uint32_t queue_num;		/* total signal num */
-	uint32_t cur_queue_num;	/* cur signal num should < queue_num */
+	const char *name;			/* I: workqueue thread name */
+	uint32_t queue_num;			/* total signal num */
+	uint32_t cur_queue_num;		/* cur signal num should < queue_num */
 #elif defined(CONFIG_THREAD_COMM_SEMA)
-	_sema wakeup_sema;    /* for internal use only */
-	_sema terminate_sema; /* for internal use only */
+	_sema wakeup_sema;			/* for internal use only */
+	_sema terminate_sema;		/* for internal use only */
 #endif
-	uint32_t blocked;          /* for internal use only */
-	uint32_t callback_running; /* for internal use only */
+	uint32_t blocked;			/* for internal use only */
+	uint32_t callback_running;	/* for internal use only */
 };
-
 
 /*********************************** Thread related *****************************************/
 
@@ -71,7 +69,7 @@ struct task_struct {
  		  "rtw_TDMA_change_state_thread", "xmit_thread", "recv_thread", "rtw_recv_tasklet", "rtw_xmit_tasklet",
  		  "rtw_interrupt_thread", "cmd_thread", "usb_init", "MSC_BULK_CMD" and "MSC_BULK_DATA".
  */
-int	rtw_create_task(struct task_struct *task, const char *name, uint32_t  stack_size, uint32_t priority, thread_func_t func, void *thctx);
+int rtw_create_task(struct task_struct *task, const char *name, uint32_t stack_size, uint32_t priority, thread_func_t func, void *thctx);
 
 /**
  * @brief  This function deletes a task.
@@ -97,13 +95,13 @@ void rtw_resume_task_all(void);
  * @param[in] name:  The name of the thread.
  * @return  None
  */
-void	rtw_thread_enter(char *name);
+void rtw_thread_enter(char *name);
 
 /**
  * @brief  This function exits the calling thread.
  * @return  None
  */
-void	rtw_thread_exit(void);
+void rtw_thread_exit(void);
 
 /**
  * @brief  This function gets the scheduler state of the calling thread.
@@ -111,7 +109,7 @@ void	rtw_thread_exit(void);
  * @return  OS_SCHEDULER_RUNNING
  * @return  OS_SCHEDULER_SUSPENDED
  */
-uint8_t		rtw_get_scheduler_state(void);
+uint8_t rtw_get_scheduler_state(void);
 
 /**
  * @brief  This function creats secure stack for threads.

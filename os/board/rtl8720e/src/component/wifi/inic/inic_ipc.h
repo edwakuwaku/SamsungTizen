@@ -34,11 +34,11 @@
 
 /* ------------------------------- Data Types ------------------------------- */
 typedef struct inic_ipc_ex_msg {
-	u32	event_num;
-	u32	msg_addr;
+	u32 event_num;
+	u32 msg_addr;
 	u32 msg_queue_status;
-	u32	wlan_idx;
-	u32 rsvd[12]; /* keep total size 64B aligned */
+	u32 wlan_idx;
+	u32 rsvd[12];				/* keep total size 64B aligned */
 } inic_ipc_ex_msg_t;
 
 enum IPC_WIFI_CTRL_TYPE {
@@ -58,4 +58,4 @@ void inic_ipc_host_event_int_hdl(VOID *Data, u32 IrqStatus, u32 ChanNum);
 void inic_ipc_init(VOID);
 void inic_ipc_dev_event_int_hdl(VOID *Data, u32 IrqStatus, u32 ChanNum);
 
-#endif /* __INIC_IPC_H__ */
+#endif							/* __INIC_IPC_H__ */

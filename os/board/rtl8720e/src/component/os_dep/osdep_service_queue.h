@@ -17,11 +17,10 @@
 #ifndef __OSDEP_SERVICE_QUEUE_H_
 #define __OSDEP_SERVICE_QUEUE_H_
 
-
 #define RTW_WAIT_FOREVER		0xFFFFFFFF
 
-typedef void	            *_queueHandle;
-typedef void	            *_xqueue;
+typedef void *_queueHandle;
+typedef void *_xqueue;
 
 #define netif_queue_stopped(dev)	(0)
 #define netif_wake_queue(dev)		do { } while (0)
@@ -80,14 +79,14 @@ int rtw_deinit_xqueue(_xqueue *queue);
  * @param[in] pqueue: The handle to the newly created queue.
  * @return	 None
  */
-void	rtw_init_queue(_queue	*pqueue);
+void rtw_init_queue(_queue *pqueue);
 
 /**
  * @brief  This function tests whether the queue is empty.
  * @param[in] pqueue: The handle to the queue to be tested.
  * @return	 None
  */
-uint32_t	rtw_queue_empty(_queue	*pqueue);
+uint32_t rtw_queue_empty(_queue *pqueue);
 
 /**
  * @brief  This function tests whether the "pelement" is at the "queue".
@@ -95,6 +94,6 @@ uint32_t	rtw_queue_empty(_queue	*pqueue);
  * @param[in] pelement: The element that to be tested.
  * @return	 _TRUE/_FALSE
  */
-uint32_t	rtw_end_of_queue_search(_list *queue, _list *pelement);
+uint32_t rtw_end_of_queue_search(_list *queue, _list *pelement);
 /*************************** End Queues *******************************/
 #endif

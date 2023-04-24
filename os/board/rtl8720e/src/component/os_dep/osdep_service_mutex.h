@@ -17,7 +17,7 @@
 #ifndef __OSDEP_SERVICE_MUTEX_H_
 #define __OSDEP_SERVICE_MUTEX_H_
 
-typedef void	            *_mutex;
+typedef void *_mutex;
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 #ifdef CONFIG_WLAN
@@ -47,21 +47,21 @@ void init_mutex_pool(void);
  * @param[in] pmutex: Pointer to the created mutex semaphore.
  * @return	  None
  */
-void	rtw_mutex_init(_mutex *pmutex);
+void rtw_mutex_init(_mutex *pmutex);
 
 /**
  * @brief  This function deletes the mutex semaphore.
  * @param[in] pmutex: Pointer to the mutex semaphore to be deleted.
  * @return	  None
  */
-void	rtw_mutex_free(_mutex *pmutex);
+void rtw_mutex_free(_mutex *pmutex);
 
 /**
  * @brief  This function releases a mutex semaphore.
  * @param[in] pmutex: Pointer to the mutex semaphore to be released.
  * @return	  None
  */
-void	rtw_mutex_put(_mutex *pmutex);
+void rtw_mutex_put(_mutex *pmutex);
 
 /**
  * @brief  This function obtains a mutex semaphore.
@@ -69,7 +69,7 @@ void	rtw_mutex_put(_mutex *pmutex);
  *			  the mutex semaphore was created.
  * @return	  None
  */
-void	rtw_mutex_get(_mutex *pmutex);
+void rtw_mutex_get(_mutex *pmutex);
 
 /**
  * @brief  This function obtains a mutex semaphore with a timeout setting.
@@ -79,6 +79,6 @@ void	rtw_mutex_get(_mutex *pmutex);
  * @return	0: The semaphore was obtained.
  * @return	-1: Timeout without the semaphore becoming available.
  */
-int	rtw_mutex_get_timeout(_mutex *pmutex, uint32_t timeout_ms);
+int rtw_mutex_get_timeout(_mutex *pmutex, uint32_t timeout_ms);
 /*************************** End Mutexes *******************************/
 #endif

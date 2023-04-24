@@ -4,7 +4,6 @@
 #include <wifi_conf.h>
 #include <wifi_ind.h>
 
-
 /******************************************************
  *                    Constants
  ******************************************************/
@@ -43,18 +42,17 @@ int wifi_set_promisc(rtw_rcr_level_t enabled, void (*callback)(unsigned char *, 
 	return promisc_set(enabled, callback, len_used);
 }
 
-
 void wifi_enter_promisc_mode()
 {
 #ifdef CONFIG_PROMISC
-	rtw_wifi_setting_t setting = {0};
+	rtw_wifi_setting_t setting = { 0 };
 
-	/* stop softap fisrt*/
+	/* stop softap fisrt */
 	if (wifi_is_running(SOFTAP_WLAN_INDEX)) {
 		wifi_stop_ap();
 	}
 
-	/* disconnect to ap if already connected*/
+	/* disconnect to ap if already connected */
 	wifi_get_setting(STA_WLAN_INDEX, &setting);
 	if (strlen((const char *)setting.ssid) > 0) {
 		wifi_disconnect();
@@ -104,4 +102,4 @@ int wifi_promisc_ctrl_packet_rpt(u8 enable)
 }
 #endif
 
-#endif	//#if CONFIG_WLAN
+#endif							//#if CONFIG_WLAN

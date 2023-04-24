@@ -16,7 +16,6 @@
 #define RTW_INFO(x,...) do {} while (0)
 #define RTW_DBG(x,...) do {} while (0)
 
-
 /* add new definition of debug log level */
 #define RTW_MSG_RESIDENT   2
 #define RTW_MSG_ERROR         3
@@ -31,16 +30,13 @@ extern u32 GlobalDebugEnable;
 extern u8 OtherDebugPortEnable;
 extern u16 GlobalDebugLevel;
 
-
 #undef	_dbgdump
 #undef   _dbgdump_nr
 
 #define _dbgdump_nr	printf("\n\r"); printf
 #define _dbgdump	printf
 
-
-#include <diag.h> // for DRIVER_PREFIX
-
+#include <diag.h>				// for DRIVER_PREFIX
 
 /* 220728:add new definition of RTW_ERR\RTW_WARN\RTW_RESIDENT */
 #if defined(RTW_MSG_LEVEL) && defined(_dbgdump_nr)
@@ -52,7 +48,6 @@ extern u16 GlobalDebugLevel;
 			_dbgdump_nr(DRIVER_PREFIX __VA_ARGS__);\
 			} \
 	} while(0)
-
 
 #undef RTW_ERR
 #define RTW_ERR(...) 	\
@@ -71,7 +66,6 @@ extern u16 GlobalDebugLevel;
 	} while (0)
 #endif
 
-
 #if 	defined (_dbgdump)
 #if defined (__ICCARM__) || defined (__CC_ARM) ||defined(__GNUC__)
 
@@ -87,6 +81,4 @@ extern int msg_uart_port(const char *fmt, ...);
 #endif
 #endif
 
-
-#endif	//__RTW_DEBUG_H__
-
+#endif							//__RTW_DEBUG_H__

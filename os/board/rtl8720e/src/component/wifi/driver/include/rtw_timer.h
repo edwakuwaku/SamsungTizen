@@ -21,8 +21,8 @@
 #define __RTW_TIMER_H_
 
 #define AP_CSA_TO	(102)
-#define REAUTH_TO	(800) //(50)
-#define REASSOC_TO	(300) //(50)
+#define REAUTH_TO	(800)		//(50)
+#define REASSOC_TO	(300)		//(50)
 #define REAUTH_LIMIT	(4)
 #define REASSOC_LIMIT	(4)
 
@@ -38,16 +38,16 @@
 
 void init_timer(struct timer_list *timer);
 void mod_timer(struct timer_list *timer, uint32_t delay_time_ms);
-void  cancel_timer_ex(struct timer_list *timer);
+void cancel_timer_ex(struct timer_list *timer);
 void del_timer_sync(struct timer_list *timer);
 void init_timer_wrapper(void);
 void deinit_timer_wrapper(void);
 /* void *adapter useless in rtw_init_timer, may clear later. */
 void rtw_init_timer(_timer *ptimer, void *adapter, TIMER_FUN pfunc, void *cntx, const char *name);
 void rtw_set_timer(_timer *ptimer, uint32_t delay_time);
-uint8_t  rtw_cancel_timer(_timer *ptimer);
+uint8_t rtw_cancel_timer(_timer *ptimer);
 void rtw_del_timer(_timer *ptimer);
 void init_timer_pool(void);
 void deinit_timer_pool(void);
 
-#endif //__RTW_TIMER_H_
+#endif							//__RTW_TIMER_H_

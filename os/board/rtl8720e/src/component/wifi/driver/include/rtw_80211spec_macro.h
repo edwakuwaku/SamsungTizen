@@ -270,7 +270,7 @@
 #define WLAN_EID_EXT_SPATIAL_REUSE_PARA 39
 #define WLAN_EID_EXT_BSS_COLOR_CHANGE 42
 #define WLAN_EID_EXT_MULTIPLE_BSSID_CONFIGURATION 55	//MBSSID
-#define WLAN_EID_EXT_NON_INGERITANCE_ELEMENT 56		//MBSSID
+#define WLAN_EID_EXT_NON_INGERITANCE_ELEMENT 56	//MBSSID
 
 #define WLAN_EID_EXT_CAP_MAX_LEN 10
 
@@ -279,7 +279,7 @@
 #define MAX_P2P_IE_LEN (256)
 #define MAX_WFD_IE_LEN (128)
 
-#define _WMM_IE_Length_				7  // for WMM STA
+#define _WMM_IE_Length_				7	// for WMM STA
 #define _WMM_Para_Element_Length_		24
 
 #define _ASOCREQ_IE_OFFSET_		4	// excluding wlan_hdr
@@ -360,7 +360,6 @@
 
 #define get_tofr_ds(pframe)	((GetToDs(pframe) << 1) | GetFrDs(pframe))
 
-
 #define SetMFrag(pbuf)	\
 	do	{	\
 		*(unsigned short *)(void*)(pbuf) |= cpu_to_le16(_MORE_FRAG_); \
@@ -437,7 +436,6 @@
 
 #define get_frame_sub_type(pbuf)	(cpu_to_le16(*(unsigned short *)(void*)(pbuf)) & (BIT(7) | BIT(6) | BIT(5) | BIT(4) | BIT(3) | BIT(2)))
 
-
 #define set_frame_sub_type(pbuf, type) \
 	do {    \
 		*(unsigned short *)(void*)(pbuf) &= cpu_to_le16(~(BIT(7) | BIT(6) | BIT(5) | BIT(4) | BIT(3) | BIT(2))); \
@@ -488,7 +486,6 @@
 	do {    \
 		*(unsigned short *)(void*)((SIZE_PTR)(pbuf) + 2) = cpu_to_le16(0xffff & (dur)); \
 	} while(0)
-
 
 #define SetPriority(pbuf, tid)	\
 	do	{	\
@@ -612,10 +609,10 @@
 
 #define WLAN_STATUS_SAE_HASH_TO_ELEMENT 126
 
-//	===============WPS Section===============
-//	For WPSv1.0
+//  ===============WPS Section===============
+//  For WPSv1.0
 #define WPSOUI							0x0050f204
-//	WPS attribute ID
+//  WPS attribute ID
 #define WPS_ATTR_VER1					0x104A
 #define WPS_ATTR_SIMPLE_CONF_STATE	0x1044
 #define WPS_ATTR_RESP_TYPE			0x103B
@@ -636,29 +633,29 @@
 #define WPS_ATTR_VENDOR_EXT			0x1049
 #define WPS_ATTR_SELECTED_REGISTRAR	0x1041
 
-//	Value of WPS attribute "WPS_ATTR_DEVICE_NAME
+//  Value of WPS attribute "WPS_ATTR_DEVICE_NAME
 #define WPS_MAX_DEVICE_NAME_LEN		32
 
-//	Value of WPS Request Type Attribute
+//  Value of WPS Request Type Attribute
 #define WPS_REQ_TYPE_ENROLLEE_INFO_ONLY			0x00
 #define WPS_REQ_TYPE_ENROLLEE_OPEN_8021X		0x01
 #define WPS_REQ_TYPE_REGISTRAR					0x02
 #define WPS_REQ_TYPE_WLAN_MANAGER_REGISTRAR	0x03
 
-//	Value of WPS Response Type Attribute
+//  Value of WPS Response Type Attribute
 #define WPS_RESPONSE_TYPE_INFO_ONLY	0x00
 #define WPS_RESPONSE_TYPE_8021X		0x01
 #define WPS_RESPONSE_TYPE_REGISTRAR	0x02
 #define WPS_RESPONSE_TYPE_AP			0x03
 
-//	Value of WPS WiFi Simple Configuration State Attribute
+//  Value of WPS WiFi Simple Configuration State Attribute
 #define WPS_WSC_STATE_NOT_CONFIG	0x01
 #define WPS_WSC_STATE_CONFIG			0x02
 
-//	Value of WPS Version Attribute
+//  Value of WPS Version Attribute
 #define WPS_VERSION_1					0x10
 
-//	Value of WPS Configuration Method Attribute
+//  Value of WPS Configuration Method Attribute
 #define WPS_CONFIG_METHOD_FLASH		0x0001
 #define WPS_CONFIG_METHOD_ETHERNET	0x0002
 #define WPS_CONFIG_METHOD_LABEL		0x0004
@@ -673,16 +670,16 @@
 #define WPS_CONFIG_METHOD_VDISPLAY	0x2008
 #define WPS_CONFIG_METHOD_PDISPLAY	0x4008
 
-//	Value of Category ID of WPS Primary Device Type Attribute
+//  Value of Category ID of WPS Primary Device Type Attribute
 #define WPS_PDT_CID_DISPLAYS			0x0007
 #define WPS_PDT_CID_MULIT_MEDIA		0x0008
 #define WPS_PDT_CID_RTK_WIDI			WPS_PDT_CID_MULIT_MEDIA
 
-//	Value of Sub Category ID of WPS Primary Device Type Attribute
+//  Value of Sub Category ID of WPS Primary Device Type Attribute
 #define WPS_PDT_SCID_MEDIA_SERVER	0x0005
 #define WPS_PDT_SCID_RTK_DMP			WPS_PDT_SCID_MEDIA_SERVER
 
-//	Value of Device Password ID
+//  Value of Device Password ID
 #define WPS_DPID_PIN					0x0000
 #define WPS_DPID_USER_SPEC			0x0001
 #define WPS_DPID_MACHINE_SPEC			0x0002
@@ -690,17 +687,16 @@
 #define WPS_DPID_PBC					0x0004
 #define WPS_DPID_REGISTRAR_SPEC		0x0005
 
-//	Value of WPS RF Bands Attribute
+//  Value of WPS RF Bands Attribute
 #define WPS_RF_BANDS_2_4_GHZ		0x01
 #define WPS_RF_BANDS_5_GHZ		0x02
 
-//	Value of WPS Association State Attribute
+//  Value of WPS Association State Attribute
 #define WPS_ASSOC_STATE_NOT_ASSOCIATED			0x00
 #define WPS_ASSOC_STATE_CONNECTION_SUCCESS		0x01
 #define WPS_ASSOC_STATE_CONFIGURATION_FAILURE	0x02
 #define WPS_ASSOC_STATE_ASSOCIATION_FAILURE		0x03
 #define WPS_ASSOC_STATE_IP_FAILURE				0x04
-
 
 // This value is tested by WiFi 11n Test Plan 5.2.3.
 // This test verifies the WLAN NIC can update the NAV through sending the CTS with large duration.
@@ -735,7 +731,7 @@
 
 #ifdef CONFIG_IEEE80211W
 #define _MME_IE_LENGTH_  18
-#endif /* CONFIG_IEEE80211W */
+#endif							/* CONFIG_IEEE80211W */
 
 #define OP_MODE_PURE                    0
 #define OP_MODE_MAY_BE_LEGACY_STAS      1
@@ -771,7 +767,7 @@
 #define IEEE80211_MIN_AMPDU_BUF 0x8
 #define IEEE80211_MAX_AMPDU_BUF 0x40
 
-//	P2P Public Action Frame Type
+//  P2P Public Action Frame Type
 #define	P2P_GO_NEGO_REQ						0
 #define	P2P_GO_NEGO_RESP						1
 #define	P2P_GO_NEGO_CONF						2
@@ -782,18 +778,18 @@
 #define	P2P_PROVISION_DISC_REQ				7
 #define	P2P_PROVISION_DISC_RESP				8
 
-#define OUI_MICROSOFT 0x0050f2 /* Microsoft (also used in Wi-Fi specs) 	* 00:50:F2 */
-#define OUI_BROADCOM 0x00904c /* Broadcom (Epigram) */
+#define OUI_MICROSOFT 0x0050f2	/* Microsoft (also used in Wi-Fi specs)  * 00:50:F2 */
+#define OUI_BROADCOM 0x00904c	/* Broadcom (Epigram) */
 
 #define WME_OUI_TYPE 2
 #define WME_OUI_SUBTYPE_INFORMATION_ELEMENT 0
 #define WME_OUI_SUBTYPE_PARAMETER_ELEMENT 1
 #define WME_OUI_SUBTYPE_TSPEC_ELEMENT 2
 
-#define VENDOR_HT_CAPAB_OUI_TYPE 0x33 /* 00-90-4c:0x33 */
+#define VENDOR_HT_CAPAB_OUI_TYPE 0x33	/* 00-90-4c:0x33 */
 
-typedef unsigned char   NDIS_802_11_RATES[WLAN_RATES_MAXLEN];        // Set of 8 data rates
-typedef unsigned char   NDIS_802_11_RATES_EX[WLAN_RATES_EX_MAXLEN];  // Set of 16 data rates
+typedef unsigned char NDIS_802_11_RATES[WLAN_RATES_MAXLEN];	// Set of 8 data rates
+typedef unsigned char NDIS_802_11_RATES_EX[WLAN_RATES_EX_MAXLEN];	// Set of 16 data rates
 
 static inline u8 *rtw_get_capability_from_ie(u8 *ie)
 {
@@ -826,27 +822,27 @@ __inline static int IsFrameTypeCtrl(unsigned char *pframe)
 
 __inline static unsigned char *get_ta(unsigned char *pframe)
 {
-	unsigned char 	*ta;
+	unsigned char *ta;
 	ta = GetAddr2Ptr(pframe);
 	return ta;
 }
 
 __inline static unsigned char *get_da(unsigned char *pframe)
 {
-	unsigned char 	*da;
-	unsigned int	to_fr_ds	= (GetToDs(pframe) << 1) | GetFrDs(pframe);
+	unsigned char *da;
+	unsigned int to_fr_ds = (GetToDs(pframe) << 1) | GetFrDs(pframe);
 
 	switch (to_fr_ds) {
-	case 0x00:	// ToDs=0, FromDs=0
+	case 0x00:					// ToDs=0, FromDs=0
 		da = GetAddr1Ptr(pframe);
 		break;
-	case 0x01:	// ToDs=0, FromDs=1
+	case 0x01:					// ToDs=0, FromDs=1
 		da = GetAddr1Ptr(pframe);
 		break;
-	case 0x02:	// ToDs=1, FromDs=0
+	case 0x02:					// ToDs=1, FromDs=0
 		da = GetAddr3Ptr(pframe);
 		break;
-	default:	// ToDs=1, FromDs=1
+	default:					// ToDs=1, FromDs=1
 		da = GetAddr3Ptr(pframe);
 		break;
 	}
@@ -854,23 +850,22 @@ __inline static unsigned char *get_da(unsigned char *pframe)
 	return da;
 }
 
-
 __inline static unsigned char *get_sa(unsigned char *pframe)
 {
-	unsigned char 	*sa;
-	unsigned int	to_fr_ds	= (GetToDs(pframe) << 1) | GetFrDs(pframe);
+	unsigned char *sa;
+	unsigned int to_fr_ds = (GetToDs(pframe) << 1) | GetFrDs(pframe);
 
 	switch (to_fr_ds) {
-	case 0x00:	// ToDs=0, FromDs=0
+	case 0x00:					// ToDs=0, FromDs=0
 		sa = GetAddr2Ptr(pframe);
 		break;
-	case 0x01:	// ToDs=0, FromDs=1
+	case 0x01:					// ToDs=0, FromDs=1
 		sa = GetAddr3Ptr(pframe);
 		break;
-	case 0x02:	// ToDs=1, FromDs=0
+	case 0x02:					// ToDs=1, FromDs=0
 		sa = GetAddr2Ptr(pframe);
 		break;
-	default:	// ToDs=1, FromDs=1
+	default:					// ToDs=1, FromDs=1
 		sa = GetAddr4Ptr(pframe);
 		break;
 	}
@@ -880,31 +875,28 @@ __inline static unsigned char *get_sa(unsigned char *pframe)
 
 __inline static unsigned char *get_hdr_bssid(unsigned char *pframe)
 {
-	unsigned char 	*sa;
-	unsigned int	to_fr_ds	= (GetToDs(pframe) << 1) | GetFrDs(pframe);
+	unsigned char *sa;
+	unsigned int to_fr_ds = (GetToDs(pframe) << 1) | GetFrDs(pframe);
 
 	switch (to_fr_ds) {
-	case 0x00:	// ToDs=0, FromDs=0
+	case 0x00:					// ToDs=0, FromDs=0
 		sa = GetAddr3Ptr(pframe);
 		break;
-	case 0x01:	// ToDs=0, FromDs=1
+	case 0x01:					// ToDs=0, FromDs=1
 		sa = GetAddr2Ptr(pframe);
 		break;
-	case 0x02:	// ToDs=1, FromDs=0
+	case 0x02:					// ToDs=1, FromDs=0
 		sa = GetAddr1Ptr(pframe);
 		break;
-	case 0x03:	// ToDs=1, FromDs=1
+	case 0x03:					// ToDs=1, FromDs=1
 		sa = GetAddr1Ptr(pframe);
 		break;
 	default:
-		sa = NULL; //???????
+		sa = NULL;				//???????
 		break;
 	}
 
 	return sa;
 }
 
-
-
 #endif
-

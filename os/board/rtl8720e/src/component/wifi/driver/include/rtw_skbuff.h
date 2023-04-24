@@ -29,48 +29,48 @@
 
 #define SKB_DATA_ALIGN(X)	(((X) + (4 - 1)) & ~(4 - 1))
 
-struct  sk_buff_head {
-	struct list_head	*next, *prev;
-	unsigned int 		qlen;
+struct sk_buff_head {
+	struct list_head *next, *prev;
+	unsigned int qlen;
 };
 
 struct sk_buff {
 	/* These two members must be first. */
-	struct sk_buff		*next;		/* Next buffer in list */
-	struct sk_buff		*prev;		/* Previous buffer in list */
+	struct sk_buff *next;		/* Next buffer in list */
+	struct sk_buff *prev;		/* Previous buffer in list */
 
-	struct sk_buff_head	*list;		/* List we are on */
-	unsigned char		*head;		/* Head of buffer */
-	unsigned char		*data;		/* Data head pointer */
-	unsigned char		*tail;		/* Tail pointer	*/
-	unsigned char		*end;		/* End pointer */
-	void	*dev;		/* Device we arrived on/are leaving by */
-	unsigned int 		len;		/* Length of actual data */
+	struct sk_buff_head *list;	/* List we are on */
+	unsigned char *head;		/* Head of buffer */
+	unsigned char *data;		/* Data head pointer */
+	unsigned char *tail;		/* Tail pointer */
+	unsigned char *end;			/* End pointer */
+	void *dev;					/* Device we arrived on/are leaving by */
+	unsigned int len;			/* Length of actual data */
 
-	int 			dyalloc_flag;
-	unsigned char	busy;
-	unsigned char	no_free;
+	int dyalloc_flag;
+	unsigned char busy;
+	unsigned char no_free;
 };
 
 struct skb_info {
 	struct list_head list;
 	struct sk_buff skb;
-} SKB_ALIGNMENT; /*total size should be align to max(AP_cache_size, NP_cache_size), single core no need*/
+} SKB_ALIGNMENT;				/*total size should be align to max(AP_cache_size, NP_cache_size), single core no need */
 
 struct skb_data {
 	struct list_head list;
-	unsigned char buf[MAX_SKB_BUF_SIZE] SKB_ALIGNMENT;/* buf start address and size alignmengt for pre allocate skb*/
+	unsigned char buf[MAX_SKB_BUF_SIZE] SKB_ALIGNMENT;	/* buf start address and size alignmengt for pre allocate skb */
 	atomic_t ref;
 };
 
 struct skb_priv_t {
-	/*skb_data for store data*/
+	/*skb_data for store data */
 	struct skb_data *skb_data_pool;
 	struct list_head skb_data_list;
 	int skb_data_num;
 	int skb_data_used;
 	int skb_data_max_used;
-	/*skb_info for managing skb_data*/
+	/*skb_info for managing skb_data */
 	struct skb_info *skb_info_pool;
 	struct list_head skb_info_list;
 	int skb_info_num;
@@ -118,4 +118,4 @@ __inline static unsigned char *skb_put(struct sk_buff *skb, unsigned int len)
 	return tmp;
 }
 
-#endif //__SKBUFF_H__
+#endif							//__SKBUFF_H__

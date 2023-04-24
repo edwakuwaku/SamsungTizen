@@ -60,7 +60,7 @@ void rtw_up_sema_from_isr(_sema *sema)
 	sem_post((sem_t *)(*sema));
 }
 
-u32	rtw_down_timeout_sema(_sema *sema, u32 timeout)
+u32 rtw_down_timeout_sema(_sema *sema, u32 timeout)
 {
 	struct timespec ts;
 	int ret;
@@ -77,12 +77,11 @@ u32	rtw_down_timeout_sema(_sema *sema, u32 timeout)
 		return _SUCCESS;
 	}
 }
+
 u32 rtw_down_sema(_sema *sema)
 {
 	while (rtw_down_timeout_sema(sema, RTW_MAX_DELAY) != _TRUE) {
-		OSDEP_DBG("%s(%p) failed, retry\n",  __FUNCTION__, sema);
+		OSDEP_DBG("%s(%p) failed, retry\n", __FUNCTION__, sema);
 	}
 	return _TRUE;
 }
-
-

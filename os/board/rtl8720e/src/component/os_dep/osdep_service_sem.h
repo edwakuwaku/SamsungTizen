@@ -19,8 +19,7 @@
 
 #define RTW_MAX_DELAY			0xFFFFFFFF
 
-typedef void	            *_sema;
-
+typedef void *_sema;
 
 /*************************** Semaphores *******************************/
 /**
@@ -29,14 +28,14 @@ typedef void	            *_sema;
  * @param[in] init_val: Initial value for semaphore.
  * @return	  None
  */
-void	rtw_init_sema(_sema *sema, int init_val);
+void rtw_init_sema(_sema *sema, int init_val);
 
 /**
  * @brief  This function deletes the semaphore.
  * @param[in] sema: The semaphore to be deleted.
  * @return	  None
  */
-void	rtw_free_sema(_sema *sema);
+void rtw_free_sema(_sema *sema);
 
 /**
  * @brief  This function releases the semaphore.
@@ -44,7 +43,7 @@ void	rtw_free_sema(_sema *sema);
  * @param[in] sema: The semaphore to be released.
  * @return	  None
  */
-void	rtw_up_sema(_sema	*sema);
+void rtw_up_sema(_sema *sema);
 
 /**
  * @brief  This function releases the semaphore.
@@ -52,7 +51,7 @@ void	rtw_up_sema(_sema	*sema);
  * @param[in] sema: The semaphore to be released.
  * @return	  None
  */
-void	rtw_up_sema_from_isr(_sema *sema);
+void rtw_up_sema_from_isr(_sema *sema);
 
 /**
  * @brief  This function acquires the semaphore. If no more tasks are allowed to acquire the semaphore,
@@ -61,7 +60,7 @@ void	rtw_up_sema_from_isr(_sema *sema);
  * @return	pdTRUE: The semaphore was obtained.
  * @return	pdFALSE: Obtain the semaphore failed.
  */
-uint32_t	rtw_down_sema(_sema *sema);
+uint32_t rtw_down_sema(_sema *sema);
 
 /**
  * @brief  This function acquires the semaphore. If no more tasks are allowed to acquire the semaphore,
@@ -71,6 +70,6 @@ uint32_t	rtw_down_sema(_sema *sema);
  * @return	pdTRUE: The semaphore was obtained.
  * @return	pdFALSE: Timeout without the semaphore becoming available.
  */
-uint32_t	rtw_down_timeout_sema(_sema *sema, uint32_t timeout);
+uint32_t rtw_down_timeout_sema(_sema *sema, uint32_t timeout);
 /*************************** End Semaphores *******************************/
 #endif

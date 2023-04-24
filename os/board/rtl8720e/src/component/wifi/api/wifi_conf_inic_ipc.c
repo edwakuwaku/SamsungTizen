@@ -17,7 +17,7 @@
 /******************************************************
  *                    Constants
  ******************************************************/
-#define RTW_JOIN_TIMEOUT 20000 //INIC_IPC_API_TODO
+#define RTW_JOIN_TIMEOUT 20000	//INIC_IPC_API_TODO
 /******************************************************
  *               Variables Declarations
  ******************************************************/
@@ -30,8 +30,8 @@ extern struct netif xnetif[NET_IF_NUM];
  ******************************************************/
 static internal_join_block_param_t *join_block_param = NULL;
 
-rtw_result_t (*scan_user_callback_ptr)(unsigned int, void *) = NULL;
-rtw_result_t (*scan_each_report_user_callback_ptr)(rtw_scan_result_t *, void *) = NULL;
+rtw_result_t(*scan_user_callback_ptr)(unsigned int, void *) = NULL;
+rtw_result_t(*scan_each_report_user_callback_ptr)(rtw_scan_result_t *, void *) = NULL;
 
 extern void *param_indicator;
 rtw_join_status_t rtw_join_status;
@@ -55,7 +55,6 @@ unsigned char ap_bssid[ETH_ALEN];
 static rtk_network_link_callback_t g_link_up = NULL;
 static rtk_network_link_callback_t g_link_down = NULL;
 
-
 typedef void (*rtk_network_link_callback_t)(rtk_reason_t *reason);
 int8_t WiFiRegisterLinkCallback(rtk_network_link_callback_t link_up, rtk_network_link_callback_t link_down)
 {
@@ -68,13 +67,14 @@ int8_t WiFiRegisterLinkCallback(rtk_network_link_callback_t link_up, rtk_network
 
 	return RTK_STATUS_SUCCESS;
 }
+
 extern void linkup_handler(rtk_reason_t *reason);
 extern void linkdown_handler(rtk_reason_t *reason);
 #endif
 
 static void _wifi_join_status_indicate(rtw_join_status_t join_status)
 {
-	/* step 1: internal process for wifi_connect*/
+	/* step 1: internal process for wifi_connect */
 	if (join_status == RTW_JOINSTATUS_SUCCESS) {
 #if !defined(CONFIG_PLATFORM_TIZENRT_OS)
 #if CONFIG_LWIP_LAYER
@@ -82,20 +82,20 @@ static void _wifi_join_status_indicate(rtw_join_status_t join_status)
 #endif
 #endif
 
-		/* if not use fast dhcp, store fast connect info to flash when connect successfully*/
+		/* if not use fast dhcp, store fast connect info to flash when connect successfully */
 #if defined(CONFIG_FAST_DHCP) && CONFIG_FAST_DHCP == 0
 		if (p_store_fast_connect_info) {
 			p_store_fast_connect_info(0, 0);
 		}
 #endif
-		/* if Synchronized connect, up sema when connect success*/
+		/* if Synchronized connect, up sema when connect success */
 		if (join_block_param && join_block_param->block) {
 			rtw_up_sema(&join_block_param->join_sema);
 		}
 	}
 
 	if (join_status == RTW_JOINSTATUS_FAIL) {
-		/* if blocking connection, up sema when connect fail*/
+		/* if blocking connection, up sema when connect fail */
 		if (join_block_param && join_block_param->block) {
 			rtw_up_sema(&join_block_param->join_sema);
 		}
@@ -113,7 +113,7 @@ static void _wifi_join_status_indicate(rtw_join_status_t join_status)
 		memset(&reason, 0, sizeof(rtk_reason_t));
 
 		if (g_link_down) {
-			nvdbg("RTK_API %s send link_down\n",__func__);
+			nvdbg("RTK_API %s send link_down\n", __func__);
 			g_link_down(&reason);
 		}
 #endif
@@ -121,7 +121,7 @@ static void _wifi_join_status_indicate(rtw_join_status_t join_status)
 
 	rtw_join_status = join_status;
 
-	/* step 2: execute user callback to process join_status*/
+	/* step 2: execute user callback to process join_status */
 	if (p_wifi_joinstatus_user_callback) {
 		p_wifi_joinstatus_user_callback(join_status);
 	}
@@ -131,10 +131,10 @@ int wifi_connect(rtw_network_info_t *connect_param, unsigned char block)
 {
 	rtw_result_t result = RTW_SUCCESS;
 	internal_join_block_param_t *block_param = NULL;
-	u32 param_buf[1] = {0};
+	u32 param_buf[1] = { 0 };
 
 #if defined(CONFIG_PLATFORM_TIZENRT_OS)
-		rtk_reason_t reason;
+	rtk_reason_t reason;
 #endif
 
 	if (connect_param == NULL) {
@@ -142,7 +142,7 @@ int wifi_connect(rtw_network_info_t *connect_param, unsigned char block)
 		return RTW_ERROR;
 	}
 
-	/* step1: check if there's ongoing connect*/
+	/* step1: check if there's ongoing connect */
 	if ((rtw_join_status > RTW_JOINSTATUS_UNKNOWN) && (rtw_join_status < RTW_JOINSTATUS_SUCCESS)) {
 		RTW_API_INFO("\nthere is ongoing wifi connect!");
 		return RTW_BUSY;
@@ -155,9 +155,9 @@ int wifi_connect(rtw_network_info_t *connect_param, unsigned char block)
 	rtw_join_status = RTW_JOINSTATUS_STARTING;
 	_wifi_join_status_indicate(RTW_JOINSTATUS_STARTING);
 
-	/* step2: malloc and set synchronous connection related variables*/
+	/* step2: malloc and set synchronous connection related variables */
 	if (block) {
-		block_param = (internal_join_block_param_t *)rtw_zmalloc(sizeof(internal_join_block_param_t));
+		block_param = (internal_join_block_param_t *) rtw_zmalloc(sizeof(internal_join_block_param_t));
 		if (!block_param) {
 			result = (rtw_result_t) RTW_NOMEM;
 			rtw_join_status = RTW_JOINSTATUS_FAIL;
@@ -173,12 +173,12 @@ int wifi_connect(rtw_network_info_t *connect_param, unsigned char block)
 
 	}
 
-	/* step3: set connect cmd to driver*/
+	/* step3: set connect cmd to driver */
 	if (connect_param->password_len) {
-		DCache_Clean((u32)connect_param->password, connect_param->password_len);
+		DCache_Clean((u32) connect_param->password, connect_param->password_len);
 	}
-	DCache_Clean((u32)connect_param, sizeof(rtw_network_info_t));
-	param_buf[0] = (u32)connect_param;
+	DCache_Clean((u32) connect_param, sizeof(rtw_network_info_t));
+	param_buf[0] = (u32) connect_param;
 	result = inic_ipc_api_host_message_send(IPC_API_WIFI_CONNECT, param_buf, 1);
 
 	if (result != RTW_SUCCESS) {
@@ -186,7 +186,7 @@ int wifi_connect(rtw_network_info_t *connect_param, unsigned char block)
 		goto error;
 	}
 
-	/* step4: wait connect finished for synchronous connection*/
+	/* step4: wait connect finished for synchronous connection */
 	if (block) {
 		join_block_param = block_param;
 
@@ -230,7 +230,7 @@ error:
 		if (block_param->join_sema) {
 			rtw_free_sema(&block_param->join_sema);
 		}
-		rtw_free((u8 *)block_param);
+		rtw_free((u8 *) block_param);
 		join_block_param = NULL;
 	}
 
@@ -240,8 +240,8 @@ error:
 
 	return result;
 }
-//----------------------------------------------------------------------------//
 
+//----------------------------------------------------------------------------//
 
 int wifi_disconnect(void)
 {
@@ -253,7 +253,7 @@ int wifi_disconnect(void)
 	memset(&dummy_reason, 0, sizeof(rtk_reason_t));
 	if (g_link_down) {
 		nvdbg("RTK_API rtk_handle_disconnect send link_down\n");
-		g_link_down(&dummy_reason); //dummy_reason was not processed in _wt_sta_disconnected callback in TizenRT
+		g_link_down(&dummy_reason);	//dummy_reason was not processed in _wt_sta_disconnected callback in TizenRT
 	}
 #endif
 	return ret;
@@ -300,13 +300,13 @@ int wifi_get_channel(int *channel)
 		return -1;
 	}
 
-	param_buf[0] = (u32)channel_temp;
-	DCache_CleanInvalidate((u32)channel_temp, sizeof(int));
+	param_buf[0] = (u32) channel_temp;
+	DCache_CleanInvalidate((u32) channel_temp, sizeof(int));
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_CHANNEL, param_buf, 1);
-	DCache_Invalidate((u32)channel_temp, sizeof(int));
+	DCache_Invalidate((u32) channel_temp, sizeof(int));
 	*channel = *channel_temp;
-	rtw_mfree((u8 *)channel_temp, 0);
+	rtw_mfree((u8 *) channel_temp, 0);
 
 	return ret;
 }
@@ -323,10 +323,10 @@ _WEAK void wifi_set_user_config(void)
 	//below items for user config
 	/* adaptivity */
 	p_wifi_user_config->rtw_adaptivity_en = DISABLE;
-	p_wifi_user_config->rtw_adaptivity_mode = 0; //0 : RTW_ADAPTIVITY_MODE_NORMAL,1: RTW_ADAPTIVITY_MODE_CARRIER_SENSE
+	p_wifi_user_config->rtw_adaptivity_mode = 0;	//0 : RTW_ADAPTIVITY_MODE_NORMAL,1: RTW_ADAPTIVITY_MODE_CARRIER_SENSE
 	/* trp */
 	p_wifi_user_config->rtw_tx_pwr_lmt_enable = 2;	// 0: disable, 1: enable, 2: Depend on efuse(flash)
-	p_wifi_user_config->rtw_tx_pwr_by_rate	= 2;	// 0: disable, 1: enable, 2: Depend on efuse(flash)
+	p_wifi_user_config->rtw_tx_pwr_by_rate = 2;	// 0: disable, 1: enable, 2: Depend on efuse(flash)
 	p_wifi_user_config->rtw_trp_tis_cert_en = RTW_TRP_TIS_DISABLE;
 
 #ifdef CONFIG_SAE_SUPPORT
@@ -339,7 +339,7 @@ _WEAK void wifi_set_user_config(void)
 
 	/* power save */
 	p_wifi_user_config->lps_dtim = 0;
-	p_wifi_user_config->lps_enter_threshold = 0; // LPS_THRESH_PKT_COUNT
+	p_wifi_user_config->lps_enter_threshold = 0;	// LPS_THRESH_PKT_COUNT
 
 	p_wifi_user_config->rtw_power_mgnt = PS_MODE_MIN;
 #if defined(CONFIG_LPS_PG)
@@ -352,13 +352,13 @@ _WEAK void wifi_set_user_config(void)
 	/* AP */
 	p_wifi_user_config->bForwardingDisabled = 0;
 
-	p_wifi_user_config->bAcceptAddbaReq = (u8)_TRUE; // 0:Reject AP's Add BA req, 1:Accept AP's Add BA req.
-	p_wifi_user_config->bIssueAddbaReq = (u8)_TRUE;
+	p_wifi_user_config->bAcceptAddbaReq = (u8) _TRUE;	// 0:Reject AP's Add BA req, 1:Accept AP's Add BA req.
+	p_wifi_user_config->bIssueAddbaReq = (u8) _TRUE;
 #ifdef CONFIG_80211AC_VHT
 	p_wifi_user_config->ampdu_factor = 0;
 #endif
 
-	p_wifi_user_config->bCheckDestAddress = (u8)_TRUE;
+	p_wifi_user_config->bCheckDestAddress = (u8) _TRUE;
 
 	p_wifi_user_config->ap_compatibilty_enabled = 0x0B;
 
@@ -376,7 +376,7 @@ _WEAK void wifi_set_user_config(void)
 	p_wifi_user_config->country_code = RTW_COUNTRY_MAX;
 
 	p_wifi_user_config->auto_reconnect_count = 8;
-	p_wifi_user_config->auto_reconnect_interval = 5;/* in sec*/
+	p_wifi_user_config->auto_reconnect_interval = 5;	/* in sec */
 
 	p_wifi_user_config->skb_num_np = SKB_NUM_NP;
 	p_wifi_user_config->skb_num_ap = SKB_NUM_AP;
@@ -387,10 +387,10 @@ _WEAK void wifi_set_user_config(void)
 
 	skb_num_ap = p_wifi_user_config->skb_num_ap;
 
-	DCache_Clean((u32)p_wifi_user_config, sizeof(struct wifi_user_conf));
-	param_buf[0] = (u32)p_wifi_user_config;
+	DCache_Clean((u32) p_wifi_user_config, sizeof(struct wifi_user_conf));
+	param_buf[0] = (u32) p_wifi_user_config;
 	inic_ipc_api_host_message_send(IPC_API_WIFI_SET_USR_CFG, param_buf, 1);
-	rtw_mfree((u8 *)p_wifi_user_config, 0);
+	rtw_mfree((u8 *) p_wifi_user_config, 0);
 }
 
 int wifi_get_disconn_reason_code(unsigned short *reason_code)
@@ -403,12 +403,12 @@ int wifi_get_disconn_reason_code(unsigned short *reason_code)
 		return -1;
 	}
 
-	DCache_CleanInvalidate((u32)reason_code_temp, sizeof(unsigned short));
-	param_buf[0] = (u32)reason_code_temp;
+	DCache_CleanInvalidate((u32) reason_code_temp, sizeof(unsigned short));
+	param_buf[0] = (u32) reason_code_temp;
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_DISCONN_REASCON, param_buf, 1);
-	DCache_Invalidate((u32)reason_code_temp, sizeof(unsigned short));
+	DCache_Invalidate((u32) reason_code_temp, sizeof(unsigned short));
 	*reason_code = *reason_code_temp;
-	rtw_mfree((u8 *)reason_code_temp, 0);
+	rtw_mfree((u8 *) reason_code_temp, 0);
 	return ret;
 }
 
@@ -448,7 +448,7 @@ int wifi_on(rtw_mode_t mode)
 		}
 	}
 
-	if (ret == RTW_SUCCESS) { //wifi on success
+	if (ret == RTW_SUCCESS) {	//wifi on success
 #if !defined(CONFIG_PLATFORM_TIZENRT_OS)
 #if CONFIG_LWIP_LAYER
 		if (mode == RTW_MODE_STA) {
@@ -471,25 +471,25 @@ int wifi_off(void)
 
 int wifi_set_mode(rtw_mode_t mode)
 {
-	(void) mode;
+	(void)mode;
 
 	return 0;
 }
 
 #if defined(CONFIG_PLATFORM_TIZENRT_OS)
-static void wifi_ap_sta_assoc_hdl( char* buf, int buf_len, int flags, void* userdata)
+static void wifi_ap_sta_assoc_hdl(char *buf, int buf_len, int flags, void *userdata)
 {
 	/* To avoid gcc warnings */
-	( void ) buf;
-	( void ) buf_len;
-	( void ) flags;
-	( void ) userdata;
+	(void)buf;
+	(void)buf_len;
+	(void)flags;
+	(void)userdata;
 	//USER TODO
 #if defined(CONFIG_PLATFORM_TIZENRT_OS)
 	rtk_reason_t reason;
 	memset(&reason, 0, sizeof(rtk_reason_t));
-	if (strlen(buf) >= 17) {			  // bssid is a 17 character string
-		memcpy(&(reason.bssid), buf, 17); // Exclude null-termination
+	if (strlen(buf) >= 17) {	// bssid is a 17 character string
+		memcpy(&(reason.bssid), buf, 17);	// Exclude null-termination
 	}
 
 	if (g_link_up) {
@@ -498,18 +498,19 @@ static void wifi_ap_sta_assoc_hdl( char* buf, int buf_len, int flags, void* user
 	}
 #endif
 }
-static void wifi_ap_sta_disassoc_hdl( char* buf, int buf_len, int flags, void* userdata)
+
+static void wifi_ap_sta_disassoc_hdl(char *buf, int buf_len, int flags, void *userdata)
 {
 	/* To avoid gcc warnings */
-	( void ) buf;
-	( void ) buf_len;
-	( void ) flags;
-	( void ) userdata;
+	(void)buf;
+	(void)buf_len;
+	(void)flags;
+	(void)userdata;
 	//USER TODO
 #if defined(CONFIG_PLATFORM_TIZENRT_OS)
 	rtk_reason_t reason;
 	memset(&reason, 0, sizeof(rtk_reason_t));
-	if (strlen(buf) >= 17) { // bssid is a 17 character string
+	if (strlen(buf) >= 17) {	// bssid is a 17 character string
 		memcpy(&(reason.bssid), buf, 17);
 	}
 	if (g_link_down) {
@@ -525,9 +526,9 @@ int wifi_start_ap(rtw_softap_info_t *softAP_config)
 	int ret = 0;
 	u32 param_buf[1];
 
-	DCache_Clean((u32)softAP_config->password, softAP_config->password_len);
-	DCache_Clean((u32)softAP_config, sizeof(rtw_softap_info_t));
-	param_buf[0] = (u32)softAP_config;
+	DCache_Clean((u32) softAP_config->password, softAP_config->password_len);
+	DCache_Clean((u32) softAP_config, sizeof(rtw_softap_info_t));
+	param_buf[0] = (u32) softAP_config;
 
 #if defined(CONFIG_PLATFORM_TIZENRT_OS)
 	wifi_reg_event_handler(WIFI_EVENT_STA_ASSOC, wifi_ap_sta_assoc_hdl, NULL);
@@ -570,7 +571,6 @@ int wifi_stop_ap(void)
 	return ret;
 }
 
-
 int wifi_scan_networks(rtw_scan_param_t *scan_param, unsigned char block)
 {
 	assert_param(scan_param);
@@ -583,13 +583,13 @@ int wifi_scan_networks(rtw_scan_param_t *scan_param, unsigned char block)
 	scan_each_report_user_callback_ptr = scan_param->scan_report_each_mode_user_callback;
 
 	if (scan_param->ssid) {
-		DCache_Clean((u32)scan_param->ssid, strlen(scan_param->ssid));
+		DCache_Clean((u32) scan_param->ssid, strlen(scan_param->ssid));
 	}
 	if (scan_param->channel_list) {
-		DCache_Clean((u32)scan_param->channel_list, scan_param->channel_list_num);
+		DCache_Clean((u32) scan_param->channel_list, scan_param->channel_list_num);
 	}
-	DCache_Clean((u32)scan_param, sizeof(rtw_scan_param_t));
-	param_buf[0] = (u32)scan_param;
+	DCache_Clean((u32) scan_param, sizeof(rtw_scan_param_t));
+	param_buf[0] = (u32) scan_param;
 	param_buf[1] = block;
 	if (scan_param->ssid) {
 		param_buf[2] = strlen(scan_param->ssid);
@@ -618,19 +618,19 @@ int wifi_get_scan_records(unsigned int *AP_num, char *scan_buf)
 		return -1;
 	}
 
-	param_buf[0] = (u32)AP_num_temp;
-	param_buf[1] = (u32)scan_buf_temp;
-	DCache_CleanInvalidate((u32)AP_num_temp, sizeof(unsigned int));
-	DCache_CleanInvalidate((u32)scan_buf_temp, (*AP_num)*sizeof(rtw_scan_result_t));
+	param_buf[0] = (u32) AP_num_temp;
+	param_buf[1] = (u32) scan_buf_temp;
+	DCache_CleanInvalidate((u32) AP_num_temp, sizeof(unsigned int));
+	DCache_CleanInvalidate((u32) scan_buf_temp, (*AP_num) * sizeof(rtw_scan_result_t));
 
 	ret = inic_ipc_api_host_message_send(IPC_API_WIFI_GET_SCANNED_AP_INFO, param_buf, 2);
-	DCache_Invalidate((u32)AP_num_temp, sizeof(unsigned int));
-	DCache_Invalidate((u32)scan_buf_temp, (*AP_num)*sizeof(rtw_scan_result_t));
+	DCache_Invalidate((u32) AP_num_temp, sizeof(unsigned int));
+	DCache_Invalidate((u32) scan_buf_temp, (*AP_num) * sizeof(rtw_scan_result_t));
 	*AP_num = *AP_num_temp;
-	rtw_memcpy(scan_buf, scan_buf_temp, ((*AP_num)*sizeof(rtw_scan_result_t)));
+	rtw_memcpy(scan_buf, scan_buf_temp, ((*AP_num) * sizeof(rtw_scan_result_t)));
 
-	rtw_mfree((u8 *)AP_num_temp, 0);
-	rtw_mfree((u8 *)scan_buf_temp, 0);
+	rtw_mfree((u8 *) AP_num_temp, 0);
+	rtw_mfree((u8 *) scan_buf_temp, 0);
 	return ret;
 }
 
@@ -641,6 +641,7 @@ int wifi_scan_abort(void)
 
 	return ret;
 }
+
 //----------------------------------------------------------------------------//
 
-#endif	//#if CONFIG_WLAN
+#endif							//#if CONFIG_WLAN

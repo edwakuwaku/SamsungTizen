@@ -3,105 +3,101 @@
 
 enum wlan_mode {
 	WLAN_MD_INVALID = 0,
-	WLAN_MD_11B	= BIT0,
-	WLAN_MD_11A	= BIT1,
-	WLAN_MD_11G	= BIT2,
-	WLAN_MD_11N	= BIT3,
-	WLAN_MD_11AC	= BIT4,
-	WLAN_MD_11AX	= BIT5,
+	WLAN_MD_11B = BIT0,
+	WLAN_MD_11A = BIT1,
+	WLAN_MD_11G = BIT2,
+	WLAN_MD_11N = BIT3,
+	WLAN_MD_11AC = BIT4,
+	WLAN_MD_11AX = BIT5,
 
 	/* Type for current wireless mode */
-	WLAN_MD_11BG	= (WLAN_MD_11B | WLAN_MD_11G),
-	WLAN_MD_11GN	= (WLAN_MD_11G | WLAN_MD_11N),
-	WLAN_MD_11AN	= (WLAN_MD_11A | WLAN_MD_11N),
-	WLAN_MD_11BN	= (WLAN_MD_11B | WLAN_MD_11N),
-	WLAN_MD_11BGN	= (WLAN_MD_11B | WLAN_MD_11G | WLAN_MD_11N),
+	WLAN_MD_11BG = (WLAN_MD_11B | WLAN_MD_11G),
+	WLAN_MD_11GN = (WLAN_MD_11G | WLAN_MD_11N),
+	WLAN_MD_11AN = (WLAN_MD_11A | WLAN_MD_11N),
+	WLAN_MD_11BN = (WLAN_MD_11B | WLAN_MD_11N),
+	WLAN_MD_11BGN = (WLAN_MD_11B | WLAN_MD_11G | WLAN_MD_11N),
 	WLAN_MD_11BGAC = (WLAN_MD_11B | WLAN_MD_11G | WLAN_MD_11AC),
 	WLAN_MD_11BGAX = (WLAN_MD_11B | WLAN_MD_11G | WLAN_MD_11AX),
-	WLAN_MD_11GAC  = (WLAN_MD_11G | WLAN_MD_11AC),
-	WLAN_MD_11GAX  = (WLAN_MD_11G | WLAN_MD_11AX),
+	WLAN_MD_11GAC = (WLAN_MD_11G | WLAN_MD_11AC),
+	WLAN_MD_11GAX = (WLAN_MD_11G | WLAN_MD_11AX),
 	WLAN_MD_11A_AC = (WLAN_MD_11A | WLAN_MD_11AC),
 	WLAN_MD_11A_AX = (WLAN_MD_11A | WLAN_MD_11AX),
 
 	/* Capability -Type for registry default wireless mode */
-	WLAN_MD_11AGN	= (WLAN_MD_11A | WLAN_MD_11G | WLAN_MD_11N),
-	WLAN_MD_11ABGN	= (WLAN_MD_11A | WLAN_MD_11B | WLAN_MD_11G | WLAN_MD_11N),
-	WLAN_MD_11ANAC	= (WLAN_MD_11A | WLAN_MD_11N | WLAN_MD_11AC),
+	WLAN_MD_11AGN = (WLAN_MD_11A | WLAN_MD_11G | WLAN_MD_11N),
+	WLAN_MD_11ABGN = (WLAN_MD_11A | WLAN_MD_11B | WLAN_MD_11G | WLAN_MD_11N),
+	WLAN_MD_11ANAC = (WLAN_MD_11A | WLAN_MD_11N | WLAN_MD_11AC),
 	WLAN_MD_11BGNAC = (WLAN_MD_11B | WLAN_MD_11G | WLAN_MD_11N | WLAN_MD_11AC),
-	WLAN_MD_11GNAC  = (WLAN_MD_11G | WLAN_MD_11N | WLAN_MD_11AC),
-	WLAN_MD_24G_MIX = (WLAN_MD_11B | WLAN_MD_11G | WLAN_MD_11N  | WLAN_MD_11AX),
-	WLAN_MD_5G_MIX	= (WLAN_MD_11A | WLAN_MD_11N | WLAN_MD_11AC | WLAN_MD_11AX),
-	WLAN_MD_6G_MIX 	= (WLAN_MD_11A | WLAN_MD_11AX),
-	WLAN_MD_MAX	= (WLAN_MD_24G_MIX | WLAN_MD_5G_MIX),
+	WLAN_MD_11GNAC = (WLAN_MD_11G | WLAN_MD_11N | WLAN_MD_11AC),
+	WLAN_MD_24G_MIX = (WLAN_MD_11B | WLAN_MD_11G | WLAN_MD_11N | WLAN_MD_11AX),
+	WLAN_MD_5G_MIX = (WLAN_MD_11A | WLAN_MD_11N | WLAN_MD_11AC | WLAN_MD_11AX),
+	WLAN_MD_6G_MIX = (WLAN_MD_11A | WLAN_MD_11AX),
+	WLAN_MD_MAX = (WLAN_MD_24G_MIX | WLAN_MD_5G_MIX),
 };
 
 typedef enum _RT_CHANNEL_DOMAIN_2G {
-	RTW_RD_2G_NULL = 0,	/* Do not support 2G*/
-	RTW_RD_2G_01 = 1,	/* Worldwide 13, Canada */
-	RTW_RD_2G_02 = 2,	/* Europe, Japan */
-	RTW_RD_2G_03 = 3,		/* Worldwide 11, US, Canada, Korea */
-	RTW_RD_2G_04 = 4,		/* Japan */
-	RTW_RD_2G_05 = 5,	/* France */
-	RTW_RD_2G_06 = 6,	/* 2G Global, include channel 14 */
+	RTW_RD_2G_NULL = 0,			/* Do not support 2G */
+	RTW_RD_2G_01 = 1,			/* Worldwide 13, Canada */
+	RTW_RD_2G_02 = 2,			/* Europe, Japan */
+	RTW_RD_2G_03 = 3,			/* Worldwide 11, US, Canada, Korea */
+	RTW_RD_2G_04 = 4,			/* Japan */
+	RTW_RD_2G_05 = 5,			/* France */
+	RTW_RD_2G_06 = 6,			/* 2G Global, include channel 14 */
 	//===== Add new channel plan above this line===============//
 	RT_CHANNEL_DOMAIN_2G_MAX,
 } RT_CHANNEL_DOMAIN_2G, *PRT_CHANNEL_DOMAIN_2G;
 
 typedef enum _RT_CHANNEL_DOMAIN_5G {
-	RTW_RD_5G_NULL = 0,		/*Do not support 5G*/
-	RTW_RD_5G_01 = 1,		/*US, Canada, Australia, New Zealand, Mexico (w/o Weather radar), (w/o Ch120~Ch128)*/
-	RTW_RD_5G_02 = 2,		/*Europe, Japan (W52, W53, W56)*/
-	RTW_RD_5G_03 = 3,		/*Australia, New Zealand, US, Korea*/
-	RTW_RD_5G_04 = 4,		/*Russia (w/o Ch136, Ch140)*/
-	RTW_RD_5G_05 = 5,		/*Korea*/
-	RTW_RD_5G_06 = 6,		/*FCC w/o DFS Channels, Jordan*/
-	RTW_RD_5G_07 = 7,		/*Bolivia, Chile, El Salvador, Venezuela, China */
-	RTW_RD_5G_08 = 8,		/*Venezuela, Indonesia (w/o Ch165)*/
-	RTW_RD_5G_09 = 9,		/*China, Taiwan w/o DFS, Qatar*/
-	RTW_RD_5G_10 = 10,		/*Japan (W52, W53), Israel, Bahrain, Egypt, India, China, Malaysia*/
-	RTW_RD_5G_11 = 11,		/*Japan (W56)*/
-	RTW_RD_5G_12 = 12,		/*Taiwan, (w/o Weather radar)(w/o Ch52, Ch120~Ch128)*/
-	RTW_RD_5G_13 = 13,		/*Taiwan, Band2, Band4*/
-	RTW_RD_5G_14 = 14,		/*Europe, Japan (W52), w/o DFS, Band1 only*/
-	RTW_RD_5G_15 = 15,		/*Latin America, Indonesia*/
-	RTW_RD_5G_16 = 16,		/*Lebanon*/
-	RTW_RD_5G_17 = 17,		/*Russia*/
-	RTW_RD_5G_18 = 18,		/*Taiwan (w/o Weather radar)(w/o Ch120~Ch128)*/
-	RTW_RD_5G_19 = 19,		/*ETSI, FCC (w/o Weather radar)(w/o Ch120~Ch128)*/
-	RTW_RD_5G_20 = 20,		/*Argentina(w/o Weather radar)(w/o Ch120~Ch128, Ch165)*/
-	RTW_RD_5G_21 = 21,		/*Russia*/
-	RTW_RD_5G_22 = 22,		/*US (include Ch144), Chile, Korea (2018 Dec 05 New standard, include ch144)*/
-	RTW_RD_5G_23 = 23,		/*Malaysia*/
-	RTW_RD_5G_24 = 24,		/*Japan, Europe*/
-	RTW_RD_5G_25 = 25,		/*Europe, FCC*/
-	RTW_RD_5G_26 = 26,		/*FCC*/
-	RTW_RD_5G_27 = 27,		/*FCC w/o Weather radar(w/o Ch120~Ch128)*/
-	RTW_RD_5G_28 = 28,		/*FCC w/o Band3 China*/
-	RTW_RD_5G_29 = 29,		/*FCC w/o Band3*/
-	RTW_RD_5G_30 = 30,		/*ETSI w/o DFS Band2&3*/
-	RTW_RD_5G_31 = 31,		/*Europe*/
-	RTW_RD_5G_32 = 32,		/*Europe*/
-	RTW_RD_5G_33 = 33,		/*Canada (w/o Weather radar)(w/o Ch120~Ch128, include Ch144)*/
-	RTW_RD_5G_34 = 34,		/*Australia, New Zealand (w/o Weather radar)(w/o Ch120~Ch128)*/
-	RTW_RD_5G_35 = 35,		/**/
-	RTW_RD_5G_36 = 36,		/*5G Worldwide (include Ch144) Band2&3 w/i DFS for AP mode.*/
-	RTW_RD_5G_37 = 37,		/*5G Worldwide Band1&2*/
-	RTW_RD_5G_38 = 38,		/*Chile (Band2,Band3)*/
-	RTW_RD_5G_39 = 39,		/*Japan*/
-	RTW_RD_5G_40 = 40,		/*Japan*/
-	RTW_RD_5G_41 = 41,		/*Japan*/
-	RTW_RD_5G_42 = 42,		/*Europe*/
-	RTW_RD_5G_43 = 43,		/*Japan, FCC*/
-	RTW_RD_5G_44 = 44,		/*FCC*/
-	RTW_RD_5G_45 = 45,		/*FCC w/o Band3*/
-	RTW_RD_5G_46 = 46,		/*Indonesia*/
-	RTW_RD_5G_47 = 47,		/*Japan, Singapore*/
-	RTW_RD_5G_48 = 48,		/*Japan*/
-	RTW_RD_5G_49 = 49,		/**/
-	RTW_RD_5G_50 = 50,		/*Russia*/
-	RTW_RD_5G_51 = 51,		/*Tunisia*/
-	RTW_RD_5G_52 = 52,		/*US (include Ch144)(2018 Dec 05 New standard, include ch144)Add FCC 5.9G Channel*/
-	RTW_RD_5G_53 = 53,		/*Korea*/
+	RTW_RD_5G_NULL = 0,			/*Do not support 5G */
+	RTW_RD_5G_01 = 1,			/*US, Canada, Australia, New Zealand, Mexico (w/o Weather radar), (w/o Ch120~Ch128) */
+	RTW_RD_5G_02 = 2,			/*Europe, Japan (W52, W53, W56) */
+	RTW_RD_5G_03 = 3,			/*Australia, New Zealand, US, Korea */
+	RTW_RD_5G_04 = 4,			/*Russia (w/o Ch136, Ch140) */
+	RTW_RD_5G_05 = 5,			/*Korea */
+	RTW_RD_5G_06 = 6,			/*FCC w/o DFS Channels, Jordan */
+	RTW_RD_5G_07 = 7,			/*Bolivia, Chile, El Salvador, Venezuela, China */
+	RTW_RD_5G_08 = 8,			/*Venezuela, Indonesia (w/o Ch165) */
+	RTW_RD_5G_09 = 9,			/*China, Taiwan w/o DFS, Qatar */
+	RTW_RD_5G_10 = 10,			/*Japan (W52, W53), Israel, Bahrain, Egypt, India, China, Malaysia */
+	RTW_RD_5G_11 = 11,			/*Japan (W56) */
+	RTW_RD_5G_12 = 12,			/*Taiwan, (w/o Weather radar)(w/o Ch52, Ch120~Ch128) */
+	RTW_RD_5G_13 = 13,			/*Taiwan, Band2, Band4 */
+	RTW_RD_5G_14 = 14,			/*Europe, Japan (W52), w/o DFS, Band1 only */
+	RTW_RD_5G_15 = 15,			/*Latin America, Indonesia */
+	RTW_RD_5G_16 = 16,			/*Lebanon */
+	RTW_RD_5G_17 = 17,			/*Russia */
+	RTW_RD_5G_18 = 18,			/*Taiwan (w/o Weather radar)(w/o Ch120~Ch128) */
+	RTW_RD_5G_19 = 19,			/*ETSI, FCC (w/o Weather radar)(w/o Ch120~Ch128) */
+	RTW_RD_5G_20 = 20,			/*Argentina(w/o Weather radar)(w/o Ch120~Ch128, Ch165) */
+	RTW_RD_5G_21 = 21,			/*Russia */
+	RTW_RD_5G_22 = 22,			/*US (include Ch144), Chile, Korea (2018 Dec 05 New standard, include ch144) */
+	RTW_RD_5G_23 = 23,			/*Malaysia */
+	RTW_RD_5G_24 = 24,			/*Japan, Europe */
+	RTW_RD_5G_25 = 25,			/*Europe, FCC */
+	RTW_RD_5G_26 = 26, /*FCC*/ RTW_RD_5G_27 = 27,	/*FCC w/o Weather radar(w/o Ch120~Ch128) */
+	RTW_RD_5G_28 = 28,			/*FCC w/o Band3 China */
+	RTW_RD_5G_29 = 29,			/*FCC w/o Band3 */
+	RTW_RD_5G_30 = 30,			/*ETSI w/o DFS Band2&3 */
+	RTW_RD_5G_31 = 31,			/*Europe */
+	RTW_RD_5G_32 = 32,			/*Europe */
+	RTW_RD_5G_33 = 33,			/*Canada (w/o Weather radar)(w/o Ch120~Ch128, include Ch144) */
+	RTW_RD_5G_34 = 34,			/*Australia, New Zealand (w/o Weather radar)(w/o Ch120~Ch128) */
+	RTW_RD_5G_35 = 35, /**/ RTW_RD_5G_36 = 36,	/*5G Worldwide (include Ch144) Band2&3 w/i DFS for AP mode. */
+	RTW_RD_5G_37 = 37,			/*5G Worldwide Band1&2 */
+	RTW_RD_5G_38 = 38,			/*Chile (Band2,Band3) */
+	RTW_RD_5G_39 = 39,			/*Japan */
+	RTW_RD_5G_40 = 40,			/*Japan */
+	RTW_RD_5G_41 = 41,			/*Japan */
+	RTW_RD_5G_42 = 42,			/*Europe */
+	RTW_RD_5G_43 = 43,			/*Japan, FCC */
+	RTW_RD_5G_44 = 44, /*FCC*/ RTW_RD_5G_45 = 45,	/*FCC w/o Band3 */
+	RTW_RD_5G_46 = 46,			/*Indonesia */
+	RTW_RD_5G_47 = 47,			/*Japan, Singapore */
+	RTW_RD_5G_48 = 48,			/*Japan */
+	RTW_RD_5G_49 = 49, /**/ RTW_RD_5G_50 = 50,	/*Russia */
+	RTW_RD_5G_51 = 51,			/*Tunisia */
+	RTW_RD_5G_52 = 52,			/*US (include Ch144)(2018 Dec 05 New standard, include ch144)Add FCC 5.9G Channel */
+	RTW_RD_5G_53 = 53,			/*Korea */
 	RTW_RD_5G_54 = 54,
 	//===== Add new channel plan above this line===============//
 	RT_CHANNEL_DOMAIN_5G_MAX
@@ -117,24 +113,24 @@ typedef enum _REGULATION_TXPWR_LMT {
 	TXPWR_LMT_ACMA = 5,
 	TXPWR_LMT_CHILE = 6,
 	TXPWR_LMT_MEXICO = 7,
-	TXPWR_LMT_WW = 8, // WW13, The mininum of ETSI,MKK
-	TXPWR_LMT_GL = 9, // Global, The mininum of all
+	TXPWR_LMT_WW = 8,			// WW13, The mininum of ETSI,MKK
+	TXPWR_LMT_GL = 9,			// Global, The mininum of all
 	TXPWR_LMT_UKRAINE = 10,
 	TXPWR_LMT_CN = 11,
 	TXPWR_LMT_QATAR = 12,
 	TXPWR_LMT_UK = 13,
 	TXPWR_LMT_NCC = 14,
 	TXPWR_LMT_MAX_REGULATION_NUM = 15,
-	TXPWR_LMT_NA = 16  /* Not support, choose NA */
+	TXPWR_LMT_NA = 16			/* Not support, choose NA */
 } REGULATION_TXPWR_LMT;
 
 //
 // Channel Plan Type.
 // Note:
-//	We just add new channel plan when the new channel plan is different from any of the following
-//	channel plan.
-//	If you just wnat to customize the acitions(scan period or join actions) about one of the channel plan,
-//	customize them in RT_CHANNEL_INFO in the RT_CHANNEL_LIST.
+//  We just add new channel plan when the new channel plan is different from any of the following
+//  channel plan.
+//  If you just wnat to customize the acitions(scan period or join actions) about one of the channel plan,
+//  customize them in RT_CHANNEL_INFO in the RT_CHANNEL_LIST.
 //
 typedef enum _RT_CHANNEL_DOMAIN {
 	//===== new channel plan mapping, (2GDOMAIN_5GDOMAIN) =====//
@@ -199,7 +195,7 @@ typedef enum _RT_CHANNEL_DOMAIN {
 	RT_CHANNEL_DOMAIN_NULL_FCC19 = 0x5A,
 	RT_CHANNEL_DOMAIN_NULL_FCC20 = 0x5B,
 	RT_CHANNEL_DOMAIN_NULL_FCC21 = 0x5C,
-	RT_CHANNEL_DOMAIN_ETSI1_ETSI23	= 0x5D,
+	RT_CHANNEL_DOMAIN_ETSI1_ETSI23 = 0x5D,
 	RT_CHANNEL_DOMAIN_ETSI1_ETSI2 = 0x5E,
 	RT_CHANNEL_DOMAIN_MKK2_MKK10 = 0x5F,
 	RT_CHANNEL_DOMAIN_FCC1_FCC5 = 0x60,
@@ -249,14 +245,14 @@ typedef enum _RT_SCAN_TYPE {
 } RT_SCAN_TYPE, *PRT_SCAN_TYPE;
 
 enum channel_width {
-	CHANNEL_WIDTH_20		= 0,
-	CHANNEL_WIDTH_40		= 1,
-	CHANNEL_WIDTH_80		= 2,
-	CHANNEL_WIDTH_160		= 3,
-	CHANNEL_WIDTH_80_80	= 4,
-	CHANNEL_WIDTH_5		= 5,
-	CHANNEL_WIDTH_10	= 6,
-	CHANNEL_WIDTH_MAX	= 7,
+	CHANNEL_WIDTH_20 = 0,
+	CHANNEL_WIDTH_40 = 1,
+	CHANNEL_WIDTH_80 = 2,
+	CHANNEL_WIDTH_160 = 3,
+	CHANNEL_WIDTH_80_80 = 4,
+	CHANNEL_WIDTH_5 = 5,
+	CHANNEL_WIDTH_10 = 6,
+	CHANNEL_WIDTH_MAX = 7,
 };
 
 #define WLANHDR_OFFSET	64
@@ -299,10 +295,10 @@ typedef enum _NDIS_802_11_AUTHENTICATION_MODE {
 	Ndis802_11AuthModeWPA2PSK,
 	Ndis802_11AuthModeWPA3,
 	Ndis802_11AuthModeWPA3PSK,
-	Ndis802_11AuthModeMax               // Not a real mode, defined as upper bound
+	Ndis802_11AuthModeMax		// Not a real mode, defined as upper bound
 } NDIS_802_11_AUTHENTICATION_MODE, *PNDIS_802_11_AUTHENTICATION_MODE;
 
-#define MAX_IE_SZ	768 //384//
+#define MAX_IE_SZ	768			//384//
 
 enum {
 	RTW_ROAM_ON_EXPIRED = BIT(0),
@@ -347,7 +343,7 @@ typedef enum {
 #define _TKIP_WTMIC_		0x3
 #define _AES_				0x4
 #define _WEP104_			0x5
-#define _WEP_WPA_MIXED_		0x07  // WEP + WPA
+#define _WEP_WPA_MIXED_		0x07	// WEP + WPA
 #define _SMS4_				0x06
 #define _BIP_				0x8
 #define _GCMP_ 0x07
@@ -363,10 +359,10 @@ typedef enum {
 #define BW_CAP_80_80M	BIT6
 
 enum chan_offset {
-	CHAN_OFFSET_NO_EXT = 0,	/*SCN - no secondary channel*/
-	CHAN_OFFSET_UPPER = 1,	/*SCA - secondary channel above*/
-	CHAN_OFFSET_NO_DEF = 2,	/*Reserved*/
-	CHAN_OFFSET_LOWER = 3,	/*SCB - secondary channel below*/
+	CHAN_OFFSET_NO_EXT = 0,		/*SCN - no secondary channel */
+	CHAN_OFFSET_UPPER = 1,		/*SCA - secondary channel above */
+	CHAN_OFFSET_NO_DEF = 2,		/*Reserved */
+	CHAN_OFFSET_LOWER = 3,		/*SCB - secondary channel below */
 	CHAN_OFFSET_40M_UPPER = 4,
 	CHAN_OFFSET_40M_LOWER = 5,
 	CHAN_OFFSET_80M_UPPER = 6,
@@ -374,12 +370,12 @@ enum chan_offset {
 };
 
 typedef enum {
-	ENCRYP_PROTOCOL_OPENSYS,   //open system
-	ENCRYP_PROTOCOL_WEP,       //WEP
-	ENCRYP_PROTOCOL_WPA,       //WPA
-	ENCRYP_PROTOCOL_WPA2,      //WPA2
-	ENCRYP_PROTOCOL_WPA_WPA2,  //WPA & WPA2
-	ENCRYP_PROTOCOL_WAPI,      //WAPI: Not support in this version
+	ENCRYP_PROTOCOL_OPENSYS,	//open system
+	ENCRYP_PROTOCOL_WEP,		//WEP
+	ENCRYP_PROTOCOL_WPA,		//WPA
+	ENCRYP_PROTOCOL_WPA2,		//WPA2
+	ENCRYP_PROTOCOL_WPA_WPA2,	//WPA & WPA2
+	ENCRYP_PROTOCOL_WAPI,		//WAPI: Not support in this version
 	ENCRYP_PROTOCOL_MAX
 } ENCRYP_PROTOCOL_E;
 
@@ -436,7 +432,7 @@ enum dot11AuthAlgrthmNum {
 #define WLAN_STA_TIM BIT(3)
 #define WLAN_STA_PERM BIT(4)
 #define WLAN_STA_AUTHORIZED BIT(5)
-#define WLAN_STA_PENDING_POLL BIT(6) /* pending activity poll not ACKed */
+#define WLAN_STA_PENDING_POLL BIT(6)	/* pending activity poll not ACKed */
 #define WLAN_STA_SHORT_PREAMBLE BIT(7)
 #define WLAN_STA_PREAUTH BIT(8)
 #define WLAN_STA_WME BIT(9)
@@ -468,20 +464,20 @@ typedef enum _RATEID_IDX_ {
 } RATEID_IDX, *PRATEID_IDX;
 
 enum rf_type {
-	RF_1T1R			= 0,
-	RF_1T2R			= 1,
-	RF_2T2R			= 2,
-	RF_2T3R			= 3,
-	RF_2T4R			= 4,
-	RF_3T3R			= 5,
-	RF_3T4R			= 6,
-	RF_4T4R			= 7,
+	RF_1T1R = 0,
+	RF_1T2R = 1,
+	RF_2T2R = 2,
+	RF_2T3R = 3,
+	RF_2T4R = 4,
+	RF_3T3R = 5,
+	RF_3T4R = 6,
+	RF_4T4R = 7,
 	RF_TYPE_MAX,
 };
 
 enum _IFACE_TYPE {
-	IFACE_PORT0, //mapping to port0 for C/D series chips
-	IFACE_PORT1, //mapping to port1 for C/D series chip
+	IFACE_PORT0,				//mapping to port0 for C/D series chips
+	IFACE_PORT1,				//mapping to port1 for C/D series chip
 	MAX_IFACE_PORT,
 };
 
@@ -494,8 +490,8 @@ typedef enum _WIRELESS_MODE {
 	WIRELESS_MODE_N_24G = 0x10,
 	WIRELESS_MODE_N_5G = 0x20,
 	WIRELESS_MODE_AC_5G = 0x40,
-	WIRELESS_MODE_AC_24G  = 0x80,
-	WIRELESS_MODE_AC_ONLY  = 0x100,
+	WIRELESS_MODE_AC_24G = 0x80,
+	WIRELESS_MODE_AC_ONLY = 0x100,
 } WIRELESS_MODE;
 
 #define _HW_MSR_STATE_NOLINK_		0x00
@@ -515,22 +511,22 @@ enum _hw_port {
 
 #define MAX_REGULATION_NUM	TXPWR_LMT_MAX_REGULATION_NUM
 
-#define MAX_2_4G_BANDWITH_NUM					2 // 20M, 40M
+#define MAX_2_4G_BANDWITH_NUM					2	// 20M, 40M
 #if defined(NOT_SUPPORT_RF_MULTIPATH) && (!defined(CONFIG_80211AC_VHT))
-#define MAX_RATE_SECTION_NUM					3 // CCk, OFDM, HT
-#define MAX_BASE_NUM_IN_PHY_REG_PG_2_4G			3 //  CCK:1,OFDM:1, HT:1(MCS0_MCS7)
+#define MAX_RATE_SECTION_NUM					3	// CCk, OFDM, HT
+#define MAX_BASE_NUM_IN_PHY_REG_PG_2_4G			3	//  CCK:1,OFDM:1, HT:1(MCS0_MCS7)
 #else
 #define MAX_RATE_SECTION_NUM					10
-#define MAX_BASE_NUM_IN_PHY_REG_PG_2_4G			10 //  CCK:1,OFDM:1, HT:4, VHT:4
+#define MAX_BASE_NUM_IN_PHY_REG_PG_2_4G			10	//  CCK:1,OFDM:1, HT:4, VHT:4
 #endif
 #define MAX_5G_BANDWITH_NUM						4
-#define MAX_BASE_NUM_IN_PHY_REG_PG_5G			9 // OFDM:1, HT:4, VHT:4
+#define MAX_BASE_NUM_IN_PHY_REG_PG_5G			9	// OFDM:1, HT:4, VHT:4
 
 enum hal_rate_mode {
-	HAL_LEGACY_MODE	= 0,
-	HAL_HT_MODE	= 1,
-	HAL_VHT_MODE	= 2,
-	HAL_HE_MODE	= 3
+	HAL_LEGACY_MODE = 0,
+	HAL_HT_MODE = 1,
+	HAL_VHT_MODE = 2,
+	HAL_HE_MODE = 3
 };
 
 #if !defined(SUPPORT_5G_CHANNEL)
@@ -542,14 +538,14 @@ enum hal_rate_mode {
 #if defined(NOT_SUPPORT_RF_MULTIPATH)
 #if !defined(CONFIG_80211AC_VHT)
 #define RTW_TX_PWR_BY_RATE_NUM_RF			1
-#define TX_PWR_BY_RATE_NUM_RATE			20 // CCK 1M~11M, OFDM 6M~54M, MCS0~7
+#define TX_PWR_BY_RATE_NUM_RATE			20	// CCK 1M~11M, OFDM 6M~54M, MCS0~7
 #else
 #define RTW_TX_PWR_BY_RATE_NUM_RF			1
-#define TX_PWR_BY_RATE_NUM_RATE			30 // CCK 1M~11M, OFDM 6M~54M, MCS0~7, VHT MCS0~MCS9
+#define TX_PWR_BY_RATE_NUM_RATE			30	// CCK 1M~11M, OFDM 6M~54M, MCS0~7, VHT MCS0~MCS9
 #endif
 #else
 #define RTW_TX_PWR_BY_RATE_NUM_RF			4
 #define TX_PWR_BY_RATE_NUM_RATE			84
 #endif
 
-#endif //__ROM_RTW_DEFS_H_
+#endif							//__ROM_RTW_DEFS_H_

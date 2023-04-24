@@ -110,6 +110,6 @@
 #define WPS_EVENT_ER_AP_SETTINGS "WPS-ER-AP-SETTINGS "
 #define WPS_EVENT_ER_SET_SEL_REG "WPS-ER-AP-SET-SEL-REG "
 
-#endif /* CONFIG_NO_STDOUT_DEBUG */
+#endif							/* CONFIG_NO_STDOUT_DEBUG */
 
-#endif /* INCLUDES_H */
+#endif							/* INCLUDES_H */

@@ -61,7 +61,7 @@ void release_mutex_to_poll(unsigned char *buf, struct list_head *phead, int *cou
 
 u8 rtw_get_mutex_dynamic_flag(_mutex sema)
 {
-	StaticSemaphore_t *pqueue = (StaticSemaphore_t *)sema;
+	StaticSemaphore_t *pqueue = (StaticSemaphore_t *) sema;
 	return pqueue->ucDummy6;
 }
 
@@ -88,13 +88,12 @@ void init_mutex_pool(void)
 #endif
 }
 
-
 void rtw_mutex_init(_mutex *pmutex)
 {
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 	StaticSemaphore_t *mutex;
 
-	mutex = (StaticSemaphore_t *)get_mutex_from_poll(&wrapper_mutexbuf_list, &mutexbuf_used_num);
+	mutex = (StaticSemaphore_t *) get_mutex_from_poll(&wrapper_mutexbuf_list, &mutexbuf_used_num);
 
 	if (mutex == NULL) {
 		if (mutexpool_flag) {
@@ -168,5 +167,3 @@ int rtw_mutex_get_timeout(_mutex *pmutex, u32 timeout_ms)
 		return _SUCCESS;
 	}
 }
-
-

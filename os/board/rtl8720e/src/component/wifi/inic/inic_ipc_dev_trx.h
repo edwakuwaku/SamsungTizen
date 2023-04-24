@@ -29,4 +29,4 @@ void inic_ipc_dev_tx_handler(inic_ipc_ex_msg_t *ipc_msg);
 void inic_ipc_dev_recv(int idx);
 void inic_ipc_dev_rx_done(inic_ipc_ex_msg_t *p_ipc_msg);
 
-#endif /* __INIC_IPC_DEV_TX_H__ */
+#endif							/* __INIC_IPC_DEV_TX_H__ */

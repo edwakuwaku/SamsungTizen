@@ -9,17 +9,16 @@
 #include <stdio.h>
 #include <freertos_pmu.h>
 
-void	rtw_init_queue(_queue	*pqueue)
+void rtw_init_queue(_queue *pqueue)
 {
 	rtw_init_listhead(&(pqueue->queue));
 	rtw_spinlock_init(&(pqueue->lock));
 }
 
-u32	  rtw_queue_empty(_queue	*pqueue)
+u32 rtw_queue_empty(_queue *pqueue)
 {
 	return (rtw_is_list_empty(&(pqueue->queue)));
 }
-
 
 u32 rtw_end_of_queue_search(_list *head, _list *plist)
 {
@@ -29,6 +28,7 @@ u32 rtw_end_of_queue_search(_list *head, _list *plist)
 		return _FALSE;
 	}
 }
+
 int rtw_init_xqueue(_xqueue *queue, const char *name, u32 message_size, u32 number_of_messages)
 {
 	/* To avoid gcc warnings */
@@ -59,5 +59,3 @@ int rtw_deinit_xqueue(_xqueue *queue)
 	DBG_INFO("\n");
 	return 0;
 }
-
-

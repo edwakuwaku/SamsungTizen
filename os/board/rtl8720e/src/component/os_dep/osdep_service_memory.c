@@ -13,10 +13,9 @@ void *rtw_vmalloc(u32 sz)
 	void *pbuf = NULL;
 	pbuf = kmm_malloc(sz);
 #ifdef CONFIG_DEBUG_MM_HEAPINFO
-        if (pbuf)
-        {
-            DEBUG_SET_CALLER_ADDR(pbuf);
-        }
+	if (pbuf) {
+		DEBUG_SET_CALLER_ADDR(pbuf);
+	}
 #endif
 	return pbuf;
 }
@@ -27,17 +26,16 @@ void *rtw_zvmalloc(u32 sz)
 
 	pbuf = kmm_zalloc(sz);
 #ifdef CONFIG_DEBUG_MM_HEAPINFO
-        if (pbuf)
-        {
-            DEBUG_SET_CALLER_ADDR(pbuf);
-        }
+	if (pbuf) {
+		DEBUG_SET_CALLER_ADDR(pbuf);
+	}
 #endif
 	return pbuf;
 }
 
 void rtw_vmfree(u8 *pbuf, u32 sz)
 {
-	(void) sz;
+	(void)sz;
 
 	kmm_free(pbuf);
 }
@@ -47,10 +45,9 @@ void *rtw_malloc(u32 sz)
 	void *pbuf = NULL;
 	pbuf = kmm_malloc(sz);
 #ifdef CONFIG_DEBUG_MM_HEAPINFO
-        if (pbuf)
-        {
-            DEBUG_SET_CALLER_ADDR(pbuf);
-        }
+	if (pbuf) {
+		DEBUG_SET_CALLER_ADDR(pbuf);
+	}
 #endif
 	return pbuf;
 }
@@ -61,10 +58,9 @@ void *rtw_zmalloc(u32 sz)
 
 	pbuf = kmm_zalloc(sz);
 #ifdef CONFIG_DEBUG_MM_HEAPINFO
-        if (pbuf)
-        {
-            DEBUG_SET_CALLER_ADDR(pbuf);
-        }
+	if (pbuf) {
+		DEBUG_SET_CALLER_ADDR(pbuf);
+	}
 #endif
 	return pbuf;
 }
@@ -74,17 +70,16 @@ void *rtw_calloc(u32 nelements, u32 elementSize)
 	u32 sz = nelements * elementSize;
 	void *pbuf = kmm_zalloc(sz);
 #ifdef CONFIG_DEBUG_MM_HEAPINFO
-        if (pbuf)
-        {
-            DEBUG_SET_CALLER_ADDR(pbuf);
-        }
+	if (pbuf) {
+		DEBUG_SET_CALLER_ADDR(pbuf);
+	}
 #endif
 	return pbuf;
 }
 
 void rtw_mfree(u8 *pbuf, u32 sz)
 {
-	(void) sz;
+	(void)sz;
 
 	kmm_free(pbuf);
 }
@@ -107,4 +102,3 @@ void rtw_memset(void *pbuf, int c, u32 sz)
 {
 	memset(pbuf, c, sz);
 }
-

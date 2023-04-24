@@ -17,10 +17,10 @@
 #ifndef __OSDEP_SERVICE_MISC_H_
 #define __OSDEP_SERVICE_MISC_H_
 
-// #define printk				printf
-// #define DBG_ERR(fmt, args...)		printf("\n\r[%s] " fmt, __FUNCTION__, ## args)
+// #define printk               printf
+// #define DBG_ERR(fmt, args...)        printf("\n\r[%s] " fmt, __FUNCTION__, ## args)
 
-// #define HALT()				do { cli(); for(;;);} while(0)
+// #define HALT()               do { cli(); for(;;);} while(0)
 #undef ASSERT
 #define ASSERT(x)			do { \
 						if((x) == 0){\
@@ -57,13 +57,13 @@
  * @param[in] size: The size of the random bytes.
  * @return	  0
 */
-int	rtw_get_random_bytes(void *dst, uint32_t size);
+int rtw_get_random_bytes(void *dst, uint32_t size);
 
 /**
  * @brief  This function gets the available heap size.
  * @return	  The value of the available heap size.
 */
-uint32_t	rtw_getFreeHeapSize(void);
+uint32_t rtw_getFreeHeapSize(void);
 
 /**
  * @brief  This function indicates that the WLAN needs to stay on which means cannot go into power saving mode.
@@ -71,7 +71,7 @@ uint32_t	rtw_getFreeHeapSize(void);
  * @note  Defining configUSE_WAKELOCK_PMU 1 in "FreeRTOSConfig.h" needs to be done before compiling,
  *			or this API won't be effective.
  */
-void	rtw_acquire_wakelock(void);
+void rtw_acquire_wakelock(void);
 
 /**
  * @brief  This function indicates that the WLAN does not need to stay on which means can go into power saving mode.
@@ -79,7 +79,7 @@ void	rtw_acquire_wakelock(void);
  * @note  Defining configUSE_WAKELOCK_PMU 1 in "FreeRTOSConfig.h" needs to be done before compiling,
  *			or this API won't be effective.
  */
-void	rtw_release_wakelock(void);
+void rtw_release_wakelock(void);
 void rtw_wakelock_timeout(uint32_t timeout);
 
 int rtw_in_interrupt(void);
@@ -89,11 +89,11 @@ int rtw_in_interrupt(void);
  * @param[in] s: The pointer to the string to be converted.
  * @return	  The converted value.
 */
-uint32_t 	rtw_atoi(uint8_t *s);
+uint32_t rtw_atoi(uint8_t *s);
 
 __inline static uint32_t _RND4(uint32_t sz)
 {
-	uint32_t	val;
+	uint32_t val;
 
 	val = ((sz >> 2) + ((sz & 3) ? 1 : 0)) << 2;
 
@@ -102,7 +102,7 @@ __inline static uint32_t _RND4(uint32_t sz)
 
 __inline static uint32_t _RND8(uint32_t sz)
 {
-	uint32_t	val;
+	uint32_t val;
 
 	val = ((sz >> 3) + ((sz & 7) ? 1 : 0)) << 3;
 
@@ -111,7 +111,7 @@ __inline static uint32_t _RND8(uint32_t sz)
 
 __inline static uint32_t _RND128(uint32_t sz)
 {
-	uint32_t	val;
+	uint32_t val;
 
 	val = ((sz >> 7) + ((sz & 127) ? 1 : 0)) << 7;
 
@@ -120,7 +120,7 @@ __inline static uint32_t _RND128(uint32_t sz)
 
 __inline static uint32_t _RND256(uint32_t sz)
 {
-	uint32_t	val;
+	uint32_t val;
 
 	val = ((sz >> 8) + ((sz & 255) ? 1 : 0)) << 8;
 
@@ -129,7 +129,7 @@ __inline static uint32_t _RND256(uint32_t sz)
 
 __inline static uint32_t _RND512(uint32_t sz)
 {
-	uint32_t	val;
+	uint32_t val;
 
 	val = ((sz >> 9) + ((sz & 511) ? 1 : 0)) << 9;
 
@@ -141,7 +141,7 @@ __inline static uint32_t bitshift(uint32_t bitmask)
 	uint32_t i;
 
 	for (i = 0; i <= 31; i++)
-		if (((bitmask >> i) &  0x1) == 1) {
+		if (((bitmask >> i) & 0x1) == 1) {
 			break;
 		}
 
@@ -160,10 +160,7 @@ __inline static u16 _ntohs(u16 n)
 
 __inline static u32 _htonl(u32 n)
 {
-	return ((n & 0xff) << 24) |
-		   ((n & 0xff00) << 8) |
-		   ((n & 0xff0000UL) >> 8) |
-		   ((n & 0xff000000UL) >> 24);
+	return ((n & 0xff) << 24) | ((n & 0xff00) << 8) | ((n & 0xff0000UL) >> 8) | ((n & 0xff000000UL) >> 24);
 }
 
 __inline static u32 _ntohl(u32 n)

@@ -19,8 +19,8 @@
 
 #include "osdep_service_mutex.h"
 
-typedef void	            *_lock;
-typedef unsigned long		_irqL;
+typedef void *_lock;
+typedef unsigned long _irqL;
 
 /*************************** SchedulerControl *******************************/
 /**
@@ -32,7 +32,7 @@ typedef unsigned long		_irqL;
  * @note: This may alter the stack (depending on the portable implementation)
  * so must be used with care!
  */
-void	rtw_enter_critical(_lock *plock, _irqL *pirqL);
+void rtw_enter_critical(_lock *plock, _irqL *pirqL);
 
 /**
  * @brief  This function marks end of a critical code region. Preemptive context
@@ -43,7 +43,7 @@ void	rtw_enter_critical(_lock *plock, _irqL *pirqL);
  * @note: This may alter the stack (depending on the portable implementation)
  * so must be used with care!
  */
-void	rtw_exit_critical(_lock *plock, _irqL *pirqL);
+void rtw_exit_critical(_lock *plock, _irqL *pirqL);
 
 /**
  * @brief  This function obtains a spin lock semaphore.
@@ -52,7 +52,7 @@ void	rtw_exit_critical(_lock *plock, _irqL *pirqL);
  * @param[in] pirqL: Pointer to the IRQ.
  * @return	  None
  */
-void	rtw_enter_critical_bh(_lock *plock, _irqL *pirqL);
+void rtw_enter_critical_bh(_lock *plock, _irqL *pirqL);
 
 /**
  * @brief  This function releases a spin lock semaphore.
@@ -60,7 +60,7 @@ void	rtw_enter_critical_bh(_lock *plock, _irqL *pirqL);
  * @param[in] pirqL: Pointer to the IRQ.
  * @return	  None
  */
-void	rtw_exit_critical_bh(_lock *plock, _irqL *pirqL);
+void rtw_exit_critical_bh(_lock *plock, _irqL *pirqL);
 
 /**
  * @brief  This function obtains a semaphore.
@@ -68,7 +68,7 @@ void	rtw_exit_critical_bh(_lock *plock, _irqL *pirqL);
  * @param[in] pirqL: Pointer to the IRQ.
  * @return	  None
  */
-int		rtw_enter_critical_mutex(_mutex *pmutex, _irqL *pirqL);
+int rtw_enter_critical_mutex(_mutex *pmutex, _irqL *pirqL);
 
 /**
  * @brief  This function releases a semaphore.
@@ -76,19 +76,19 @@ int		rtw_enter_critical_mutex(_mutex *pmutex, _irqL *pirqL);
  * @param[in] pirqL: Pointer to the IRQ.
  * @return	  None
  */
-void	rtw_exit_critical_mutex(_mutex *pmutex, _irqL *pirqL);
+void rtw_exit_critical_mutex(_mutex *pmutex, _irqL *pirqL);
 
 /**
  * @brief  This function will lock cpu. Can be used when xip active and want to do some flash operation.
  * @return	  None
  */
-void	rtw_cpu_lock(void);
+void rtw_cpu_lock(void);
 
 /**
 * @brief  This function unlock cpu.
 * @return	  None
 */
-void	rtw_cpu_unlock(void);
+void rtw_cpu_unlock(void);
 
 /*************************** End SchedulerControl *******************************/
 
@@ -99,14 +99,14 @@ void	rtw_cpu_unlock(void);
  * @param[in] plock: Pointer to the created spin lock semaphore.
  * @return	  None
  */
-void	rtw_spinlock_init(_lock *plock);
+void rtw_spinlock_init(_lock *plock);
 
 /**
  * @brief  This function deletes the spin lock semaphore.
  * @param[in] pmutex: Pointer to the spin lock semaphore to be deleted.
  * @return	  None
  */
-void	rtw_spinlock_free(_lock *plock);
+void rtw_spinlock_free(_lock *plock);
 
 /**
  * @brief  This function obtains a spin lock semaphore.
@@ -114,14 +114,14 @@ void	rtw_spinlock_free(_lock *plock);
  *			  the mutex semaphore was created.
  * @return	  None
  */
-void	rtw_spin_lock(_lock *plock);
+void rtw_spin_lock(_lock *plock);
 
 /**
  * @brief  This function releases a spin lock semaphore.
  * @param[in] plock: Pointer to the spin lock semaphore to be released.
  * @return	  None
  */
-void	rtw_spin_unlock(_lock *plock);
+void rtw_spin_unlock(_lock *plock);
 
 /*************************** End Semaphores *******************************/
 
