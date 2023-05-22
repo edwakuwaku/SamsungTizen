@@ -194,6 +194,7 @@ int up_create_stack(struct tcb_s *tcb, size_t stack_size, uint8_t ttype)
       size_of_stack = top_of_stack - (uintptr_t)tcb->stack_alloc_ptr;
 
       /* Save the adjusted stack values in the struct tcb_s */
+		tcb->adj_stack_ptr = (uint32_t *)top_of_stack;
 
       tcb->stack_base_ptr = tcb->stack_alloc_ptr;
       tcb->adj_stack_size = size_of_stack;
