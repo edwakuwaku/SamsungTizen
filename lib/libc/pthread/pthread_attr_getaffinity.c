@@ -51,7 +51,7 @@
 int pthread_attr_getaffinity_np(FAR const pthread_attr_t *attr,
                                 size_t cpusetsize, cpu_set_t *cpuset)
 {
-  linfo("attr=%p cpusetsize=%d cpuset=%p\n",
+  svdbg("attr=%p cpusetsize=%d cpuset=%p\n",
          attr, (int)cpusetsize, cpuset);
 
   DEBUGASSERT(attr != NULL && cpusetsize == sizeof(cpu_set_t) &&
