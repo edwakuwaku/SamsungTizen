@@ -808,6 +808,7 @@ void os_start(void)
 		}
 	}
 
+	lldbg("\n[%s] - %d\n",__FUNCTION__,__LINE__);
 #ifdef CONFIG_SMP
 	/* Start all CPUs *********************************************************/
 
@@ -818,7 +819,7 @@ void os_start(void)
 	/* Then start the other CPUs */
 
 	DEBUGVERIFY(os_smp_start());
-
+	lldbg("\n[%s] - %d\n",__FUNCTION__,__LINE__);
 #endif /* CONFIG_SMP */
 
 #ifdef CONFIG_ARMV8M_TRUSTZONE

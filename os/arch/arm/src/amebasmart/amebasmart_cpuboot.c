@@ -106,7 +106,7 @@ void amebasmart_cpu_disable(void)
 
 void amebasmart_cpu_enable(void)
 {
-  psci_init();
+  // psci_init();
   smp_init();
 }
 

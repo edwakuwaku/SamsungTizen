@@ -165,7 +165,7 @@ int arm_start_handler(int irq, void *context, void *arg)
 
 int up_cpu_start(int cpu)
 {
-  svdbg("Starting CPU%d\n", cpu);
+  lldbg("Starting CPU%d\n", cpu);
 
   DEBUGASSERT(cpu >= 0 && cpu < CONFIG_SMP_NCPUS && cpu != this_cpu());
 

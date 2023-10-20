@@ -112,7 +112,7 @@ int os_smp_start(void)
 	int cpu;
 
 	/* Start all of the other CPUs.  CPU0 is already running. */
-
+	lldbg("\n[%s] - %d\n",__FUNCTION__,__LINE__);
 	for (cpu = 1; cpu < CONFIG_SMP_NCPUS; cpu++) {
 		/* Start the CPU */
 
