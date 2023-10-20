@@ -22,7 +22,7 @@ static uint32_t sysactive_timeout_flag = 0;
 #define configNUM_CORES			1
 #endif
 /* cpu hotplug flag for each core */
-volatile u32 cpuhp_flag[configNUM_CORES];
+volatile u32 cpuhp_flag[CONFIG_SMP_NCPUS];
 #endif
 
 u32 tickless_debug = 0;
@@ -731,7 +731,7 @@ void pmu_tickless_debug(u32 NewStatus)
 	}
 }
 
-#ifdef ARM_CORE_CA32
+#ifdef CONFIG_ARCH_CORTEXA32
 void pmu_set_secondary_cpu_state(uint32_t CoreID, uint32_t NewStatus)
 {
 	cpuhp_flag[CoreID] = NewStatus;

@@ -285,6 +285,13 @@ SECTIONS
 		__bss_end__ = .;
 	} > CA32_BL3_DRAM_NS
 
+    .noinit :
+    {
+        _snoinit = ABSOLUTE(.);
+        *(.noinit*)
+        _enoinit = ABSOLUTE(.);
+    } > CA32_BL3_DRAM_NS
+
 	.heap (NOLOAD) :
 	{
 		__end__ = .;

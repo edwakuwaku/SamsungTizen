@@ -199,7 +199,7 @@ int  flash_read_word(flash_t *obj, u32 address, u32 *data)
 
 #ifdef ARM_CORE_CA32
 	if (SYSCFG_CUT_VERSION_A == SYSCFG_RLVersion()) {
-		arm_gic_freq_switch();
+		// arm_gic_freq_switch();
 	}
 #endif
 
@@ -219,7 +219,7 @@ int  flash_read_word(flash_t *obj, u32 address, u32 *data)
 
 #ifdef ARM_CORE_CA32
 	if (SYSCFG_CUT_VERSION_A == SYSCFG_RLVersion()) {
-		arm_gic_freq_restore();
+		// arm_gic_freq_restore();
 	}
 #endif
 	return 1;
@@ -289,7 +289,7 @@ int  flash_stream_read(flash_t *obj, u32 address, u32 len, u8 *data)
 
 #ifdef ARM_CORE_CA32
 	if (SYSCFG_CUT_VERSION_A == SYSCFG_RLVersion()) {
-		arm_gic_freq_switch();
+		// arm_gic_freq_switch();
 	}
 #endif
 
@@ -343,7 +343,7 @@ int  flash_stream_read(flash_t *obj, u32 address, u32 len, u8 *data)
 
 #ifdef ARM_CORE_CA32
 	if (SYSCFG_CUT_VERSION_A == SYSCFG_RLVersion()) {
-		arm_gic_freq_restore();
+		// arm_gic_freq_restore();
 	}
 #endif
 	return 1;
