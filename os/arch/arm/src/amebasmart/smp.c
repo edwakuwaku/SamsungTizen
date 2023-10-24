@@ -81,7 +81,7 @@ void vPortSecondaryOff(void)
 #ifndef CONFIG_PLATFORM_TIZENRT_OS
 	arm_gic_raise_softirq(1, 1);
 #else
-	sys_write32(1 << (16 + 1) | 1, AMEBASMART_GIC_VBASE + GIC_ICDSGIR_OFFSET);
+	sys_write32(1 << (16 + 1) | 1, GIC_ICDSGIR);
 #endif
 #endif
 	//add a delay to wait cpu1 enter wfi.
@@ -149,6 +149,7 @@ void smp_init(void)
 	rtk_core1_power_off();
 #endif
 
+#if ( CONFIG_SMP_NCPUS > 1 )
 	for (xCoreID = 0; xCoreID < CONFIG_SMP_NCPUS; xCoreID++) {
 		if (xCoreID == up_cpu_index()) {
 			pmu_set_secondary_cpu_state(xCoreID, CPU1_RUNNING);
@@ -160,5 +161,6 @@ void smp_init(void)
 			printf("CPU%d: failed to boot: %d\n", (int)xCoreID, (int)err);
 		}
 	}
+#endif
 
 }
