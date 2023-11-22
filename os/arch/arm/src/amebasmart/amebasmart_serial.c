@@ -1151,6 +1151,8 @@ static void rtl8730e_up_txint(struct uart_dev_s *dev, bool enable)
 	DEBUGASSERT(priv);
 	priv->txint_enable = enable;
 	serial_irq_set(sdrv[uart_index_get(priv->tx)], TxIrq, enable);
+	if (enable)
+		UART_INTConfig(UART_DEV_TABLE[uart_index_get(priv->tx)].UARTx, RUART_BIT_ETBEI, ENABLE);
 }
 
 /****************************************************************************
@@ -1399,11 +1401,6 @@ void up_serialinit(void)
 #endif
 #ifdef TTYS2_DEV
 	rtl8730e_up_setup_pin(&TTYS2_DEV);
-	// For testing on tx/rx irq functionality
-	// rtl8730e_up_setup(&TTYS2_DEV);
-	// rtl8730e_up_attach(&TTYS2_DEV);
-	// rtl8730e_up_txint(&TTYS2_DEV, 1);
-	// rtl8730e_up_rxint(&TTYS2_DEV, 1);
 	uart_register("/dev/ttyS2", &TTYS2_DEV);
 #endif
 

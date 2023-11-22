@@ -181,8 +181,8 @@ void SOCPS_SleepPG(void)
 
 	//restore gic registers
 	SOCPS_Restore_GIC();
+	printf("pg-w\n");
 
-	// printf("pg-w\n");
 	/* exec sleep hook functions */
 	pmu_exec_wakeup_hook_funs(PMU_MAX);
 

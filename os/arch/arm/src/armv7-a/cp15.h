@@ -162,11 +162,7 @@
 #define CP15_PMINTENCLR(r) _CP15(0, r, c9, c14, 2)  /* Interrupt Enable Clear Register */
 
 #define CP15_TLBLCKDOWN(r) _CP15(0, r, c10, c0, 0)  /* TLB Lockdown register (Cortex-A9) */
-#ifndef CONFIG_ARCH_CORTEXA32
 #define CP15_PPRRR(r)      _CP15(0, r, c10, c2, 0)  /* Primary Region Remap Register */
-#else
-#define CP15_MAIR0(r)      _CP15(0, r, c10, c2, 0)  /* Memory Attribute Indirection Register 0 */
-#endif
 #define CP15_NMRR(r)       _CP15(0, r, c10, c2, 1)  /* Normal Memory Remap Register */
 
 #define CP15_PLEIDR(r)     _CP15(0, r, c11, c0, 0)  /* PLE ID Register (Cortex-A9) */

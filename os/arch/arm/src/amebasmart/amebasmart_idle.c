@@ -64,34 +64,25 @@ static void np_wakelock_acquire(void) {
 }
 
 RTIM_TimeBaseInitTypeDef TIM_InitStruct_GT[8];
-static void pg_timer_int_handler(void)
+static void pg_timer_int_handler(void *Data)
 {
-
-	// RTIM_TimeBaseInitTypeDef *TIM_InitStruct = (RTIM_TimeBaseInitTypeDef *) Data;
+	RTIM_TimeBaseInitTypeDef *TIM_InitStruct = (RTIM_TimeBaseInitTypeDef *) Data;
 	DiagPrintf("pg Ap timer handler\n");
 	DiagPrintf("WAK_Event0 = %x 1=%x\n", HAL_READ32(PMC_BASE, WAK_STATUS0), HAL_READ32(PMC_BASE, WAK_STATUS1));
 
-	RTIM_INTClear(TIMx[1]);
+	RTIM_INTClear(TIMx[TIM_InitStruct->TIM_Idx]);
 
 	DiagPrintf("WAK_Event0 = %x 1=%x\n", HAL_READ32(PMC_BASE, WAK_STATUS0), HAL_READ32(PMC_BASE, WAK_STATUS1));
-	RTIM_Cmd(TIMx[1], DISABLE);
+	RTIM_Cmd(TIMx[TIM_InitStruct->TIM_Idx], DISABLE);
 	// Switch status back to normal mode after wake up from interrupt
 	pm_activity(PM_IDLE_DOMAIN, 9);
-
 }
 
 static void set_timer_interrupt(u32 TimerIdx, u32 Timercnt) {
 	printf("hs pg_sleep_Test aon_timer:%d ms\n", Timercnt * 1000);
 	printf("\nCheck g_system_timer: %8lld\n", g_system_timer);
 	RTIM_TimeBaseInitTypeDef *pTIM_InitStruct_temp = &TIM_InitStruct_GT[TimerIdx];
-	// RCC_PeriphClockCmd(APBPeriph_TIM0, APBPeriph_TIM0_CLOCK, ENABLE);
 	RCC_PeriphClockCmd(APBPeriph_TIM1, APBPeriph_TIM1_CLOCK, ENABLE);
-	// RCC_PeriphClockCmd(APBPeriph_TIM2, APBPeriph_TIM2_CLOCK, ENABLE);
-	// RCC_PeriphClockCmd(APBPeriph_TIM3, APBPeriph_TIM3_CLOCK, ENABLE);
-	// RCC_PeriphClockCmd(APBPeriph_TIM4, APBPeriph_TIM4_CLOCK, ENABLE);
-	// RCC_PeriphClockCmd(APBPeriph_TIM5, APBPeriph_TIM5_CLOCK, ENABLE);
-	// RCC_PeriphClockCmd(APBPeriph_TIM6, APBPeriph_TIM6_CLOCK, ENABLE);
-	// RCC_PeriphClockCmd(APBPeriph_TIM7, APBPeriph_TIM7_CLOCK, ENABLE);
 
 	RTIM_TimeBaseStructInit(pTIM_InitStruct_temp);
 
@@ -167,7 +158,7 @@ static void up_idlepm(void)
 					/* need further check, for SMP case*/
 					system_can_yield = 0;
 					// set interrupt source
-					set_timer_interrupt(1, 5 + set_interrupt_count);
+					set_timer_interrupt(1, 5);
 					set_interrupt_count--;
 					if (up_cpu_index() == 0) {
 						/* mask sys tick interrupt*/
@@ -203,7 +194,6 @@ static void up_idlepm(void)
 							// Interrupt source from BT/UART will wake cpu up, just leave expected idle time as 0
 							// Enter sleep mode for AP
 							configPRE_SLEEP_PROCESSING(xModifiableIdleTime);
-							pg_timer_int_handler();
 							/* When wake from pg, arm timer has been reset, so a new compare value is necessary to
 							trigger an timer interrupt */
 							if (pmu_get_sleep_type() == SLEEP_PG) {

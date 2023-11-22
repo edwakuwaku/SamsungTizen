@@ -372,7 +372,9 @@ __start:
 	orr		r1, r5, #(TTBR0_RGN_WBWA | TTBR0_IRGN0)	/* Select cache properties */
 	mcr		CP15_TTBR0(r1)
 #ifndef CONFIG_ARCH_CORTEXA32
-	mcr		CP15_TTBR1(r1)
+	mcr		CP15_TTBR1(r1)	
+#else
+	mcr		CP15_TTBR1(r0)	/* Disable TTBR1 */
 #endif
 
 	/* Set the TTB control register (TTBCR) to indicate that we are using
