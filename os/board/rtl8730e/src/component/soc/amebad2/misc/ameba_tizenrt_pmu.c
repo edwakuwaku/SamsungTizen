@@ -302,10 +302,8 @@ void tizenrt_pre_sleep_processing(uint32_t *expected_idle_time)
 #ifndef CONFIG_PLATFORM_TIZENRT_OS
 	vTaskStepTick(ms_passed); /*  update kernel tick */
 #else
-	printf("\nMissing tick in msec: %8lld\n", (u64)ms_passed);
 	irqstate_t flags  = irqsave();
 	g_system_timer += (u64)ms_passed;
-	printf("\ng_system_timer after compensation: %8lld\n", g_system_timer);
 	irqrestore(flags);
 	wd_timer_nohz(ms_passed);
 #endif
