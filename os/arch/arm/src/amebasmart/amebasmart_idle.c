@@ -39,7 +39,7 @@
 #include "gic.h"
 #endif
 
-static u32 system_can_yield = 1;
+// static u32 system_can_yield = 1;
 /****************************************************************************
  * Name: up_idlepm
  *
@@ -58,6 +58,9 @@ static void up_idlepm(void)
 	int ret;
 
 	/* Decide, which power saving level can be obtained */
+	/* If up_idlepm() need to be callable from pm_ioctl, this part
+	   should be revised?
+	*/
 	newstate = pm_checkstate(PM_IDLE_DOMAIN);
 
 	/* Check for state changes */
@@ -66,13 +69,13 @@ static void up_idlepm(void)
 		//TODO: Critical section code needed for SMP case?
 		//Any additional implications of putting a core in critical section while trying to sleep?
 		/* Perform board-specific, state-dependent logic here */
-	  	dbg("newstate= %d oldstate=%d\n", newstate, oldstate);
+	  	pmvdbg("newstate= %d oldstate=%d\n", newstate, oldstate);
 
 		/* Then force the global state change */
 		ret = pm_changestate(PM_IDLE_DOMAIN, newstate);
 		if (ret < 0) {
 			/* The new state change failed, revert to the preceding state */
-			dbg("State change failed! Current state = %d, newstate = %d\n", oldstate, newstate);
+			pmdbg("State change failed! Current state = %d, newstate = %d\n", oldstate, newstate);
 			newstate = oldstate;
 			goto EXIT2;
 		} else {
@@ -82,15 +85,17 @@ static void up_idlepm(void)
 		/* MCU-specific power management logic */
 		switch (newstate) {
 			case PM_NORMAL:
-				break;
 			case PM_IDLE:
+				pmvdbg("\n[%s] - %d, state = %d\n",__FUNCTION__,__LINE__, newstate);
 				break;
 			case PM_STANDBY:
+				pmvdbg("\n[%s] - %d, state = %d\n",__FUNCTION__,__LINE__, newstate);
 				np_wakelock_helper();
 				break;
 			case PM_SLEEP:
+				pmvdbg("\n[%s] - %d, state = %d\n",__FUNCTION__,__LINE__, newstate);
 				/* need further check, for SMP case*/
-				system_can_yield = 0;
+				// system_can_yield = 0;
 				ap_timer_helper();
 				if (up_cpu_index() == 0) {
 					/* mask sys tick interrupt*/
@@ -166,7 +171,7 @@ EXIT:
 					up_irq_enable();
 				}
 				/* need further check*/
-				system_can_yield = 1;
+				// system_can_yield = 1;
 				np_wakelock_helper();
 				ret = pm_changestate(PM_IDLE_DOMAIN, PM_NORMAL);
 				if (ret < 0) {
@@ -213,8 +218,11 @@ void up_idle(void)
 	nxsched_process_timer();
 #else
 
-	/* Sleep until an interrupt occurs to save power */
-
+	/* Sleep until an interrupt occurs to save power,
+	   is it possible to toggle between HW/SW sleep, to
+	   lower down average power consumption?
+	 */
+	// asm("WFI");
 	up_idlepm();
 #endif
 }

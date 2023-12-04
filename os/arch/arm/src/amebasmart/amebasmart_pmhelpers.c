@@ -52,7 +52,7 @@ static void np_wakelock_acquire(void) {
 	}
 }
 
-void pg_timer_int_handler(void *Data)
+static void pg_timer_int_handler(void *Data)
 {
 	RTIM_TimeBaseInitTypeDef *TIM_InitStruct = (RTIM_TimeBaseInitTypeDef *) Data;
 	RTIM_INTClear(TIMx[TIM_InitStruct->TIM_Idx]);
@@ -64,7 +64,7 @@ void pg_timer_int_handler(void *Data)
 	pm_activity(PM_IDLE_DOMAIN, 9);
 }
 
-void up_set_timer_interrupt(u32 TimerIdx, u32 Timercnt) {
+static void up_set_timer_interrupt(u32 TimerIdx, u32 Timercnt) {
 	RTIM_TimeBaseInitTypeDef *pTIM_InitStruct_temp = &TIM_InitStruct_GT[TimerIdx];
 	RCC_PeriphClockCmd(APBPeriph_TIM1, APBPeriph_TIM1_CLOCK, ENABLE);
 

@@ -190,11 +190,9 @@ static void amebasmart_ble_pmnotify(struct pm_callback_s *cb, int domain,
 	case PM_NORMAL:		/* Logic for PM_NORMAL goes here */
 	case PM_IDLE:		/* Logic for PM_IDLE goes here */
 	case PM_STANDBY:	/* Logic for PM_STANDBY goes here */
-		printf("\n[%s] - %d, state = %d\n",__FUNCTION__,__LINE__, pmstate);
 		break;
 
 	case PM_SLEEP:		/* Logic for PM_SLEEP goes here */
-		printf("\n[%s] - %d, state = %d\n",__FUNCTION__,__LINE__, pmstate);
 		rtk_bt_presleep_task();
 		rtw_delete_task(&rtk_bt_presleep_handler);
 		break;
@@ -247,11 +245,9 @@ static int amebasmart_ble_pmprepare(struct pm_callback_s *cb, int domain,
 	case PM_NORMAL:		/* Logic for PM_NORMAL goes here */
 	case PM_IDLE:		/* Logic for PM_IDLE goes here */
 	case PM_STANDBY:	/* Logic for PM_STANDBY goes here */
-		printf("\n[%s] - %d, state = %d\n",__FUNCTION__,__LINE__, pmstate);
 		break;
 
 	case PM_SLEEP:		/* Logic for PM_SLEEP goes here */
-		printf("\n[%s] - %d, state = %d\n",__FUNCTION__,__LINE__, pmstate);
 		if(ble_client_connect_is_running)
 			return ERROR;
 		break;

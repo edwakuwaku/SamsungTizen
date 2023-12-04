@@ -356,10 +356,6 @@ void arm_boot(void)
 
   amebasmart_wdtdisable();
 
-  /* Initialize clocking to settings provided by board-specific logic */
-
-  amebasmart_clockconfig();
-
   /* Initialize the FPU */
 
   arm_fpuconfig();

@@ -57,7 +57,7 @@
 #include <tinyara/config.h>
 #include <stdio.h>
 
-// #include <pm/pm.h>
+#include <tinyara/pm/pm.h>
 
 /****************************************************************************
  * hello_main
@@ -80,7 +80,7 @@ int hello_main(int argc, char *argv[])
 	// }
 
 	/* The work is done, now relax the stay on the current state of the domain */
-	// pm_ioctl(PM_IOC_RELAX);
+	pm_ioctl(PM_IOC_RELAX, 0);
 
 	// {
 		//App does some other non-blocking work

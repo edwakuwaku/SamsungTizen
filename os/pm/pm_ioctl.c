@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * Copyright 2016 Samsung Electronics All Rights Reserved.
+ * Copyright 2023 Samsung Electronics All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  *
  ****************************************************************************/
 /****************************************************************************
- * pm/pm_initialize.c
+ * pm/pm_ioctl.c
  *
  *   Copyright (C) 2011-2012 Gregory Nutt. All rights reserved.
  *   Author: Gregory Nutt <gnutt@nuttx.org>
@@ -100,18 +100,12 @@ void pm_ioctl(enum pm_ioctl_cmds cmd, uint32_t TimerInterval)
 			dbg("Nothing to do\n");
 			break;
 		case PM_IOC_STAY:
-			//Get the current domain
-			//perform pm_stay to block the domain in its current PM state
+			//Lock the current state due to some ongoing activity
 			(void) TimerInterval;
 			pm_stay(PM_IDLE_DOMAIN, pm_querystate(PM_IDLE_DOMAIN));
 			break;
 		case PM_IOC_RELAX:
-			//Get the current domain
-			//perform pm_relax to unblock the domain's state transitions
-			if (TimerInterval > 0) {
-                g_timer_wakeup.use_timer = 1;
-                g_timer_wakeup.timer_interval = TimerInterval;
-            }
+			//Relax the current state due to low activity usage
 			pm_relax(PM_IDLE_DOMAIN, pm_querystate(PM_IDLE_DOMAIN));
 			break;
 		/* Note that in the above 2 IOCTL calls, the application does not provide the state to stay/relax.
@@ -125,22 +119,18 @@ void pm_ioctl(enum pm_ioctl_cmds cmd, uint32_t TimerInterval)
 		 * Open to discussion and consideration
 		 */
 		case PM_IOC_SLEEP:
-			//Get the current domain
-			/* Perform any checks neccessary for doing the next step. As per current code in idle.c, some
-			 * preliminary steps are performed in STANDBY state, and then state changes to SLEEP.
-			 */
-			/* Change the recommended state for the current domain to PM_SLEEP */
+			//Preset timer countdown value, and update next recommended state to sleep
             if (TimerInterval > 0) {
                 g_timer_wakeup.use_timer = 1;
                 g_timer_wakeup.timer_interval = TimerInterval;
             }
 
             pdom->recommended = PM_SLEEP;
-			/* up_idlepm() -> The code in this function may be needed to be modified a bit so that the opening
-			 * condition which invokes a state change is met (oldstate!=newstate)
-			 */
+			/* Invoke up_idlepm() from app thread, but the design of the loop structure is yet to be revised? */
+			// up_idlepm();
 			break;
 
+			// Might have to consider for dual core scenario in the future, leave it as it is first
 			/* If another application running parallely on another core also requests sleep, then the IOCTL
                          * request will be processed for that particular core.
                          * If an application requests sleep and then gets switched out, either the sleep request is
@@ -149,6 +139,7 @@ void pm_ioctl(enum pm_ioctl_cmds cmd, uint32_t TimerInterval)
                          */
 		default:
 			dbg("Invalid PM IOCTLL command\n");
+			break;
 	}
 	irqrestore(flags);
 }
