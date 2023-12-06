@@ -97,7 +97,7 @@ void pm_ioctl(enum pm_ioctl_cmds cmd, uint32_t TimerInterval)
 	flags = irqsave();
 	switch(cmd) {
 		case PM_IOC_NOCMD:
-			dbg("Nothing to do\n");
+			pmdbg("Nothing to do\n");
 			break;
 		case PM_IOC_STAY:
 			//Lock the current state due to some ongoing activity
@@ -138,7 +138,7 @@ void pm_ioctl(enum pm_ioctl_cmds cmd, uint32_t TimerInterval)
                          * discarded. This means that there should not be multiple sleep requests pending in line.
                          */
 		default:
-			dbg("Invalid PM IOCTLL command\n");
+			pmdbg("Invalid PM IOCTLL command\n");
 			break;
 	}
 	irqrestore(flags);

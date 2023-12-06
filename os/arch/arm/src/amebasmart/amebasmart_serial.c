@@ -597,7 +597,7 @@ static int rtl8730e_log_uart_irq(void *Data)
 {
 	/* Report serial activity to the power management logic */
 #if defined(CONFIG_PM) && CONFIG_RTL8730E_PM_SERIAL_ACTIVITY > 0
-	pm_activity(PM_IDLE_DOMAIN, CONFIG_RTL8730E_PM_SERIAL_ACTIVITY);
+	// pm_activity(PM_IDLE_DOMAIN, CONFIG_RTL8730E_PM_SERIAL_ACTIVITY);
 #endif
 
 	uart_recvchars(&CONSOLE_DEV);

@@ -56,13 +56,14 @@
 
 #include <tinyara/config.h>
 #include <stdio.h>
-
+#include <stdlib.h>
+#include <string.h>
 #include <tinyara/pm/pm.h>
 
 /****************************************************************************
  * hello_main
  ****************************************************************************/
-
+bool counter_c = 0;
 #ifdef CONFIG_BUILD_KERNEL
 int main(int argc, FAR char *argv[])
 #else
@@ -75,23 +76,51 @@ int hello_main(int argc, char *argv[])
 	 */
 	// pm_ioctl(PM_IOC_STAY);
 
-	// {
-		//The work happens
-	// }
-
-	/* The work is done, now relax the stay on the current state of the domain */
-	pm_ioctl(PM_IOC_RELAX, 0);
-
-	// {
-		//App does some other non-blocking work
-	// }
-
+	/* Done all required step for bootup, system is stabilized, invoke relax to relax the stay from os_start.c */
+	if (!counter_c) {
+		pm_ioctl(PM_IOC_RELAX, 0);
+		counter_c = 1;
+	}
+	else {
+		switch (atoi(argv[1])) {
+			/* This piece of code should be done when inputting hello to tash command */
+			case 0:
+				printf("case 0\n");
+				pm_ioctl(PM_IOC_STAY, 0);
+				// This delay is to simulate some activity task running
+				/* This value doesn't correlate to 30s, it was set higher due to
+				CONFIG_BOARD_LOOPSPERMSEC in defconfig might be inaccurate, it might need to be revised
+				*/
+				up_mdelay(30000);
+				// Relax current state and go to sleep
+				pm_ioctl(PM_IOC_RELAX, 0);
+				pm_ioctl(PM_IOC_SLEEP, 5);
+				break;
+			case 1:
+				// Direct go to sleep
+				printf("case 1\n");
+				pm_ioctl(PM_IOC_SLEEP, 5);
+				break;
+			case 2:
+				printf("case 2\n");
+				pm_ioctl(PM_IOC_STAY, 0);
+				// This delay is to simulate some activity task running
+				up_mdelay(30000);
+				// Go to sleep directly without relaxing state
+				pm_ioctl(PM_IOC_SLEEP, 5);
+				break;
+			// Add more case to simulate real application scenario...
+			// case 3:.....
+			default:
+				printf("Input out of bounds!\n");
+				break;
+		}
+	}
 	/* Now, maybe the app has completed the major part of its work and is suggesting that the board
 	 * can go to sleep, given that there is nothing else going on.
 	 * This does not mean that the board will immediately be put to sleep. If there is a stay applied
 	 * by another application, then this SLEEP request will be DISCARDED(can be discussed if otherwise).
 	 */
-	// pm_ioctl(PM_IOC_SLEEP);
 
 	/* However, as discussed before, we may need the application to request/suggest the core to go to
 	 * sleep for a specified amount of time. Alternatively, the application may want the core to be woken up at
