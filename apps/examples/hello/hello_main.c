@@ -58,7 +58,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 #include <tinyara/pm/pm.h>
+
+#define PM_LOCK_PATH					"/proc/power/domains/0/pm_lock"
+#define PM_UNLOCK_PATH					"/proc/power/domains/0/pm_unlock"
+#define PM_SLEEP_PATH					"/proc/power/domains/0/enter_sleep"
 
 /****************************************************************************
  * hello_main
@@ -71,43 +76,88 @@ int hello_main(int argc, char *argv[])
 #endif
 {
 	printf("Hello, World!!\n");
-	/* Call stay IOCTL to keep PM domain in current state because maybe we know we need to do some
-	 * non-frequent work with time gaps and dont want the board to sleep in between
-	 */
-	// pm_ioctl(PM_IOC_STAY);
+
+	int fd_lock, fd_unlock, fd_sleep;
+	int ret;
 
 	/* Done all required step for bootup, system is stabilized, invoke relax to relax the stay from os_start.c */
 	if (!counter_c) {
-		pm_ioctl(PM_IOC_RELAX, 0);
+		fd_unlock = open(PM_UNLOCK_PATH, O_WRONLY);
+		//pm_ioctl(PM_IOC_RELAX, 0);
+		ret = write(fd_unlock, PM_NORMAL, 1);
+		close(fd_unlock);
 		counter_c = 1;
 	}
 	else {
 		switch (atoi(argv[1])) {
 			/* This piece of code should be done when inputting hello to tash command */
 			case 0:
+			/* Call stay IOCTL to keep PM domain in current state because maybe we know we need to do some
+			 * non-frequent work with time gaps and dont want the board to sleep in between
+			 */
 				printf("case 0\n");
-				pm_ioctl(PM_IOC_STAY, 0);
+				fd_lock = open(PM_LOCK_PATH, O_WRONLY); //The domain for PM is included in the file opening path itself
+				//pm_ioctl(PM_IOC_STAY, 0);
+				ret = write(fd_lock, PM_NORMAL, 1);
+				close(fd_lock);
+
 				// This delay is to simulate some activity task running
 				/* This value doesn't correlate to 30s, it was set higher due to
 				CONFIG_BOARD_LOOPSPERMSEC in defconfig might be inaccurate, it might need to be revised
 				*/
-				up_mdelay(30000);
+				//up_mdelay(30000); //Not supported in loadable
+
 				// Relax current state and go to sleep
-				pm_ioctl(PM_IOC_RELAX, 0);
-				pm_ioctl(PM_IOC_SLEEP, 5);
+				fd_unlock = open(PM_UNLOCK_PATH, O_WRONLY);
+				//pm_ioctl(PM_IOC_RELAX, 0);
+				ret = write(fd_unlock, PM_NORMAL, 1);
+				close(fd_unlock);
+
+				fd_sleep = open(PM_SLEEP_PATH, O_WRONLY);
+				//pm_ioctl(PM_IOC_SLEEP, 5);
+
+				/* Need to find a way to pass time duration as a parameter for sleeping via the syscall itself.
+				 * This can be done by passing the third parameter as the time duration in seconds.
+				 * Function "enter_sleep_write" in "os/pm/pm_procfs.c" already knows that the request is a sleep
+				 * request for which particular domain, hence the third parameter can piggy-back the sleep duration.
+				 */
+				//TODO: enter_sleep_write() needs to be implemented for AI_Dual like in "os/arch/arm/src/stm32l4/stm32l4_idle.c"
+				ret = write(fd_sleep, PM_NORMAL, 1);
+				close(fd_sleep);
 				break;
 			case 1:
+			/* Now, maybe the app has completed the major part of its work and is suggesting that the board
+			 * can go to sleep, given that there is nothing else going on.
+			 * This does not mean that the board will immediately be put to sleep. If there is a stay applied
+			 * by another application, then this SLEEP request will be DISCARDED(can be discussed if otherwise).
+			 */
+			/* However, as discussed before, we may need the application to request/suggest the core to go to
+			 * sleep for a specified amount of time. Alternatively, the application may want the core to be woken up at
+			 * a specific timestamp when it expects to be able to do resume some work. In this case, the application
+			 * should be able to request sleep with a timed interrupt.
+			 */
 				// Direct go to sleep
 				printf("case 1\n");
-				pm_ioctl(PM_IOC_SLEEP, 5);
+				fd_sleep = open(PM_SLEEP_PATH, O_WRONLY);
+				//pm_ioctl(PM_IOC_SLEEP, 5);
+				ret = write(fd_sleep, PM_NORMAL, 1);
+				close(fd_sleep);
 				break;
 			case 2:
 				printf("case 2\n");
-				pm_ioctl(PM_IOC_STAY, 0);
+				fd_lock = open(PM_LOCK_PATH, O_WRONLY);
+				//pm_ioctl(PM_IOC_STAY, 0);
+				ret = write(fd_lock, PM_NORMAL, 1);
+				close(fd_lock);
+
 				// This delay is to simulate some activity task running
-				up_mdelay(30000);
+				//up_mdelay(30000);
+
 				// Go to sleep directly without relaxing state
-				pm_ioctl(PM_IOC_SLEEP, 5);
+				fd_sleep = open(PM_SLEEP_PATH, O_WRONLY);
+				//pm_ioctl(PM_IOC_SLEEP, 5);
+				ret = write(fd_sleep, PM_NORMAL, 1);
+				close(fd_sleep);
 				break;
 			// Add more case to simulate real application scenario...
 			// case 3:.....
@@ -116,19 +166,6 @@ int hello_main(int argc, char *argv[])
 				break;
 		}
 	}
-	/* Now, maybe the app has completed the major part of its work and is suggesting that the board
-	 * can go to sleep, given that there is nothing else going on.
-	 * This does not mean that the board will immediately be put to sleep. If there is a stay applied
-	 * by another application, then this SLEEP request will be DISCARDED(can be discussed if otherwise).
-	 */
-
-	/* However, as discussed before, we may need the application to request/suggest the core to go to
-	 * sleep for a specified amount of time. Alternatively, the application may want the core to be woken up at
-	 * a specific timestamp when it expects to be able to do resume some work. In this case, the application
-	 * should be able to request sleep with a timed interrupt.
-	 */
-	//pm_ioctl(PM_IOC_TIMEDSLEEP, <second argument for timed interval>, \
-			<third argument for current time so that timer interrupt can be adjusted for elapsed time>)
 
 	/* NOTE: At the beginning of this process, it seems that PM_IOC_RELAX and PM_IOC_SLEEP are similar in the
 	 * way that both will result in the drop of PM state if feasible, and otherwise not make any state changes.
