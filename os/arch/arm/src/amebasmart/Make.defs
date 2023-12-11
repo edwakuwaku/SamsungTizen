@@ -218,10 +218,11 @@ CFLAGS += -I$(TOPDIR)/board/$(CONFIG_ARCH_BOARD)/src/component/os/tizenrt
 
 CHIP_ASRCS  =
 CHIP_CSRCS = amebasmart_boot.c
+ifeq ($(CONFIG_PM),y)
+CHIP_CSRCS += amebasmart_pmhelpers.c
+endif
 CHIP_CSRCS += amebasmart_idle.c
 CHIP_CSRCS += amebasmart_irq.c
-CHIP_CSRCS += amebasmart_clockconfig.c
-CHIP_CSRCS += amebasmart_critical.c
 CHIP_CSRCS += amebasmart_cpuboot.c
 CHIP_CSRCS += amebasmart_memorymap.c
 CHIP_CSRCS += amebasmart_serial.c

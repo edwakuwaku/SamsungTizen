@@ -597,7 +597,7 @@ static int rtl8730e_log_uart_irq(void *Data)
 {
 	/* Report serial activity to the power management logic */
 #if defined(CONFIG_PM) && CONFIG_RTL8730E_PM_SERIAL_ACTIVITY > 0
-	pm_activity(PM_IDLE_DOMAIN, CONFIG_RTL8730E_PM_SERIAL_ACTIVITY);
+	// pm_activity(PM_IDLE_DOMAIN, CONFIG_RTL8730E_PM_SERIAL_ACTIVITY);
 #endif
 
 	uart_recvchars(&CONSOLE_DEV);
@@ -1320,7 +1320,6 @@ static int amebasmart_serial_pmprepare(FAR struct pm_callback_s *cb, int domain,
 		case PM_NORMAL:
 		case PM_IDLE:
 		case PM_STANDBY:
-			printf("\n[%s] - %d, state = %d\n",__FUNCTION__,__LINE__, pmstate);
 			break;
 
 		case PM_SLEEP:
@@ -1329,7 +1328,6 @@ static int amebasmart_serial_pmprepare(FAR struct pm_callback_s *cb, int domain,
 			 * UART2_DEV: hp uart2
 			 * UART3_DEV: hp uart3_bt
 			 * LOGUART_DEV: KM0 log uart */
-			printf("\n[%s] - %d, state = %d\n",__FUNCTION__,__LINE__, pmstate);
 #ifdef CONFIG_RTL8730E_UART0
 			if ((g_uart0priv.txint_enable) && (!serial_writable(sdrv[0]))) {		/* If Tx init enable and FIFO not empty */
 					return ERROR;

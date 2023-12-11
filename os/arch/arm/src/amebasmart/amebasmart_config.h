@@ -89,6 +89,7 @@
 #  undef  AMEBASMART_HAVE_UART_CONSOLE
 #endif
 
+typedef long BaseType_t;
 extern void tizenrt_pre_sleep_processing(uint32_t *expected_idle_time);
 extern void tizenrt_post_sleep_processing(uint32_t *expected_idle_time);
 

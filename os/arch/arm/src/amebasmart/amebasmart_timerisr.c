@@ -84,8 +84,6 @@ int up_timerisr(int irq, uint32_t *regs)
 
     last_cycle = arm_arch_timer_compare();
 
-// #if( configUSE_TICKLESS_IDLE == 1 )
-// Replace with CONFIG_PM first, this is to compensate tick to virtual timer
 #ifdef CONFIG_PM
 	  if (arm_arch_timer_count() < last_cycle) {
 		  return;
@@ -114,13 +112,8 @@ int up_timerisr(int irq, uint32_t *regs)
 
 void up_timer_initialize(void)
 {
-  // uint32_t regval;
-  // uint32_t cr;
-
   /* Disable GPT interrupts at the GIC */
   up_disable_irq(ARM_ARCH_TIMER_IRQ);
-  /* Configure as a (rising) edge-triggered interrupt */
-  // arm_gic_irq_trigger(ARM_ARCH_TIMER_IRQ, true);
 
   /* Attach the timer interrupt vector */
   irq_attach(ARM_ARCH_TIMER_IRQ, (xcpt_t)up_timerisr, NULL);
