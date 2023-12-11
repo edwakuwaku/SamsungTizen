@@ -116,7 +116,6 @@ static void pm_timer(int domain)
 	if (pdom->state < PM_SLEEP && !pdom->stay[pdom->state] && pmtick[pdom->state]) {
 		int delay = pmtick[pdom->state] + pdom->btime - clock_systimer();
 		int left  = wd_gettime(pdom->wdog);
-		lldbg("\n[%s] - %d, delay = %d, left = %d, pdom->btime = %8lld, pdom->stime = %8lld, clock_systimer = %8lld\n",__FUNCTION__,__LINE__, delay, left, pdom->btime, pdom->stime, clock_systimer());
 		if (delay <= 0) {
 			delay = 1;
 		}
