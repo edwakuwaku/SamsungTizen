@@ -124,8 +124,13 @@ arm-none-eabi-strip $BINDIR/target_pure_img2.axf
 
 #arm-none-eabi-objcopy -Obinary $BINDIR/target_pure_img2.axf $BINDIR/target_img2.bin
 
-arm-none-eabi-objcopy -j .text -j .ARM.extab -j .ARM.exidx -j .ctors -j .dtors -j .preinit_array -j .init_array -j .fini_array -j .data -j .mmu_tbl \
--Obinary $BINDIR/target_pure_img2.axf $BINDIR/ram_2.bin
+#arm-none-eabi-objcopy -j .text -j .ARM.extab -j .ARM.exidx -j .ctors -j .dtors -j .preinit_array -j .init_array -j .fini_array -j .data -j .mmu_tbl \
+#-Obinary $BINDIR/target_pure_img2.axf $BINDIR/ram_2.bin
+
+
+#let .ARM.extab/.ARM.exidx +- 1GB can jump to *(.text*)
+arm-none-eabi-objcopy -j .code -j .data -Obinary $BINDIR/target_pure_img2.axf $BINDIR/ram_2.bin; \
+arm-none-eabi-objcopy -j .xip_image2.text -j .ARM.extab -j .ARM.exidx -j .ctors -j .dtors -j .preinit_array -j .init_array -j .fini_array -Obinary $BINDIR/target_pure_img2.axf $BINDIR/xip_image2.bin; \
 
 #arm-none-eabi-objcopy -j .xip_image2.text \
 #-Obinary $BINDIR/target_pure_img2.axf $BINDIR/xip_image2.bin
@@ -159,7 +164,12 @@ echo "========== Image manipulating end =========="
 
 cp $GNUUTL/bl1_sram.bin $BINDIR/bl1_sram.bin
 cp $GNUUTL/bl1.bin $BINDIR/bl1.bin
-cp $GNUUTL/bl2_bl32.bin $BINDIR/bl2_bl32.bin
+# cp $GNUUTL/bl2.bin $BINDIR/bl2.bin
+# cp $GNUUTL/bl32.bin $BINDIR/bl32.bin
+$GNUUTL/pad_new.sh $BINDIR/xip_image2.bin 32
+# cp $GNUUTL/bl2_bl32.bin $BINDIR/bl2_bl32.bin
+# cp $GNUUTL/xip_image2.bin $BINDIR/xip_image2.bin
+
 #cat $BINDIR/bl2_bl32.bin $BINDIR/ca32_image2_all.bin > $BINDIR/fip.bin
 $GNUUTL/fiptool update $BINDIR/fip.bin --tb-fw $GNUUTL/bl2.bin --tos-fw $GNUUTL/bl32.bin --nt-fw $BINDIR/ca32_image2_all.bin
 
@@ -167,10 +177,12 @@ if [ ! -f $BINDIR/fip.bin ] ; then
 	echo "No fip.bin"
 	exit 1
 fi
+
+$GNUUTL/prepend_header.sh $BINDIR/xip_image2.bin  __flash_text_start__  $BINDIR/target_img2.map
 $GNUUTL/prepend_header.sh $BINDIR/bl1_sram.bin  __ca32_bl1_sram_start__  $BINDIR/target_img2.map
 $GNUUTL/prepend_header.sh $BINDIR/bl1.bin  __ca32_bl1_dram_start__  $BINDIR/target_img2.map
 $GNUUTL/prepend_header.sh $BINDIR/fip.bin  __ca32_fip_dram_start__  $BINDIR/target_img2.map
-cat $BINDIR/bl1_sram_prepend.bin $BINDIR/bl1_prepend.bin $BINDIR/fip_prepend.bin > $BINDIR/ap_image_all.bin
+cat $BINDIR/xip_image2_prepend.bin $BINDIR/bl1_sram_prepend.bin $BINDIR/bl1_prepend.bin $BINDIR/fip_prepend.bin > $BINDIR/ap_image_all.bin
 
 $GNUUTL/imagetool_hp.sh $BINDIR/ap_image_all.bin
 
@@ -268,6 +280,23 @@ function copy_km0_km4_image()
 	cp $GNUUTL/km0_km4_app.bin $BINDIR/km0_km4_app.bin
 }
 
+function remove_large_binary_temp()
+{
+	if [ ! -f ${CONFIG} ];then
+		echo "No .config file"
+		exit 1
+	fi
+
+	source ${CONFIG}
+
+	echo "========== Remove large size binary, temporary fix=========="
+	if [ ! -f $BINDIR/tinyara.axf.bin ];then
+		echo "No tinyara.axf.bin"
+		exit 1
+	fi
+	rm $BINDIR/tinyara.axf.bin
+}
+
 copy_bootloader;
 copy_flashloader;
 copy_km0_km4_image;
@@ -276,3 +305,4 @@ copy_km0_km4_image;
  else
 	 concatenate_binary_without_signing;
  fi
+remove_large_binary_temp;

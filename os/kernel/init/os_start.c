@@ -105,6 +105,8 @@
 #include <tinyara/log_dump/log_dump_internal.h>
 #endif
 
+#define SECTION(_name) __attribute__((__section__(_name)))
+#define SRAMDRAM_ONLY_TEXT_SECTION			SECTION(".sramdram.only.text")
 extern const uint32_t g_idle_topstack;
 
 /****************************************************************************
@@ -288,7 +290,7 @@ static FAR char *g_idleargv[2];
  *   Does not return.
  *
  ****************************************************************************/
-
+SRAMDRAM_ONLY_TEXT_SECTION
 void os_start(void)
 {
 	int i;

@@ -406,7 +406,7 @@ void board_initialize(void)
 #endif
 
 #ifdef CONFIG_FTL_ENABLED
-	app_ftl_init();
+	//app_ftl_init();
 #endif
 
 #ifdef CONFIG_AMEBASMART_WIFI

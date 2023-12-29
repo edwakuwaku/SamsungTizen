@@ -130,7 +130,7 @@ int rtw_printf_info(const char *format,...)
 	return ret;
 }
 
-static IRQ_FUN TizenUserIrqFunTable[100];
+static IRQ_FUN TizenUserIrqFunTable[96];
 static int wrapper_IrqFun(int irq, FAR void *context, FAR void *arg)
 {
 	if (irq < AMEBASMART_IRQ_FIRST) {

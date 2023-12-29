@@ -76,7 +76,7 @@
  *   Configure the FPU.  Enables access to CP10 and CP11
  *
  ****************************************************************************/
-
+	.section	.vectors, "ax"
 	.globl	arm_fpuconfig
 	.type	arm_fpuconfig, %function
 
