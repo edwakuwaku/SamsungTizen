@@ -133,6 +133,7 @@ SECTIONS
 	{
 		__flash_text_start__ = .;
 		_stext_flash = ABSOLUTE(.);
+		_stext_ram = ABSOLUTE(.);
 		*(.text)		/* .text sections (code) */
 		*(.text*)		/* .text* sections (code) */
 		*(.rodata)		/* .rodata sections (constants, strings, etc.) */
@@ -165,7 +166,6 @@ SECTIONS
 		. = ALIGN(4096);
 		__dram_text_start__ = .;
 		. = ALIGN(0x4);
-		_stext_ram = ABSOLUTE(.);
 
 		*(.vectors)
 		*(.start)

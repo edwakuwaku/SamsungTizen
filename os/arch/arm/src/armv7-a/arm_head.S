@@ -525,7 +525,6 @@ __start:
 #endif
 
 	/* Then write the configured control register */
-	/* Is it correct to write back SCTLR at this stage? It should be written back after memory mapping has been completed */
 	@ mcr		CP15_SCTLR(r0)			/* Write control reg */
 	.rept		12				/* Cortex A8 wants lots of NOPs here */
 	nop
@@ -682,7 +681,6 @@ __start:
 	orr		r0, r0, #(SCTLR_M | SCTLR_C)
 	orr		r0, r0, #(SCTLR_I)
 	mcr		CP15_SCTLR(r0)
-	mov		r0, #0
 	/* Finally branch to the OS entry point */
 
 	mov		lr, #0				/* LR = return address (none) */
