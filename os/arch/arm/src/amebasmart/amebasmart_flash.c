@@ -219,7 +219,7 @@ ssize_t amebasmart_flash_read(size_t addr, void *buf, size_t length)
 	} else {
 		//! if addr is not 4 bytes aligned
 		uint32_t offset = addr & 0x3;
-		int8_t *aligned_read_buf = (int8_t *)kmm_malloc(length + offset);
+		int8_t *aligned_read_buf = (int8_t *)kmm_zalloc(length + offset);
 		if (aligned_read_buf == NULL) {
 			ret = -EPERM;
 		} else {

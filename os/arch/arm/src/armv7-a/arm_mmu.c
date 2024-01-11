@@ -50,6 +50,7 @@
 #include <tinyara/mm/mm.h>
 #endif
 
+#include "section_config.h"
 /****************************************************************************
  * Private Data
  ****************************************************************************/
@@ -104,6 +105,7 @@ static void mmu_set_flags(uint32_t *val, bool ro, bool exec, uint8_t isL1)
  ****************************************************************************/
 
 #ifndef CONFIG_ARCH_ROMPGTABLE
+SRAMDRAM_ONLY_TEXT_SECTION
 void mmu_l1_setentry(uint32_t paddr, uint32_t vaddr, uint32_t mmuflags)
 {
   uint32_t *l1table = mmu_l1_pgtable();
@@ -220,6 +222,7 @@ void mmu_l2_setentry(uint32_t l2vaddr, uint32_t paddr, uint32_t vaddr,
  ****************************************************************************/
 
 #ifndef CONFIG_ARCH_ROMPGTABLE
+SRAMDRAM_ONLY_TEXT_SECTION
 void mmu_l1_map_region(const struct section_mapping_s *mapping)
 {
   uint32_t paddr    = mapping->physbase;
@@ -252,6 +255,7 @@ void mmu_l1_map_region(const struct section_mapping_s *mapping)
  ****************************************************************************/
 
 #ifndef CONFIG_ARCH_ROMPGTABLE
+SRAMDRAM_ONLY_TEXT_SECTION
 void mmu_l1_map_regions(const struct section_mapping_s *mappings,
                         size_t count)
 {
@@ -277,6 +281,7 @@ void mmu_l1_map_regions(const struct section_mapping_s *mappings,
  ****************************************************************************/
 
 #ifndef CONFIG_ARCH_ROMPGTABLE
+SRAMDRAM_ONLY_TEXT_SECTION
 void mmu_invalidate_region(uint32_t vstart, size_t size)
 {
   uint32_t vaddr = vstart & 0xfffff000;
