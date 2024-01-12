@@ -597,19 +597,21 @@ void hci_platform_controller_reset(void)
 
 bool rtk_bt_pre_enable(void)
 {
-//	uint32_t lock_status;
-//
-//	lock_status = pmu_get_wakelock_status();
-//	if (!(lock_status & ((0x01) << PMU_BT_DEVICE))) {
-//		printf("Acuqire BT PMU LOCK \r\n");
-//		pmu_acquire_wakelock(PMU_BT_DEVICE);
-//	}
-//
+#ifndef CONFIG_PLATFORM_TIZENRT_OS
+	uint32_t lock_status;
+
+	lock_status = pmu_get_wakelock_status();
+	if (!(lock_status & ((0x01) << PMU_BT_DEVICE))) {
+		printf("Acuqire BT PMU LOCK \r\n");
+		pmu_acquire_wakelock(PMU_BT_DEVICE);
+	}
+#endif
 	return true;
 }
 
 bool rtk_bt_post_enable(void)
 {
+#ifndef CONFIG_PLATFORM_TIZENRT_OS
 	uint32_t lock_status;
 
 	lock_status = pmu_get_wakelock_status();
@@ -617,7 +619,7 @@ bool rtk_bt_post_enable(void)
 		printf("Release BT PMU LOCK \r\n");
 		pmu_release_wakelock(PMU_BT_DEVICE);
 	}
-
+#endif
 	return true;
 }
 

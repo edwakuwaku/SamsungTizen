@@ -33,10 +33,12 @@ void FLASH_UserMode_Exit(void);
 SRAMDRAM_ONLY_TEXT_SECTION
 void FLASH_Write_Lock(void)
 {
+#ifndef CONFIG_PLATFORM_TIZENRT_OS
 #ifdef ARM_CORE_CA32
 	if (SYSCFG_CUT_VERSION_A == SYSCFG_RLVersion()) {
 		arm_gic_freq_switch();
 	}
+#endif
 #endif
 
 	/* disable irq */
@@ -55,10 +57,12 @@ void FLASH_Write_Unlock(void)
 	/* restore irq */
 	restore_flags(PrevIrqStatus);
 
+#ifndef CONFIG_PLATFORM_TIZENRT_OS
 #ifdef ARM_CORE_CA32
 	if (SYSCFG_CUT_VERSION_A == SYSCFG_RLVersion()) {
 		arm_gic_freq_restore();
 	}
+#endif
 #endif
 }
 
