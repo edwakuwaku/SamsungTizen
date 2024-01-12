@@ -297,13 +297,18 @@ enum pm_state_e {
 	PM_COUNT,
 };
 
+struct timer_s {
+	bool use_timer;
+	uint32_t timer_interval;
+};
+
 /* This structure contain pointers callback functions in the driver.  These
  * callback functions can be used to provide power management information
  * to the driver.
  */
 
 struct pm_callback_s {
-	struct dq_entry_s entry;   /* Supports a doubly linked list */
+	struct dq_entry_s entry;	/* Supports a doubly linked list */
 
 	char name[MAX_PM_CALLBACK_NAME];	/* Name of driver which register callback */
 
