@@ -34,72 +34,59 @@
  * Pre-processor Definitions
  ****************************************************************************/
 #define PM_LOCK_PATH						"/proc/power/domains/0/pm_lock"
-#define PM_UNLOCK_PATH					"/proc/power/domains/0/pm_unlock"
-#define PM_SLEEP_PATH						"/proc/power/domains/0/enter_sleep"
+#define PM_UNLOCK_PATH						"/proc/power/domains/0/pm_unlock"
+#define PM_TUNE_PATH						"/proc/power/domains/0/pm_tunefreq"
 
-#define POWER_THEAD_SIZE				2048
-#define POWER_THEAD_PRIORITY		255
-#define PM_DAEMON_INTERVAL			15
-#define PM_LOCK(x)								power_set_int(PM_LOCK_PATH, x)
-#define PM_UNLOCK(x)							power_set_int(PM_UNLOCK_PATH, x)
+#define POWER_THREAD_SIZE					2048
+#define POWER_THREAD_PRIORITY				255
+// #define PM_DAEMON_INTERVAL					15
+/* App layer shouldn't have any knowledge about PM driver*/
+#define PM_LOCK()							power_write_buf(PM_LOCK_PATH, 0)
+/* Input value : 0~? */
+#define PM_UNLOCK(time_int)					power_write_buf(PM_UNLOCK_PATH, time_int)
+/* Input value : 0~3 */
+#define PM_TUNE(level)						power_write_buf(PM_TUNE_PATH, level)
 
 /****************************************************************************
  * Private Functions
  ****************************************************************************/
-static int power_write_buf(char *file, char *buf)
+static int power_write_buf(char *file, size_t val)
 {
 	int fd;
 	int r;
 	int ret = 0;
 
-	fd = open(file, O_WRONLY);
-	if (fd == -1)
+	fd = open(file, O_RDWR);
+	if (fd == -1) {
+		printf("Failed to open %s\n", file);
 		return -ENOENT;
-
-	r = write(fd, buf, strlen(buf));
-	if (r < 0)
+	}
+	/* Second argument is not needed for RTK case */
+	r = write(fd, " ", val);
+	if (r < 0) {
+		printf("Failed to write\n");
 		ret = -EIO;
-
+	}
 	close(fd);
-
-	return ret;
-}
-
-int power_set_int(char *fname, int val)
-{
-	char buf[8];
-	int ret = 0;
-
-	snprintf(buf, sizeof(buf), "%d", val);
-
-	if (power_write_buf(fname, buf) != 0)
-		ret = -EIO;
 
 	return ret;
 }
 
 static pthread_addr_t power_daemon()
 {
-	char *state = "sleep";
-
 	/* Release PM lock after bootup*/
-	PM_UNLOCK(PM_NORMAL);
+	PM_UNLOCK(5);
 	printf("Boot completed ..Unlocked PM!!\n");
 
-	do {
-		/* TODO: Apply logic to detect activity timeout */
+	/* Apply PM lock to prevent sleep*/
+	PM_LOCK();
+	/* Change frequency to 300MHz */
+	PM_TUNE(3);
+	/* Change frequency back to 1.2GHz */
+	PM_TUNE(0);
 
-		/* Apply PM lock to prevent sleep*/
-		PM_LOCK(PM_STANDBY);
-		/* We choose 15s duration to trigger sleep */
-		sleep(PM_DAEMON_INTERVAL);
-
-		/* Release PM lock for sleep */
-		PM_UNLOCK(PM_STANDBY);
-
-		/* Trigger sleep */
-		power_write_buf(PM_SLEEP_PATH, state);
-	} while (1);
+	/* Release PM lock, update timer interrupt interval */
+	PM_UNLOCK(10);
 
 	return NULL;
 }
@@ -123,13 +110,13 @@ static pthread_t create_power_thread(void)
 		return -ret;
 	}
 
-	ret = pthread_attr_setstacksize(&attr, POWER_THEAD_SIZE);
+	ret = pthread_attr_setstacksize(&attr, POWER_THREAD_SIZE);
 	if (ret != 0) {
 		fprintf(stderr, "failed to set stack size(%d)\n", ret);
 		return -ret;
 	}
 
-	sparam.sched_priority = POWER_THEAD_PRIORITY;
+	sparam.sched_priority = POWER_THREAD_PRIORITY;
 	ret = pthread_attr_setschedparam(&attr, &sparam);
 	if (ret != 0) {
 		fprintf(stderr, "failed to set sched param(%d)\n", ret);

@@ -56,11 +56,23 @@
 
 #include <tinyara/config.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <termios.h>
+#include <unistd.h>
+#include <sched.h>
+#ifndef CONFIG_DISABLE_POLL
+#include <poll.h>
+#endif
+#include <sys/types.h>
+#include <sys/stat.h>
 
 /****************************************************************************
  * hello_main
  ****************************************************************************/
-
+int count = 0;
+#define T_MAX_DATA_SIZE  2048
 #ifdef CONFIG_BUILD_KERNEL
 int main(int argc, FAR char *argv[])
 #else
@@ -68,5 +80,56 @@ int hello_main(int argc, char *argv[])
 #endif
 {
 	printf("Hello, World!!\n");
+	if (count > 0) {
+		int ret = -1;
+		unsigned char *pBuf = (unsigned char *)malloc( T_MAX_DATA_SIZE + 1 );
+		int fd = open("/dev/ttyS2", O_RDWR | O_NOCTTY, 0666);
+		if (fd < 0) {
+			printf("ERROR: Failed to open UART port\n");
+			return -1;
+		}
+		struct termios ttyio;
+		memset(&ttyio, 0, sizeof(ttyio));
+
+		tcgetattr(fd, &ttyio);
+
+		/* set baudrate */
+		cfsetispeed(&ttyio, 115200);
+		cfsetospeed(&ttyio, 115200);
+
+		ttyio.c_cflag &= ~CSIZE;
+		ttyio.c_cflag |= CS8;
+		ttyio.c_cflag &= ~CSTOPB;
+		ttyio.c_cflag &= ~(PARENB | PARODD);
+
+		tcflush(fd, TCIOFLUSH);
+		tcsetattr(fd, TCSANOW, &ttyio);
+
+	    printf( "%s(%d) : start read from uart...\n", __func__, __LINE__ );
+
+	    while(1)
+	    {
+			/* TX same data for RX */
+	        memset( pBuf, 0, T_MAX_DATA_SIZE );
+	        ret = read( fd, pBuf, T_MAX_DATA_SIZE );
+
+	        if( ret <= 0 )
+	        {
+	            break;
+	        }
+
+	        ret = write( fd, pBuf, ret );
+	        if( ret <= 0 )
+	        {
+	            break;
+	        }
+	    }
+
+	    if( pBuf != NULL )
+	    {
+	        free( pBuf );
+	    }
+	}
+	count++;
 	return 0;
 }

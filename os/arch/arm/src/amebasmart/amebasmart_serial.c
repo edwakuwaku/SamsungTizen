@@ -1200,7 +1200,7 @@ static uint32_t rtk_uart_suspend(uint32_t expected_idle_time, void *param)
 	(void)param;
 #ifdef CONFIG_RTL8730E_UART1
 	if (sdrv[uart_index_get(g_uart1priv.tx)] != NULL) {
-		serial_change_clcksrc(sdrv[uart_index_get(g_uart1priv.tx)], 0);
+		serial_change_clcksrc(sdrv[uart_index_get(g_uart1priv.tx)], g_uart1priv.baud, 0);
 	}
 #endif
 	return 1;
@@ -1212,7 +1212,7 @@ static uint32_t rtk_uart_resume(uint32_t expected_idle_time, void *param)
 	(void)param;
 #ifdef CONFIG_RTL8730E_UART1
 	if (sdrv[uart_index_get(g_uart1priv.tx)] != NULL) {
-		serial_change_clcksrc(sdrv[uart_index_get(g_uart1priv.tx)], 1);
+		serial_change_clcksrc(sdrv[uart_index_get(g_uart1priv.tx)], g_uart1priv.baud, 1);
 	}
 #endif
 	return 1;

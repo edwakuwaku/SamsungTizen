@@ -542,7 +542,7 @@ void serial_baud(serial_t *obj, int baudrate)
 	UART_SetBaud(puart_adapter->UARTx, baudrate);
 	UART_RxCmd(puart_adapter->UARTx, ENABLE);
 
-	if (baudrate <= 1152000) {
+	if (baudrate <= 115200) {
 		if (uart_config[obj->uart_idx].LOW_POWER_RX_ENABLE) {
 			UART_MonitorParaConfig(puart_adapter->UARTx, 100, ENABLE);
 			UART_RxMonitorCmd(puart_adapter->UARTx, ENABLE);
@@ -562,12 +562,18 @@ void serial_baud(serial_t *obj, int baudrate)
   * @retval none
   */
 
-void serial_change_clcksrc(serial_t *obj, bool high_low)
+void serial_change_clcksrc(serial_t *obj, int baudrate, bool high_low)
 {
 	PMBED_UART_ADAPTER puart_adapter = &(uart_adapter[obj->uart_idx]);
 
-	high_low == 1 ? RCC_PeriphClockSource_UART(puart_adapter->UARTx, UART_RX_CLK_XTAL_40M) : 
-					RCC_PeriphClockSource_UART(puart_adapter->UARTx, UART_RX_CLK_OSC_LP);
+	if (high_low) {
+		RCC_PeriphClockSource_UART(puart_adapter->UARTx, UART_RX_CLK_XTAL_40M);
+		UART_SetBaud(puart_adapter->UARTx, baudrate);
+	}
+	else {
+		RCC_PeriphClockSource_UART(puart_adapter->UARTx, UART_RX_CLK_OSC_LP);
+		UART_LPRxBaudSet(puart_adapter->UARTx, baudrate, 2000000);
+	}
 }
 #endif
 
