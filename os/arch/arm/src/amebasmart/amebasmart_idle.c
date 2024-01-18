@@ -99,6 +99,10 @@ static void up_idlepm(void)
 					arm_arch_timer_int_mask(1);
 					up_timer_disable();
 					flags = irqsave();
+					/* TODO: If there is an interrupt happening here, what do we expect to happen?
+					   If it is one of the wakeup sources, it will recognized but will not be serviced
+					   If it is not one of the wakeup sources, it will not be recognized at all
+					*/
 					if (tizenrt_ready_to_sleep()) {
 #ifdef CONFIG_SMP
 						/*PG flow */
@@ -172,13 +176,11 @@ EXIT:
 					goto EXIT2;
 #endif
 				}
-				/* Wakeup from sleep, change the state back to PM_NORMAL */
-				ret = pm_changestate(PM_IDLE_DOMAIN, PM_NORMAL);
-				if (ret < 0) {
-					/* TODO: If we are unable to reset the state back to PM_NORMAL then what to do? */
-					pmdbg("State change failed after core waking up, please check logic flow!");
-					oldstate = PM_NORMAL;
-				}
+				/* Note: Wakeup from sleep, change the state back to PM_NORMAL 
+				   At this point, we do not need to do anything, as the
+				   wakeup callback handler will invoke pm_activity()
+				*/
+				
 
 /* TODO: This exit is for secondary core
    After 2nd core entered hotplug mode, TizenRT should remove the idle task for 2nd core

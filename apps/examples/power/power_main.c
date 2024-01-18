@@ -86,7 +86,7 @@ static pthread_addr_t power_daemon()
 	PM_TUNE(0);
 
 	/* Release PM lock, update timer interrupt interval */
-	PM_UNLOCK(10);
+	PM_UNLOCK(0);
 
 	return NULL;
 }

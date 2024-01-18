@@ -21,7 +21,7 @@
 bool is_server_init = false;
 uint16_t server_profile_count = 0;
 trble_server_init_config server_init_parm;
-uint16_t rtw_ble_server_adv_interval = 352;
+uint16_t rtw_ble_server_adv_interval = 32;
 trble_adv_type_e rtw_ble_server_adv_type = 0;
 uint8_t rtw_ble_server_direct_addr_type;
 static uint8_t bd_addr[TRBLE_BD_ADDR_MAX_LEN];

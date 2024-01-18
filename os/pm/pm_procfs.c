@@ -486,6 +486,7 @@ static size_t power_lock_write(FAR struct file *filep, FAR const char *buffer, s
 	2a. Else, we can consider to lock/unlock for all state other than PM_SLEEP, ie. fetch state: pm_querystate(PM_IDLE_DOMAIN)
 	2b. Need to verify if the transition is going to happen, but lock state appears suddenly, what will happen?
 	*/
+	// pm_stay(PM_IDLE_DOMAIN, pm_querystate(PM_IDLE_DOMAIN));
 	pm_stay(PM_IDLE_DOMAIN, PM_NORMAL);
 	pmvdbg("State locked!\n");
 
@@ -518,12 +519,17 @@ static size_t power_unlock_write(FAR struct file *filep, FAR const char *buffer,
 {
 	(void)buffer;
 
+	// pm_relax(PM_IDLE_DOMAIN, pm_querystate(PM_IDLE_DOMAIN));
 	pm_relax(PM_IDLE_DOMAIN, PM_NORMAL);
 	pmvdbg("State unlocked!\n");
 #ifdef CONFIG_ARCH_CORTEXA32
 	if (timer_interval > 0) {
 		g_timer_wakeup.use_timer = 1;
 		g_timer_wakeup.timer_interval = timer_interval;
+	}
+	else {
+		g_timer_wakeup.use_timer = 0;
+		g_timer_wakeup.timer_interval = 0;	
 	}
 	return OK;
 #else

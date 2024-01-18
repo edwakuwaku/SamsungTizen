@@ -618,7 +618,7 @@ void os_start(void)
 	DEBUGVERIFY(os_bringup());
 
 	/* Temporary added for test suite, need to check the necessity for real product test*/
-	pm_relax(PM_IDLE_DOMAIN, PM_NORMAL);
+	// pm_relax(PM_IDLE_DOMAIN, PM_NORMAL);
 
 	/* The IDLE Loop **********************************************************/
 	/* When control is return to this point, the system is idle. */

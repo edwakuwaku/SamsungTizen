@@ -117,7 +117,7 @@ static void pm_timer(int domain)
 		int left  = wd_gettime(pdom->wdog);
 		if (delay <= 0) {
 			/* TODO: Revisit this implementation if we face negative delay value here */
-			pmdbg("Delay value is negative! Delay = %d, Pdom->btime = %8lld", delay, pdom->btime);
+			pmdbg("Delay value is negative! Delay = %d, Pdom->btime = %8lld\n", delay, pdom->btime);
 			delay = 1;
 		}
 		if (!WDOG_ISACTIVE(pdom->wdog) || abs(delay - left) > PM_TIMER_GAP) {
