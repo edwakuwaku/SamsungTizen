@@ -48,8 +48,13 @@
 #include "arch_timer.h"
 #include "ameba_soc.h"
 #include "osdep_service.h"
+#include "timer_api.h"
 
-static RTIM_TimeBaseInitTypeDef TIM_InitStruct_GT[8];
+/* TODO: One for periodical, One for one-shot */
+gtimer_t g_timer1; //, g_timer2;
+#ifdef CONFIG_DEBUG_PM_INFO
+static uint32_t periodical_counter = 1;
+#endif
 extern struct timer_s g_timer_wakeup;
 
 void SOCPS_SetAPWakeEvent_MSK0(u32 Option, u32 NewStatus)
@@ -112,45 +117,50 @@ int SOCPS_AONWakeReason(void)
 	return reason;
 }
 
-void pg_timer_int_handler(void *Data)
+void one_shot_timer_handler(void *Data)
 {
-	pmvdbg("Timer wakeup interrupt handler!!\n");
-	RTIM_TimeBaseInitTypeDef *TIM_InitStruct = (RTIM_TimeBaseInitTypeDef *) Data;
-	RTIM_INTClear(TIMx[TIM_InitStruct->TIM_Idx]);
-	RTIM_Cmd(TIMx[TIM_InitStruct->TIM_Idx], DISABLE);
+	pmvdbg("One Shot timer wakeup interrupt handler!!\n");
 	// Reset the global struct
-    g_timer_wakeup.use_timer = 0;
+	g_timer_wakeup.is_periodical = 0;
     g_timer_wakeup.timer_interval = 0;
 	// Switch status back to normal mode after wake up from interrupt
 	pm_activity(PM_IDLE_DOMAIN, 9);
 }
 
-void up_set_timer_interrupt(u32 TimerIdx, u32 Timercnt) {
-	RTIM_TimeBaseInitTypeDef *pTIM_InitStruct_temp = &TIM_InitStruct_GT[TimerIdx];
-	RCC_PeriphClockCmd(APBPeriph_TIM1, APBPeriph_TIM1_CLOCK, ENABLE);
-
-	RTIM_TimeBaseStructInit(pTIM_InitStruct_temp);
-
-	pTIM_InitStruct_temp->TIM_Idx = TimerIdx;
-	pTIM_InitStruct_temp->TIM_Prescaler = 0x00;
-	pTIM_InitStruct_temp->TIM_Period = 32768 * Timercnt - 1;//0xFFFF>>11;
-
-	pTIM_InitStruct_temp->TIM_UpdateEvent = ENABLE; /* UEV enable */
-	pTIM_InitStruct_temp->TIM_UpdateSource = TIM_UpdateSource_Overflow;
-	pTIM_InitStruct_temp->TIM_ARRProtection = ENABLE;
-
-	RTIM_TimeBaseInit(TIMx[TimerIdx], pTIM_InitStruct_temp, TIMx_irq[TimerIdx], (IRQ_FUN) pg_timer_int_handler,
-						(u32)pTIM_InitStruct_temp);
-	RTIM_INTConfig(TIMx[TimerIdx], TIM_IT_Update, ENABLE);
-	RTIM_Cmd(TIMx[TimerIdx], ENABLE);
-
-	SOCPS_SetAPWakeEvent_MSK0((WAKE_SRC_Timer1 << TimerIdx), ENABLE);
+void periodical_timer_handler(void *Data)
+{
+#ifdef CONFIG_DEBUG_PM_INFO
+	pmvdbg("Periodical timer wakeup interrupt handler, count = %d!!\n", periodical_counter);
+	periodical_counter += 1;
+#endif
+	// Switch status back to normal mode after wake up from interrupt
+	pm_activity(PM_IDLE_DOMAIN, 9);
+	/* Anything else Samsung want to do here? */
+	/*
+	
+	*/
 }
 
-void ap_timer_helper(void) {
+void ap_timer_helper(void) 
+{
 	// Check whether timer interrupt need to be set
-	if (g_timer_wakeup.use_timer) {
-		up_set_timer_interrupt(1, g_timer_wakeup.timer_interval);
+	/* Note: 2 Separate Timer O and P can be initialized at the same time
+	Timer O: Is initialized with smallest one shot duration out of all timer request
+	Timer P: Is initialized with smallet periodical duration out of all timer request
+	Q1 (Both One-shot): App1 set timer for 10 secs, App2 set timer for 3 secs, board wake up after 3 secs, does some work and go back to sleep at 7 sec mark
+	now the board is sleeping, and App1 assume a wakeup at 10 sec mark, but this will fail to trigger
+	Q2 (1 One-shot, 1 Periodical): O = 7secs, P = 5secs, the board woken up at 5 sec mark, but O timer will trigger after 2 sec (ie. 7 sec mark), wastage handler
+	Q2.b: O = 3secs, P = 5secs, handler happens at-> 3, 5, 10 sec mark
+	Q2.c: O = 3secs, P = 10secs, board wakes up at 3sec mark, goes to sleep at 8sec mark, woken up again at 10sec mark (this will cause an issue, which the power efficiency will be low)
+	*/
+	if (g_timer_wakeup.timer_interval > 0) {
+		gtimer_init(&g_timer1, TIMER1);
+		g_timer_wakeup.is_periodical == 1 ? gtimer_start_periodical(&g_timer1, g_timer_wakeup.timer_interval, (void *)periodical_timer_handler, NULL) :
+											gtimer_start_one_shout(&g_timer1, g_timer_wakeup.timer_interval, (void *)one_shot_timer_handler, NULL);
+		g_timer_wakeup.timer_interval = 0;
+	}
+	else {
+		gtimer_stop(&g_timer1);
 	}
 }
 

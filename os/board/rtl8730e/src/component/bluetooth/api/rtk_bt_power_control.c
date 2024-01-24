@@ -36,12 +36,12 @@ rtk_bt_ps_callback rtk_bt_resume_callback = NULL;
 
 static void bt_power_suspend_callback(void)
 {
-	printf("[BT_PS] BT is entering sleep wake now\r\n");
+	pmvdbg("[BT_PS] BT is entering sleep wake now\r\n");
 }
 
 static void bt_power_resume_callback(void)
 {
-	printf("[BT_PS] BT is wake now\r\n");
+	pmvdbg("[BT_PS] BT is wake now\r\n");
 
 	/* Report BT activity to the power management logic */
 #if defined(CONFIG_PM) && CONFIG_RTL8730E_PM_BT_ACTIVITY > 0
@@ -82,7 +82,7 @@ static uint32_t rtk_bt_suspend(uint32_t expected_idle_time, void *param)
 	(void)expected_idle_time;
 	(void)param;
 
-	printf("[BT_PS] Enter rtk_bt_suspend\r\n");
+	pmvdbg("[BT_PS] Enter rtk_bt_suspend\r\n");
 
 #ifndef CONFIG_PLATFORM_TIZENRT_OS
 #if defined(CONFIG_BT_SINGLE_CORE) && CONFIG_BT_SINGLE_CORE
@@ -104,7 +104,7 @@ static uint32_t rtk_bt_resume(uint32_t expected_idle_time, void *param)
 	(void)expected_idle_time;
 	(void)param;
 
-	printf("[BT_PS] Enter rtk_bt_resume\r\n");
+	pmvdbg("[BT_PS] Enter rtk_bt_resume\r\n");
 
 	rtk_bt_disable_bt_wake_host();
 

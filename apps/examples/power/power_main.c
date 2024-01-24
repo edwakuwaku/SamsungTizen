@@ -41,16 +41,16 @@
 #define POWER_THREAD_PRIORITY				255
 // #define PM_DAEMON_INTERVAL					15
 /* App layer shouldn't have any knowledge about PM driver*/
-#define PM_LOCK()							power_write_buf(PM_LOCK_PATH, 0)
+#define PM_LOCK()							power_write_buf(PM_LOCK_PATH, 0, 0)
 /* Input value : 0~? */
-#define PM_UNLOCK(time_int)					power_write_buf(PM_UNLOCK_PATH, time_int)
+#define PM_UNLOCK(is_periodical, time_int)	power_write_buf(PM_UNLOCK_PATH, is_periodical, time_int)
 /* Input value : 0~3 */
-#define PM_TUNE(level)						power_write_buf(PM_TUNE_PATH, level)
+#define PM_TUNE(level)						power_write_buf(PM_TUNE_PATH, 0, level)
 
 /****************************************************************************
  * Private Functions
  ****************************************************************************/
-static int power_write_buf(char *file, size_t val)
+static int power_write_buf(char *file, char *buf, size_t val)
 {
 	int fd;
 	int r;
@@ -62,7 +62,7 @@ static int power_write_buf(char *file, size_t val)
 		return -ENOENT;
 	}
 	/* Second argument is not needed for RTK case */
-	r = write(fd, " ", val);
+	r = write(fd, buf, val);
 	if (r < 0) {
 		printf("Failed to write\n");
 		ret = -EIO;
@@ -75,7 +75,7 @@ static int power_write_buf(char *file, size_t val)
 static pthread_addr_t power_daemon()
 {
 	/* Release PM lock after bootup*/
-	PM_UNLOCK(5);
+	PM_UNLOCK(500000);
 	printf("Boot completed ..Unlocked PM!!\n");
 
 	/* Apply PM lock to prevent sleep*/
@@ -86,7 +86,7 @@ static pthread_addr_t power_daemon()
 	PM_TUNE(0);
 
 	/* Release PM lock, update timer interrupt interval */
-	PM_UNLOCK(0);
+	PM_UNLOCK(0, 2000000);
 
 	return NULL;
 }

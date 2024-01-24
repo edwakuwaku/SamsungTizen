@@ -517,20 +517,17 @@ static size_t power_unlock_write(FAR struct file *filep, FAR const char *buffer,
 static size_t power_unlock_write(FAR struct file *filep, FAR const char *buffer, size_t buflen)
 #endif
 {
-	(void)buffer;
+	int is_periodical = atoi(buffer);
 
 	// pm_relax(PM_IDLE_DOMAIN, pm_querystate(PM_IDLE_DOMAIN));
 	pm_relax(PM_IDLE_DOMAIN, PM_NORMAL);
 	pmvdbg("State unlocked!\n");
 #ifdef CONFIG_ARCH_CORTEXA32
 	if (timer_interval > 0) {
-		g_timer_wakeup.use_timer = 1;
 		g_timer_wakeup.timer_interval = timer_interval;
 	}
-	else {
-		g_timer_wakeup.use_timer = 0;
-		g_timer_wakeup.timer_interval = 0;	
-	}
+	g_timer_wakeup.is_periodical = is_periodical;
+
 	return OK;
 #else
 	return buflen;

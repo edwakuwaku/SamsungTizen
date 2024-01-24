@@ -298,7 +298,7 @@ enum pm_state_e {
 };
 
 struct timer_s {
-	bool use_timer;
+	int is_periodical;
 	uint32_t timer_interval;
 };
 
