@@ -57,11 +57,15 @@
 #include "FreeRTOS.h"
 #include <task.h>
 #include "freertos_pmu.h"
+#else
+#ifdef CONFIG_PM
+#include <tinyara/pm/pm.h>
 #endif
 #include "ameba_soc.h"
 #include "sys_io.h"
 #include "gic.h"
 #include "psci.h"
+#endif
 
 #define GIC_MAX_NUM_INTR NR_IRQS
 #define ROUND_UP(divider, divisor) (divider%divisor) ? ((divider/divisor)+1) : (divider/divisor)
@@ -281,7 +285,8 @@ void SOCPS_SleepCG(void)
 	//pmu_acquire_wakelock(PMU_OS);
 }
 
-void up_set_dvfs(u32 val)
+#ifdef CONFIG_PM_DVFS
+void up_set_dvfs(int val)
 {
 	/* Please refer to sysreg_hsys.h */
 	// AP_CLK_DIV1		0
@@ -295,3 +300,4 @@ void up_set_dvfs(u32 val)
 	reg_div |= HSYS_CKD_AP(val);
 	HAL_WRITE32(SYSTEM_CTRL_BASE_HP, REG_HSYS_HP_CKSL, reg_div);
 }
+#endif
