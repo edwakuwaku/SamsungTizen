@@ -620,8 +620,8 @@ enum pm_state_e pm_querystate(int domain);
  * Name: pm_dvfs
  *
  * Description:
- *   This internal function is called to reduce the frequency of operation
- *   of the secondary AP core of AI_Dual chipset.
+ *   This internal function is called to reduce the clock frequency
+ *   of the AP core (CA32) of AI_Dual chipset.
  *
  * Input Parameters:
  *   div_lvl - voltage frequency scaling level
@@ -634,6 +634,23 @@ enum pm_state_e pm_querystate(int domain);
  *
  ****************************************************************************/
 void pm_dvfs(int div_lvl);
+
+/****************************************************************************
+ * Name: up_set_dvfs
+ *
+ * Description:
+ *   BSP operation called from wrapper API pm_dvfs() to reduce the clock 
+ *   frequency of the AP core (CA32) of AI_Dual chipset.
+ *
+ * Input Parameters:
+ *   div_lvl - voltage frequency scaling level
+ *
+ * Returned Value:
+ *   None.
+ *
+ *
+ ****************************************************************************/
+void up_set_dvfs(int div_lvl);
 
 #undef EXTERN
 #ifdef __cplusplus
