@@ -51,7 +51,7 @@
 #include "timer_api.h"
 
 gtimer_t g_timer1;
-extern struct pm_wakeup_timer_s g_timer_wakeup;
+extern struct pm_wakeup_timer_s g_timer_wakeup, g_timer_lock;
 
 void SOCPS_SetAPWakeEvent_MSK0(u32 Option, u32 NewStatus)
 {
@@ -123,11 +123,29 @@ void pg_timer_int_handler(void *Data)
 	pm_activity(PM_IDLE_DOMAIN, 9);
 }
 
+void pg_lock_timer_int_handler(void)
+{
+	pmvdbg("Lock timer interrupt handler!!\n");
+	// Reset the global struct
+	g_timer_lock.use_timer = 0;
+	g_timer_lock.timer_interval = 0;
+        // Switch status back to normal mode after wake up from interrupt
+        pm_relax(PM_IDLE_DOMAIN, PM_NORMAL);
+}
+
 void ap_timer_helper(void) {
 	// Check whether timer interrupt need to be set
 	if (g_timer_wakeup.use_timer) {
 		gtimer_init(&g_timer1, TIMER1);
 		gtimer_start_one_shout(&g_timer1, g_timer_wakeup.timer_interval, (void *)pg_timer_int_handler, NULL);
+	}
+}
+
+void lock_timer_helper(void) {
+	//Check whether the lock timer needs to be set
+	if (g_timer_lock.use_timer) {
+		gtimer_init(&g_timer1, TIMER1);
+		gtimer_start_one_shout(&g_timer1, g_timer_lock.timer_interval, (void *)pg_lock_timer_int_handler, NULL);
 	}
 }
 

@@ -118,6 +118,7 @@ struct power_procfs_entry_s {
 
 /* Added to record timer countdown interrupt */
 struct pm_wakeup_timer_s g_timer_wakeup = { 0, 0 };
+struct pm_wakeup_timer_s g_timer_lock = { 0, 0 };
 
 /****************************************************************************
  * Private Function Prototypes
@@ -470,7 +471,6 @@ static size_t power_devices_read(FAR struct file *filep, FAR char *buffer, size_
 static size_t power_lock_write(FAR struct file *filep, FAR const char *buffer, size_t buflen)
 {
 	(void)buffer;
-	(void)buflen;
 
 	/* Always lock PM_NORMAL state, check again whether this implementation
 	is enough to handle, if not, consider below methods...
@@ -481,7 +481,13 @@ static size_t power_lock_write(FAR struct file *filep, FAR const char *buffer, s
 	*/
 	pm_stay(PM_IDLE_DOMAIN, PM_NORMAL);
 	fvdbg("State locked!\n");
-
+	if (buflen > 0) {
+		g_timer_lock.use_timer = 1;
+		g_timer_lock.timer_interval = buflen;
+	} else {
+		g_timer_lock.use_timer = 0;
+		g_timer_lock.timer_interval = 0;
+	}
 	return OK;
 }
 
