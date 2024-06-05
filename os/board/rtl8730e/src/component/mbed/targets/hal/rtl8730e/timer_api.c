@@ -189,7 +189,7 @@ void gtimer_start(gtimer_t *obj)
   * @retval none
   * @note In one-shot mode, timer will stop counting the first time counter overflows.
   */
-void gtimer_start_one_shout(gtimer_t *obj, uint32_t duration_us, void *handler, uint32_t hid)
+void gtimer_start_one_shot(gtimer_t *obj, uint32_t duration_us, void *handler, uint32_t hid)
 {
 	assert_param(obj->timer_id < GTIMER_MAX);
 

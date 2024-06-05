@@ -87,14 +87,14 @@ void gtimer_reload(gtimer_t *obj, uint32_t duration_us);
   */
 void gtimer_start(gtimer_t *obj);
 /**
-  * @brief  Set up a shout timer, including clock/function/timer registers.
+  * @brief  Set up a shot timer, including clock/function/timer registers.
   * @param  obj: gtimer object defined in application software.
   * @param  duration_us: the period in microsecond of gtimer.
   * @param  handler: The Pointer to the function that program runs into when timer is up.
   * @param  hid: the timer struct ID defined in gtimer structure.
   * @retval none
   */
-void gtimer_start_one_shout(gtimer_t *obj, uint32_t duration_us, void *handler, uint32_t hid);
+void gtimer_start_one_shot(gtimer_t *obj, uint32_t duration_us, void *handler, uint32_t hid);
 /**
   * @brief  Set up a periodic timer, including clock/function/timer registers.
   * @param  obj: gtimer object defined in application software.

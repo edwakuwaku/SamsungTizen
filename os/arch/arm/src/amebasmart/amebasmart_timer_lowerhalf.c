@@ -439,25 +439,29 @@ int amebasmart_timer_initialize(const char *devpath, int timer)
 {
 	struct amebasmart_gpt_lowerhalf_s *priv = NULL;
 
+	/* Remap the timer index for app usage 
+	EG: When app controls HW timer0 with fd (ie. /dev/timer0)
+	    it is actually using timer4
+	*/
 	switch (timer) {
 	case TIMER0:
 		priv = &g_gpt0_lowerhalf;
-		priv->obj.timer_id = TIMER0;
+		priv->obj.timer_id = TIMER4;
 		break;
 
 	case TIMER1:
 		priv = &g_gpt1_lowerhalf;
-		priv->obj.timer_id = TIMER1;
+		priv->obj.timer_id = TIMER5;
 		break;
 
 	case TIMER2:
 		priv = &g_gpt2_lowerhalf;
-		priv->obj.timer_id = TIMER2;
+		priv->obj.timer_id = TIMER6;
 		break;
 
 	case TIMER3:
 		priv = &g_gpt3_lowerhalf;
-		priv->obj.timer_id = TIMER3;
+		priv->obj.timer_id = TIMER7;
 		break;
 
 	default:
